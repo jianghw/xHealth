@@ -1,0 +1,153 @@
+package com.kaurihealth.utilslib.date;
+
+import com.kaurihealth.utilslib.log.LogUtils;
+
+import org.joda.time.DateTime;
+import org.joda.time.Years;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
+
+/**
+ * 版权所有者：刘正
+ * 创建日期： 2016/4/19.
+ * 备注：
+ */
+public class DateUtils {
+
+    public static String Today() {
+        SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd", Locale.SIMPLIFIED_CHINESE);
+        return format.format(Calendar.getInstance().getTime());
+    }
+
+    public static String GetNowDate(String dateFormat) {
+        SimpleDateFormat format = new SimpleDateFormat(dateFormat, Locale.SIMPLIFIED_CHINESE);
+        return format.format(Calendar.getInstance().getTime());
+    }
+
+    public static String GetDateText(Date date) {
+        if (date == null) {
+            return null;
+        }
+        return GetDateText(date, "yyyy-MM-dd'T'HH:mm:ss");
+    }
+
+    public static String GetDateText(Date date, String dateFormat) {
+        SimpleDateFormat format = new SimpleDateFormat(dateFormat, Locale.SIMPLIFIED_CHINESE);
+        return format.format(date);
+    }
+
+    public static String getDateText(Date date) {
+        if (date == null) return null;
+        return GetDateText(date, "yyyy-MM-dd'T'HH:mm:ssZ");
+    }
+
+    public static String getFormatDate(Date date) {
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ", Locale.SIMPLIFIED_CHINESE);
+        String sf = format.format(date);
+        if (sf.contains("T")) return sf.split("T")[0];
+        return sf;
+    }
+
+    public static int getAge(Date dateOfBirth) {
+        DateTime start = new DateTime(dateOfBirth);
+        DateTime end = new DateTime(Calendar.getInstance().getTime());
+        return Years.yearsBetween(start, end).getYears();
+    }
+
+    public static boolean isActive(boolean isActive, Date endDate) {
+        boolean timeTag;
+        if (endDate == null) {
+            timeTag = true;
+        } else {
+            timeTag = overTime(endDate);
+        }
+        return timeTag && isActive;
+    }
+
+    public static Date curDate() {
+        return new Date();
+    }
+
+    public static boolean overTime(Date endDate) {
+        return endDate.getTime() > curDate().getTime();
+    }
+
+    /**
+     * 网络提交用
+     *
+     * @param date
+     * @return
+     */
+    public static Date getDateConversion(String date) {
+        String now = getDateText(curDate());
+        String time = now.split("T")[1];
+        LogUtils.d(time);
+
+        StringBuilder sb = new StringBuilder();
+        sb.append(date);
+        sb.append("T");
+        sb.append(time);
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ", Locale.SIMPLIFIED_CHINESE);
+        try {
+            Date returnDate = sdf.parse(sb.toString());
+            return returnDate;
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        throw new IllegalStateException("time is error");
+    }
+
+    /**
+     * 倒计时
+     *
+     * @param endDate
+     * @return
+     */
+    public static RemainTimeBean getEndTimeBean(Date endDate) {
+        if (endDate == null) throw new IllegalStateException("时间的格式不合法");
+        Calendar calendar = Calendar.getInstance();
+        long remain = endDate.getTime() - calendar.getTime().getTime();
+        return transformEndDate(remain);
+    }
+
+    private static RemainTimeBean transformEndDate(long remain) {
+        int Second = 1000;
+        int Minute = Second * 60;
+        int Hour = 60 * Minute;
+        int Day = 24 * Hour;
+        RemainTimeBean remainTimeBean = new RemainTimeBean(0, 0, 0, 0);
+        if (remain <= 0) return remainTimeBean;
+        //天
+        int dayRes = (int) (remain / Day);
+        remainTimeBean.setDay(dayRes);
+        long remainDay = remain % Day;
+
+        if (remainDay == 0) {
+            remainTimeBean.setHour(0);
+            remainTimeBean.setMinutes(0);
+            remainTimeBean.setSecond(0);
+        } else {
+            int hourRes = (int) (remainDay / Hour);
+            remainTimeBean.setHour(hourRes);
+            long remainHour = remainDay % Hour;
+            if (remainHour == 0) {
+                remainTimeBean.setMinutes(0);
+            } else {
+                int minuteRes = (int) (remainHour / Minute);
+                remainTimeBean.setMinutes(minuteRes);
+                long remainMinute = remainHour % Minute;
+                if (remainMinute == 0) {
+                    remainTimeBean.setSecond(0);
+                } else {
+                    int secondRes = (int) (remainMinute / Second);
+                    remainTimeBean.setSecond(secondRes);
+                }
+            }
+        }
+        return remainTimeBean;
+    }
+}

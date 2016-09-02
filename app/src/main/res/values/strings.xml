@@ -1,0 +1,267 @@
+<resources>
+    <string name="app_name">佳仁健康</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="rbtn_register">尚未选择类型</string>
+    <string name="phone_register">手机号码长度有误</string>
+    <string name="versioncode_register">验证码有误</string>
+    <string name="password_register">密码不合法</string>
+    <string name="confirm_password_register">密码不一致</string>
+    <string name="agreement_register">尚未同意协议，无法注册</string>
+    <string name="registerresult">该账户已存在</string>
+    <string name="submit_error">修改密码失败</string>
+
+    <!--loginActivity-->
+    <string name="login_edit_name">请输入用户名</string>
+    <string name="login_btn_login">登录</string>
+    <string name="login_edit_pw">请输入密码</string>
+    <string name="login_tv_register">立即注册</string>
+    <string name="login_tv_forget_pw">忘记密码?</string>
+    <string name="login_success">登录成功</string>
+
+    <!--mainActivity-->
+    <string name="main_rb_home">首页</string>
+    <string name="main_rb_message">消息</string>
+    <string name="main_rb_friend">医患</string>
+    <string name="main_rb_clinical">临床</string>
+    <string name="main_rb_mine">我的</string>
+
+    <!--RegisterActivity-->
+    <string name="register_phone_pattern">请输入正确的电话号码</string>
+    <string name="register_verification_pattern">验证码必须为4位数字</string>
+    <string name="register_pw_length">为了保证您的账户安全,密码长度须为6到20位</string>
+    <string name="register_pw_password">请使用字母和数字构建密码</string>
+    <string name="register_pw_confirm">密填写不一致,请检查密码</string>
+    <string name="register_checked">尚未同意协议,无法注册</string>
+
+    <!--RegisterPersonInfoActivity-->
+    <string name="register_person_first">名不能为空</string>
+    <string name="register_person_last">姓不能为空</string>
+    <string name="register_person_gender">性别不能为空</string>
+    <string name="register_person_birthday">生日不能为空</string>
+
+    <!--ServiceSettingActivity-->
+    <string name="service_price">价格不能小于0.01</string>
+
+    <!--学历职称-->
+    <string-array name="educationTitles">
+        <item>教授</item>
+        <item>副教授</item>
+    </string-array>
+    <!--指导职称-->
+    <string-array name="mentorshipTitles">
+        <item>硕士生导师</item>
+        <item>博士生导师</item>
+    </string-array>
+    <!--在院职称-->
+    <string-array name="hospitalTitles">
+        <item>住院医师</item>
+        <item>主治医师</item>
+        <item>主任医师</item>
+        <item>副主任医师</item>
+    </string-array>
+    <!--教育程度-->
+    <string-array name="educationLevel">
+        <item>本科以下</item>
+        <item>本科</item>
+        <item>硕士</item>
+        <item>博士</item>
+        <item>博士后</item>
+    </string-array>
+    <!--ClinicalDiagnosisAndTreatment:临床诊疗 SupplementaryTest:辅助检查 LabTest:实验室检查 Pathology:病理-->
+    <string-array name="medicalrecod">
+        <item>临床诊疗</item>
+        <item>辅助检查</item>
+        <item>实验室检查</item>
+        <item>病理</item>
+    </string-array>
+    <!--临床诊疗值-->
+    <string-array name="ClinicalDiagnosisAndTreatment">
+        <item>门诊记录电子病历</item>
+        <item>远程医疗咨询</item>
+        <item>网络医疗咨询</item>
+        <item>门诊记录图片存档</item>
+        <item>入院记录</item>
+        <item>院内治疗相关记录</item>
+        <item>出院记录</item>
+    </string-array>
+    <!--辅助检查值-->
+    <string-array name="SupplementaryTest">
+        <item>影像学检查</item>
+        <item>心血管系统相关检查</item>
+        <item>其它检查</item>
+    </string-array>
+    <!--实验室检查值-->
+    <string-array name="LabTest">
+        <item>常规血液学检查</item>
+        <item>常规尿液检查</item>
+        <item>常规粪便检查</item>
+        <item>特殊检查</item>
+        <item>其它</item>
+    </string-array>
+    <string-array name="Pathology">
+        <item>病理</item>
+    </string-array>
+    <string-array name="smokeslect">
+        <item>不吸</item>
+        <item>轻度</item>
+        <item>中度</item>
+        <item>重度</item>
+    </string-array>
+    <string-array name="exerciseHabit">
+        <item>不运动</item>
+        <item>偶尔</item>
+        <item>经常</item>
+        <item>每天</item>
+    </string-array>
+    <string-array name="menstruationPeriod">
+        <item>正常</item>
+        <item>不正常</item>
+    </string-array>
+    <string-array name="menstruationAmount">
+        <item>少量</item>
+        <item>中等</item>
+        <item>大量</item>
+    </string-array>
+    <string-array name="drinkLevel">
+        <item>不饮</item>
+        <item>轻度</item>
+        <item>中度</item>
+        <item>重度</item>
+    </string-array>
+    <string-array name="booleanStr">
+        <item>是</item>
+        <item>否</item>
+    </string-array>
+    <!--饮食习惯-->
+    <string-array name="Diet">
+        <item>常规膳食</item>
+        <item>高糖</item>
+        <item>高热量膳食</item>
+        <item>高脂肪膳食</item>
+        <item>高盐肪膳食</item>
+        <item>素食</item>
+    </string-array>
+
+
+    <array name="paychannels">
+        <item>中国工商银行</item>
+        <item>招商银行</item>
+        <item>中国农业银行</item>
+        <item>中国建设银行</item>
+        <item>中国银行</item>
+        <item>中国民生银行</item>
+        <item>中国光大银行</item>
+        <item>中信银行</item>
+        <item>交通银行</item>
+        <item>兴业银行</item>
+        <item>上海浦东发展银行</item>
+        <item>中国人民银行</item>
+        <item>华夏银行</item>
+        <item>深圳发展银行</item>
+        <item>广东发展银行</item>
+        <item>国家开发银行</item>
+        <item>中国邮政储蓄银行</item>
+        <item>中国进出口银行</item>
+        <item>中国农业发展银行</item>
+    </array>
+
+    <string-array name="array_monitor_project">
+        <item>高血糖</item>
+        <item>身高</item>
+        <item>体重</item>
+        <item>腰围</item>
+        <item>心率</item>
+        <item>红细胞</item>
+        <item>白细胞</item>
+        <item>血小板</item>
+        <item>血尿酸</item>
+        <item>尿素氮</item>
+        <item>肌酐</item>
+        <item>谷丙转氨酶</item>
+        <item>谷草转氨酶</item>
+        <item>总胆红素</item>
+        <item>总胆固醇</item>
+        <item>低密度脂蛋白胆固醇</item>
+        <item>甘油三酯</item>
+        <item>静脉空腹血糖</item>
+        <item>指血空腹血糖</item>
+        <item>早餐后血糖</item>
+        <item>午餐后血糖</item>
+        <item>晚餐后血糖</item>
+        <item>糖化血红蛋白</item>
+        <item>血沉</item>
+        <item>纤维蛋白原</item>
+        <item>尿蛋白</item>
+        <item>尿微球蛋白</item>
+        <item>尿白细胞</item>
+        <item>血压</item>
+        <item>丙氨酸氨基转移酶</item>
+        <item>碱性磷酸酶</item>
+        <item>谷氨酰转肽酶</item>
+        <item>门冬氨酸氨基转移酶</item>
+        <item>高密度脂蛋白</item>
+        <item>低密度脂蛋白</item>
+    </string-array>
+    <string-array name="array_monitor_unit">
+        <item>mmol/L</item>
+        <item>cm</item>
+        <item>kg</item>
+        <item>cm</item>
+        <item>bpm</item>
+        <item>10^12/L</item>
+        <item>10^9/L</item>
+        <item>10^9/L</item>
+        <item>umol/L</item>
+        <item>mmol/L</item>
+        <item>umol/L</item>
+        <item>U/L</item>
+        <item>U/L</item>
+        <item>umol/L</item>
+        <item>mmol/L</item>
+        <item>mmol/L</item>
+        <item>mmol/L</item>
+        <item>mmol/L</item>
+        <item>mmol/L</item>
+        <item>mmol/L</item>
+        <item>mmol/L</item>
+        <item>mmol/L</item>
+        <item>%</item>
+        <item>mm/h</item>
+        <item>g/L</item>
+        <item>g/L</item>
+        <item>g/L</item>
+        <item>个/HP</item>
+        <item>mmHg</item>
+        <item>U/L</item>
+        <item>U/L</item>
+        <item>U/L</item>
+        <item>U/L</item>
+        <item>mmol/L</item>
+        <item>mmol/L</item>
+    </string-array>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="main_table_home">首页</string>
+    <string name="main_table_message">消息</string>
+    <string name="main_table_patient">医患</string>
+    <string name="main_table_clinical">临床</string>
+    <string name="main_table_mine">我的</string>
+
+    <string name="patient_age_null">年龄:无</string>
+    <string name="patient_age">年龄:%d</string>
+    <string name="patient_gender">性别:%s</string>
+    <string name="long_standard_title">监测指标</string>
+    <string name="more_add">添加</string>
+    <string name="more_save">保存</string>
+    <string name="monitor_time">监测时间:</string>
+    <string name="monitor_program">监测项目:</string>
+    <string name="monitor_data">监测数据:</string>
+    <string name="monitor_hint_data">填写数据</string>
+    <string name="monitor_hint_time">选择时间</string>
+    <string name="monitor_hint_program">选择项目</string>
+    <string name="charts_null">&#160;&#160;&#160;&#160;</string>
+    <string name="swipe_tv_compile">编辑</string>
+    <string name="swipe_tv_delete">删除</string>
+    <string name="standard_rbtn_progarm">监测项目</string>
+</resources>

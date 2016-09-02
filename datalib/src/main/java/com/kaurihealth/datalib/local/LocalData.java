@@ -1,0 +1,263 @@
+package com.kaurihealth.datalib.local;
+
+import android.app.ActivityManager;
+import android.content.Context;
+import android.support.annotation.NonNull;
+import android.support.v4.util.LruCache;
+
+import com.kaurihealth.datalib.request_bean.bean.RefreshBean;
+import com.kaurihealth.datalib.response_bean.DoctorDisplayBean;
+import com.kaurihealth.datalib.response_bean.TokenBean;
+import com.kaurihealth.datalib.response_bean.UserBean;
+import com.kaurihealth.utilslib.CheckUtils;
+import com.kaurihealth.utilslib.SharedUtils;
+import com.kaurihealth.utilslib.constant.Global;
+import com.litesuits.orm.LiteOrm;
+import com.litesuits.orm.db.assit.QueryBuilder;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.inject.Singleton;
+
+/**
+ * Created by jianghw on 2016/8/8.
+ * <p/>
+ * 描述：
+ */
+@Singleton
+public class LocalData implements ILocalSource {
+    private static LocalData INSTANCE = null;
+    private final LiteOrm liteOrm;
+    private final ResponseCache mResponseCache;
+    private final Context mContext;
+    /**
+     * 全局调用，暂存
+     */
+    private TokenBean token;
+    private DoctorDisplayBean myself;
+
+
+    public LocalData(@NonNull Context context) {
+        CheckUtils.checkNotNull(context, "context is must be null");
+        liteOrm = LiteOrm.newCascadeInstance(context, "health.db");
+        liteOrm.setDebugged(true);
+
+        int memClass = ((ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE)).getMemoryClass();
+        mResponseCache = new ResponseCache(1024 * 1024 * memClass / 8);
+        mContext = context;
+        INSTANCE = this;
+    }
+
+    public static LocalData getLocalData() {
+        return INSTANCE;
+    }
+
+    /**
+     * 响应缓存
+     */
+    private class ResponseCache extends LruCache<String, String> {
+
+        /**
+         * @param maxSize for caches that do not override {@link #sizeOf}, this is
+         *                the maximum number of entries in the cache. For all other caches,
+         *                this is the maximum sum of the sizes of the entries in this cache.
+         */
+        public ResponseCache(int maxSize) {
+            super(maxSize);
+        }
+
+        @Override
+        protected int sizeOf(String key, String value) {
+            return value.length();
+        }
+
+    }
+
+    public String getJsonCache(String key) {
+        return mResponseCache.get(key);
+    }
+
+    public void addJsonCache(String key, String json) {
+        if (getJsonCache(key) == null) mResponseCache.put(key, json);
+    }
+
+    public void removeJsonCache(String key) {
+        if (getJsonCache(key) != null) mResponseCache.remove(key);
+    }
+
+    /**
+     * 插入一条记录
+     *
+     * @param t
+     */
+    public <T> long insert(T t) {
+        return liteOrm.save(t);
+    }
+
+
+    public <T> long insertEnsureByOne(T t) {
+        List list = liteOrm.query(t.getClass());
+        int size = list.size();
+        if (size == 0) {
+            return liteOrm.save(t);
+        }
+        deleteAll(t.getClass());
+        return liteOrm.save(t);
+    }
+
+    public <T> void insertEnsureByOneList(List<T> list) {
+        if (list.size() <= 0) throw new IllegalStateException("list must be not null");
+        Class<?> clazz = list.get(0).getClass();
+        List listTable = getQueryAll(clazz);
+        int size = listTable.size();
+        if (size != 0) deleteAll(clazz);
+        insertAll(list);
+    }
+
+    /**
+     * 插入所有记录
+     *
+     * @param list
+     */
+    public <T> void insertAll(List<T> list) {
+        liteOrm.save(list);
+    }
+
+    /**
+     * 查询所有
+     *
+     * @param cla
+     * @return
+     */
+    public <T> List<T> getQueryAll(Class<T> cla) {
+        return liteOrm.query(cla);
+    }
+
+    /**
+     * 查询  某字段 等于 Value的值
+     *
+     * @param cla
+     * @param field
+     * @param value
+     * @return
+     */
+    public <T> ArrayList getQueryByWhere(Class<T> cla, String field, Object[] value) {
+        return liteOrm.query(new QueryBuilder<>(cla).where(field + "=?", value));
+    }
+
+    /**
+     * 查询  某字段 等于 Value的值  可以指定从1-20，就是分页
+     *
+     * @param cla
+     * @param field
+     * @param value
+     * @param start
+     * @param length
+     * @return
+     */
+    public <T> List<T> getQueryByWhereLength(Class<T> cla, String field, Object[] value, int start, int length) {
+        return liteOrm.query(new QueryBuilder<>(cla).where(field + "=?", value).limit(start, length));
+    }
+
+    /**
+     * 删除一个数据
+     *
+     * @param t
+     * @param <T>
+     */
+    public <T> void delete(T t) {
+        liteOrm.delete(t);
+    }
+
+    /**
+     * 删除一个表
+     *
+     * @param cla
+     * @param <T>
+     */
+    public <T> void delete(Class<T> cla) {
+        liteOrm.delete(cla);
+    }
+
+    /**
+     * 删除一个对象表 连同其关联的classes，classes关联的其他对象一带删除
+     * e.g..deleteAll(TokenBean.UserBean.class);
+     * user TABLE DELETE,but token TABLE still,associated still
+     *
+     * @param cla
+     * @param <T>
+     */
+    public <T> void deleteAll(Class<T> cla) {
+        liteOrm.deleteAll(cla);
+    }
+
+    /**
+     * 删除数据库
+     */
+    public void deleteDatabase() {
+        liteOrm.deleteDatabase();
+    }
+
+    /**
+     * @return 当前运行的版本环境
+     */
+    @Override
+    public String getEnvironment() {
+        return SharedUtils.getString(mContext, Global.Environment.ENVIRONMENT);
+    }
+
+    /**
+     * 获取本地token
+     *
+     * @return
+     */
+    public TokenBean getTokenBean() {
+        if (token != null) return token;
+        List<TokenBean> list = getQueryAll(TokenBean.class);
+        if (list != null && list.size() <= 0 || list == null) {
+            throw new NullPointerException("token is null,it must not be null");
+        }
+        int size = list.size();
+        token = list.get(size - 1);
+        return token;
+    }
+
+    public void setTokenBean(TokenBean bean) {
+        token = bean;
+    }
+
+
+    public DoctorDisplayBean getMyself() {
+        if (myself != null) {
+            return myself;
+        }
+        List<DoctorDisplayBean> list = getQueryAll(DoctorDisplayBean.class);
+        if (list != null && list.size() <= 0 || list == null) {
+            return null;
+        }
+        int size = list.size();
+        myself = list.get(size - 1);
+        return myself;
+    }
+
+    public void setMyself(DoctorDisplayBean bean) {
+        myself = bean;
+    }
+
+    /**
+     * 获取RefreshBean
+     *
+     * @return
+     */
+    @NonNull
+    public RefreshBean refreshTokenBean() {
+        UserBean userBean = getTokenBean().getUser();
+        String refreshToken = getTokenBean().getRefreshToken();
+        RefreshBean refreshBean = new RefreshBean();
+        refreshBean.setRefreshToken(refreshToken);
+        refreshBean.setUserId(userBean.getUserId());
+        refreshBean.setDeviceId("android");
+        return refreshBean;
+    }
+}

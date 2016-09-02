@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/kaurihealth_background"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/lay_title_medicalhistory"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/toptitle_height"
+        android:background="@color/kaurihealth_header_background">
+
+        <ImageView
+            android:id="@+id/iv_back"
+            style="@style/toptitleback" />
+
+        <TextView
+            style="@style/toptitletv"
+            android:text="毕业院校" />
+
+        <TextView
+            android:id="@+id/tv_operate"
+            style="@style/toptitleedit"
+            android:text="保存" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+
+        android:background="@android:color/white"
+        android:paddingBottom="5dp"
+        android:paddingLeft="12dp"
+        android:paddingRight="12dp"
+        android:paddingTop="8dp">
+
+        <!--<TextView-->
+            <!--android:id="@+id/tv1_mine"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_centerVertical="true"-->
+            <!--android:background="@null"-->
+            <!--android:gravity="center_vertical"-->
+            <!--android:text="毕业院校：" />-->
+
+        <EditText
+            android:id="@+id/edtGraduateSchool"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:layout_centerVertical="true"
+            android:background="@drawable/edt_bg"
+            android:hint="请输入毕业院校"
+            android:singleLine="true"
+            android:padding="5dp"
+            android:text=""
+            android:textColor="#666666"
+            android:textColorHint="#ABABAD"
+            android:textSize="15sp" />
+
+        <ImageView
+            android:id="@+id/ivDelete"
+            android:layout_marginRight="5dp"
+            android:visibility="gone"
+            style="@style/delete_profession_title" />
+    </RelativeLayout>
+</LinearLayout>

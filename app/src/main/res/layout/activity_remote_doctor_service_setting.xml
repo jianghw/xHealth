@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/kaurihealth_background"
+    android:orientation="vertical"
+    tools:context="com.kaurihealth.kaurihealth.mine.activity.ExclusiveDoctorSettingActivity">
+
+    <RelativeLayout
+        android:id="@+id/lay_title_medicalhistory"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/toptitle_height"
+        android:background="@color/kaurihealth_header_background">
+
+        <ImageView
+            android:id="@+id/iv_back"
+            style="@style/toptitleback" />
+
+        <TextView
+            style="@style/toptitletv"
+            android:text="远程医疗咨询" />
+
+        <TextView
+            android:id="@+id/tv_operate"
+            style="@style/toptitleedit"
+            android:text="保存" />
+
+    </RelativeLayout>
+
+    <RelativeLayout style="@style/rlay_exclusive_doctor">
+
+
+        <TextView
+            style="@style/tv1_exclusive_doctor"
+            android:text="远程医疗咨询" />
+
+        <com.rey.material.widget.Switch
+            android:id="@+id/switch1"
+            style="@style/Material.Widget.Switch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:checked="false"
+            android:gravity="center"
+            app:sw_thumbColor="#4FD3C1" />
+    </RelativeLayout>
+
+
+    <RelativeLayout style="@style/rlay2_exclusive_doctor">
+
+        <TextView
+            style="@style/tv2_exclusive_doctor"
+            android:text="人民币" />
+
+        <TextView
+            android:id="@+id/tv1"
+            style="@style/tv3_exclusive_doctor"
+            android:text="元/次" />
+
+        <EditText
+            android:id="@+id/edtMoney"
+            style="@style/edt_exclusive_doctor"
+            android:text="" />
+    </RelativeLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="15dp"
+        android:text="设置说明:"
+        android:textSize="14sp" />
+    <!--您收取的服务费用在提现时会扣除5%平台服务费，\n您的实际税前收入为设定金额的95%。\n【服务项目输入 - 平台服务费5%-个人所得税（如有）\n=实际收入】-->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="5dp"
+        android:textColor="@color/apptextcolormed"
+        android:text="您收取的服务费用在提现时会扣除5%平台服务费，"
+        android:textSize="12sp" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="4dp"
+        android:textColor="@color/apptextcolormed"
+        android:text="您的实际税前收入为设定金额的95%。"
+        android:textSize="12sp" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="4dp"
+        android:textColor="@color/apptextcolormed"
+        android:text="【服务项目输入 - 平台服务费5%-个人所得税（如有）"
+        android:textSize="12sp" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="4dp"
+        android:textColor="@color/apptextcolormed"
+        android:text="=实际收入】。"
+        android:textSize="12sp" />
+
+
+</LinearLayout>

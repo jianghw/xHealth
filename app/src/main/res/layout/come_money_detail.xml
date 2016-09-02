@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/money_detail_out">
+
+    <TextView
+        android:id="@+id/tvAge"
+        android:text="专属医生"
+        style="@style/money_detail_title" />
+
+    <TextView
+        android:id="@+id/tvDate"
+        android:text="2016.05.01 15:06"
+        style="@style/money_detail_date" />
+
+    <TextView
+        android:id="@+id/tvMoney"
+        android:text="-100.00元"
+        style="@style/money_detail_money" />
+</RelativeLayout>

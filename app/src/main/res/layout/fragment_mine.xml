@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/kaurihealth_background">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            >
+
+            <ImageView
+                android:id="@+id/right_top"
+                android:layout_width="match_parent"
+                android:layout_height="260dp"
+                android:scaleType="centerCrop"
+                android:src="@mipmap/image_yh" />
+
+            <LinearLayout
+                android:id="@+id/buttonLayout"
+                android:layout_width="match_parent"
+                android:layout_height="260dp"
+                android:layout_centerInParent="true"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <com.example.commonlibrary.widget.CircleImageView
+                    android:id="@+id/civ_photo"
+                    android:layout_width="65dp"
+                    android:layout_height="65dp"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="50dp"
+                    android:src="@mipmap/ic_login_head_default"
+                    app:civ_border_overlay="true"
+                    app:civ_border_color="@color/green"
+                    app:civ_border_width="0.1dp" />
+
+                <LinearLayout
+                    android:id="@+id/lay_complete"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="5dp"
+
+                    android:background="#38000000"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/tv_welcome"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="4dp"
+                        android:text="您好！杨丽萍"
+                        android:textColor="@android:color/white"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/tv_percentage"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="8dp"
+                        android:text="资料完成度"
+                        android:textColor="#EE9F52"
+                        android:textSize="10sp" />
+
+                    <ProgressBar
+                        android:id="@+id/pb_bar"
+                        style="@style/myprogress"
+                        android:layout_width="200dp"
+                        android:layout_height="8dp"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="4dp"
+                        android:max="100"
+                        android:progress="30"
+                        android:progressBackgroundTint="#E2E6E7" />
+
+                    <TextView
+
+                        android:id="@+id/tv_textButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/tv_welcome"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="8dp"
+                        android:drawablePadding="8dp"
+                        android:drawableRight="@mipmap/minefragment_right_arrows"
+                        android:text="完成您的个人信息"
+                        android:textColor="@color/green" />
+
+                    <TextView
+                        android:id="@+id/tv_moreinfo"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginBottom="28dp"
+                        android:layout_marginTop="2dp"
+                        android:text="让患者更好的了解您"
+                        android:textColor="@android:color/white"
+                        android:textSize="10sp" />
+                </LinearLayout>
+            </LinearLayout>
+        </FrameLayout>
+        <!--从这分开，下面是设置选项-->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@android:color/white"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:id="@+id/lay_servicesetting"
+                style="@style/rlay_mine"
+                android:layout_height="20dp"
+                android:layout_marginBottom="10dp">
+
+                <ImageView
+                    android:id="@+id/iv2_mine"
+                    style="@style/iv_mine"
+                    android:src="@mipmap/servicesetting_mine" />
+
+                <TextView
+                    style="@style/tv_mine"
+                    android:layout_alignBottom="@id/iv2_mine"
+                    android:layout_toRightOf="@id/iv2_mine"
+                    android:text="服务项目" />
+
+                <TextView
+                    style="@style/num_mine"
+                    android:layout_alignBottom="@id/iv2_mine"
+                    android:layout_alignParentRight="true"
+                    android:text="02" />
+
+            </RelativeLayout>
+
+            <TextView style="@style/line_personinfo" />
+
+            <RelativeLayout
+                android:id="@+id/lay_myaccount"
+                style="@style/rlay_mine"
+                android:layout_height="20dp"
+                android:layout_marginBottom="10dp">
+
+                <ImageView
+                    android:id="@+id/iv1_mine"
+                    style="@style/iv_mine"
+                    android:src="@mipmap/account_mine" />
+
+                <TextView
+                    style="@style/tv_mine"
+                    android:layout_alignBottom="@id/iv1_mine"
+                    android:layout_toRightOf="@id/iv1_mine"
+                    android:text="我的账户" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/lay_mycollect"
+                style="@style/rlay_mine"
+                android:visibility="gone">
+
+                <ImageView
+                    android:id="@+id/iv1_mcollect"
+                    style="@style/iv_mine"
+                    android:src="@mipmap/minegragment_collect_background" />
+
+                <TextView
+                    style="@style/tv_mine"
+                    android:layout_alignBottom="@id/iv1_mcollect"
+                    android:layout_toRightOf="@id/iv1_mcollect"
+                    android:text="我的收藏" />
+
+                <TextView
+                    style="@style/num_mine"
+                    android:layout_alignBottom="@id/iv1_mcollect"
+                    android:layout_alignParentRight="true"
+                    android:text="02" />
+
+                <TextView
+                    style="@style/line_mine"
+                    android:layout_below="@id/iv1_mcollect" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/lay_myeducation"
+                style="@style/rlay_mine"
+                android:visibility="gone">
+
+                <ImageView
+                    android:id="@+id/iv1_education"
+                    style="@style/iv_mine"
+                    android:src="@mipmap/minefragment_education_background" />
+
+                <TextView
+                    style="@style/tv_mine"
+                    android:layout_alignBottom="@id/iv1_education"
+                    android:layout_toRightOf="@id/iv1_education"
+                    android:text="继续教育" />
+
+                <TextView
+                    style="@style/num_mine"
+                    android:layout_alignBottom="@id/iv1_education"
+                    android:layout_alignParentRight="true"
+                    android:text="03" />
+
+                <TextView
+                    style="@style/line_mine"
+                    android:layout_below="@id/iv1_education" />
+            </RelativeLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="13dp"
+                android:background="@color/kaurihealth_background" />
+
+            <RelativeLayout
+                android:id="@+id/lay_setting"
+                style="@style/rlay_mine"
+                android:layout_height="20dp"
+                android:layout_marginBottom="10dp">
+
+                <ImageView
+                    android:id="@+id/iv4_mine"
+                    style="@style/iv_mine"
+                    android:src="@mipmap/setting_mine" />
+
+                <TextView
+                    style="@style/tv_mine"
+                    android:layout_alignBottom="@id/iv4_mine"
+                    android:layout_toRightOf="@id/iv4_mine"
+                    android:text="设置" />
+            </RelativeLayout>
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+</ScrollView>

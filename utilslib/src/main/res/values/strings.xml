@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">My Library</string>
+
+    <string name="dialog_warning_title">错误提示!</string>
+
+    <string name="dialog_btn_complete">完成</string>
+</resources>

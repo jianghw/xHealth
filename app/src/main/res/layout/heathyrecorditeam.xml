@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="50dp"
+    android:clickable="true"
+
+    android:paddingLeft="@dimen/healthyrecordnormaliteampadding">
+
+    <TextView
+        android:id="@+id/tvOrder"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/healthyrecordnormaliteampadding"
+        android:layout_marginTop="@dimen/healthyrecordnormaliteampadding"
+        android:text=""
+        android:layout_centerVertical="true"
+        android:textColor="#666666"
+        android:textSize="14sp" />
+    <TextView
+        android:id="@+id/tvOrder01"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/healthyrecordnormaliteampadding"
+        android:layout_marginTop="@dimen/healthyrecordnormaliteampadding"
+        android:layout_centerVertical="true"
+        android:text=""
+        android:textColor="#666666"
+        android:textSize="14sp" />
+
+
+    <TextView
+        android:id="@+id/tvDiseaseName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/healthyrecordnormaliteampadding"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="@dimen/healthyrecordnormaliteampadding"
+        android:layout_toRightOf="@id/tvOrder"
+        android:layout_centerVertical="true"
+        android:ellipsize="end"
+        android:maxEms="14"
+        android:singleLine="true"
+        android:text="糖尿病"
+        android:textColor="#666666"
+        android:textSize="14sp" />
+    <RelativeLayout
+        android:id="@+id/line_item"
+        android:layout_below="@+id/tvOrder"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+    <TextView
+        android:id="@+id/tv_view"
+        android:layout_width="match_parent"
+        android:layout_height="0.2dp"
+        android:layout_marginRight="10dp"
+        android:background="#cCCCCC" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/layBtnContainer"
+        android:layout_width="wrap_content"
+        android:layout_height="45dp"
+        android:layout_alignParentRight="true"
+        android:animateLayoutChanges="true"
+        android:orientation="horizontal"
+        android:visibility="invisible">
+
+        <TextView
+            android:id="@+id/tvEdit"
+            style="@style/healthyrecordedit"
+            android:background="#FF9800"
+            android:text="编辑" />
+
+        <TextView
+            android:id="@+id/tvDelete"
+            style="@style/healthyrecordedit"
+            android:background="#FFFF6600"
+            android:text="删除" />
+
+    </LinearLayout>
+</RelativeLayout>

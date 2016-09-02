@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+
+    android:layout_marginRight="10dp"
+    android:layout_marginLeft="10dp"
+    android:layout_marginTop="3dp"
+    card_view:cardCornerRadius="10dp"
+    card_view:cardBackgroundColor="@android:color/white"
+    card_view:cardElevation="1dp"
+    >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+
+        android:padding="8dp">
+
+        <com.example.commonlibrary.widget.CircleImageView
+            android:id="@+id/civPhoto"
+            style="@style/common_photo"
+            android:src="@mipmap/ic_login_head_default" />
+
+        <TextView
+            android:id="@+id/tvName"
+            style="@style/searchcommon_name"
+            android:layout_marginLeft="8dp"
+            android:layout_toRightOf="@id/civPhoto"
+            android:text="杜江" />
+
+        <TextView
+            android:id="@+id/tvAge"
+            style="@style/searchiteam_tv"
+            android:layout_alignLeft="@id/tvName"
+            android:layout_below="@id/tvName"
+            android:layout_marginTop="3dp"
+            android:text="主任医师" />
+
+        <TextView
+            android:id="@+id/tvAddress"
+            style="@style/searchiteam_tv"
+            android:layout_alignLeft="@id/tvAge"
+            android:layout_below="@id/tvAge"
+            android:layout_marginTop="3dp"
+            android:text="北京协和医院" />
+
+        <TextView
+            android:id="@+id/tvDepartmentName"
+            style="@style/searchiteam_tv"
+            android:layout_alignBottom="@id/tvAddress"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="40dp"
+            android:layout_toRightOf="@id/tvAddress"
+            android:ellipsize="end"
+            android:text="消化内科" />
+
+        <TextView
+            android:id="@+id/tvAddFriend"
+            style="@style/commonsearch_btnadd"
+            android:text="添加" />
+    </RelativeLayout>
+
+</android.support.v7.widget.CardView>

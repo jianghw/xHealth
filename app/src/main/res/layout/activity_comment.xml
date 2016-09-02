@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#EAEFEE"
+    android:orientation="vertical"
+    tools:context="com.kaurihealth.kaurihealth.clinical.activity.CommentActivity">
+
+    <RelativeLayout
+        android:id="@+id/lay_title_medicalhistory"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/toptitle_height"
+        android:background="@color/kaurihealth_header_background">
+
+        <ImageView
+            android:id="@+id/iv_back"
+            style="@style/toptitleback" />
+
+        <TextView
+            android:id="@+id/tv_clinicalName"
+            style="@style/toptitletv"
+            android:text="发表评论"
+            android:textColor="@android:color/white" />
+
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/tv_medicalLiteratureTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="12dp"
+        android:text="关于深化医药卫生体制改革的意见的意见"
+        android:textColor="#000000" />
+
+    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <RelativeLayout style="@style/rlay_major_strength">
+
+            <EditText
+                android:id="@+id/edt_comment"
+                style="@style/edt_major_strength"
+                android:layout_height="130dp"
+                android:gravity="left|top" />
+
+        </RelativeLayout>
+
+    </ScrollView>
+
+    <TextView
+        android:id="@+id/tv_register"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginLeft="25dp"
+        android:layout_marginRight="25dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/select_btn_login"
+        android:gravity="center"
+        android:paddingBottom="5dp"
+        android:paddingTop="5dp"
+        android:text="评论"
+        android:textColor="@android:color/white"
+        android:textSize="18sp" />
+
+</LinearLayout>

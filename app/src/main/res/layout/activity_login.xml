@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_white"
+    tools:context=".login_v.LoginActivity">
+
+    <LinearLayout
+        android:id="@+id/layout_login"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_marginLeft="@dimen/login_widget_marginLeft"
+        android:layout_marginRight="@dimen/login_widget_marginLeft"
+        android:orientation="vertical">
+
+        <com.kaurihealth.utilslib.widget.CircleImageView
+            android:id="@+id/portrait_login"
+            android:layout_width="@dimen/login_head_width"
+            android:layout_height="@dimen/login_head_width"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="@dimen/login_head_marginBottom"
+            android:src="@mipmap/ic_login_head_default"
+            app:civ_border_color="@color/login_head_green"
+            app:civ_border_overlay="true"
+            app:civ_border_width="0.5dp"/>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/edt_name"
+                style="@style/Login_EditText"
+                android:drawableLeft="@mipmap/username"
+                android:drawableStart="@mipmap/username"
+                android:hint="@string/login_edit_name"/>
+
+            <ImageView
+                android:id="@+id/img_del_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="@dimen/login_img_marginRight"
+                android:src="@mipmap/ic_login_delete"
+                android:visibility="gone"/>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp">
+
+            <EditText
+                android:id="@+id/edt_password"
+                style="@style/Login_EditText"
+                android:drawableLeft="@mipmap/lock"
+                android:drawableStart="@mipmap/lock"
+                android:hint="@string/login_edit_pw"
+                android:inputType="textPassword"/>
+
+            <ImageView
+                android:id="@+id/img_del_pw"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="@dimen/login_img_marginRight"
+                android:src="@mipmap/ic_login_delete"
+                android:visibility="gone"/>
+        </RelativeLayout>
+
+        <Button
+            android:id="@+id/btn_login"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/login_btn_height"
+            android:layout_marginTop="@dimen/login_btn_marginTop"
+            android:background="@drawable/select_btn_login"
+            android:text="@string/login_btn_login"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/btn_textSize"/>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp">
+
+            <TextView
+                android:id="@+id/tv_register"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="@string/login_tv_register"
+                android:textColor="#ff9800"
+                android:textSize="@dimen/login_tv_textSize"/>
+
+            <TextView
+                android:id="@+id/tv_forget_pw"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_marginTop="10dp"
+                android:text="@string/login_tv_forget_pw"
+                android:textColor="#999999"
+                android:textSize="@dimen/login_tv_textSize"/>
+        </RelativeLayout>
+    </LinearLayout>
+</RelativeLayout>

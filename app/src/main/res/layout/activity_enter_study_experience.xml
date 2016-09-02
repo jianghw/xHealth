@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/kaurihealth_background"
+    android:orientation="vertical"
+    tools:context="com.kaurihealth.kaurihealth.mine.activity.StudyExperienceActivity">
+
+    <RelativeLayout
+        android:id="@+id/lay_title_medicalhistory"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/toptitle_height"
+        android:background="@color/kaurihealth_header_background">
+
+        <ImageView
+            android:id="@+id/iv_back"
+            style="@style/toptitleback" />
+
+        <TextView
+            style="@style/toptitletv"
+            android:text="学习与工作经历" />
+
+        <TextView
+            android:id="@+id/tv_operate"
+            style="@style/toptitleedit"
+            android:text="保存" />
+    </RelativeLayout>
+
+    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/edt_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:layout_marginTop="2dp"
+                android:background="@drawable/bg_white"
+                android:gravity="left|top"
+                android:minLines="10"
+                android:padding="10dp" />
+        </RelativeLayout>
+    </ScrollView>
+</LinearLayout>

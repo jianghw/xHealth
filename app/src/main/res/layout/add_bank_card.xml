@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg_normal"
+    tools:context="com.kaurihealth.kaurihealth.mine.activity.AddBankCardActivity">
+
+    <RelativeLayout
+        android:id="@+id/rlay_top"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/toptitle_height"
+        android:background="@color/kaurihealth_header_background">
+
+        <ImageView
+            android:id="@+id/iv_back"
+            style="@style/toptitleback" />
+
+        <TextView
+            style="@style/toptitletv"
+            android:text="添加银行卡" />
+
+        <TextView
+            android:id="@+id/tv_operate"
+            style="@style/toptitleedit"
+            android:text="确定" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/rlivHintay2"
+        style="@style/withdraw_rlay">
+
+        <TextView
+            android:id="@+id/tv2"
+            style="@style/add_bankcard_left_tv"
+            android:text="持  卡  人" />
+
+        <TextView
+            android:id="@+id/edtName"
+            style="@style/add_bankcard_edt"
+            android:layout_width="match_parent" />
+
+        <ImageView
+            android:id="@+id/ivHint"
+            android:layout_width="26dp"
+            android:layout_height="26dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:src="@mipmap/bankinfo" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/rlay3"
+        style="@style/withdraw_rlay"
+        android:layout_below="@id/rlivHintay2"
+        android:layout_marginTop="1dp">
+
+        <TextView
+            android:id="@+id/tv3"
+            style="@style/add_bankcard_left_tv"
+            android:text="卡  类  型" />
+
+        <TextView
+            android:id="@+id/edtBankCardType"
+            style="@style/add_bankcard_edt"
+            android:text=""
+            android:layout_width="match_parent"
+            android:gravity="center|left"
+            android:hint="请选择银行卡类型" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/rlayPlace"
+        style="@style/withdraw_rlay"
+        android:layout_below="@id/rlay3"
+        android:layout_marginTop="1dp">
+
+        <TextView
+            android:id="@+id/tv4"
+            style="@style/add_bankcard_left_tv"
+            android:text="发卡网点" />
+
+        <EditText
+            android:id="@+id/edtPlace"
+            style="@style/add_bankcard_edt"
+            android:layout_width="match_parent"
+            android:hint="请输入发卡网点" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/rlay5"
+        style="@style/withdraw_rlay"
+        android:layout_below="@id/rlayPlace"
+        android:layout_marginTop="1dp">
+
+        <TextView
+            android:id="@+id/tv5"
+            style="@style/add_bankcard_left_tv"
+            android:text="卡        号" />
+
+        <EditText
+            android:id="@+id/edtBankCardCode"
+            style="@style/add_bankcard_edt"
+            android:layout_width="match_parent"
+            android:inputType="number"
+            android:hint="请输入卡号" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/rlay5"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="15dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="发卡网点:"
+            android:textColor="@color/colornormalblack"
+            android:textSize="@dimen/normaltext" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:text="例如中国工商银行上海市七宝支行"
+            android:textColor="#8b8c8e"
+            android:textSize="@dimen/normaltext" />
+
+    </LinearLayout>
+
+
+</RelativeLayout>

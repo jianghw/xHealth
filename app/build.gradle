@@ -1,0 +1,124 @@
+apply plugin: 'com.android.application'
+apply plugin: 'com.bugtags.library.plugin'
+apply plugin: 'com.neenbedankt.android-apt'
+
+android {
+    signingConfigs {
+        config {
+            keyAlias 'jiarenjiankang'
+            keyPassword 'z0l13022172178'
+            storeFile file('../jiarenjiankangdebug.keystore')
+            storePassword 'z0l13022172178'
+        }
+    }
+    compileSdkVersion rootProject.ext.compileSdkVersion
+    buildToolsVersion rootProject.ext.buildToolsVersion
+    defaultConfig {
+        applicationId "kaurihealth.mobile.andirod"
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
+        versionCode 52
+        versionName "2.00"
+        multiDexEnabled true
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.config
+        }
+        debug {
+            buildConfigField "String", "Environment", "\"Develop\""
+            signingConfig signingConfigs.config
+            debuggable true
+        }
+        interaltest {
+            applicationIdSuffix ".interaltest"
+            buildConfigField "String", "Environment", "\"Test\""
+            signingConfig signingConfigs.config
+            debuggable true
+
+        }
+        preview {
+            buildConfigField "String", "Environment", "\"Preview\""
+            signingConfig signingConfigs.config
+            debuggable true
+        }
+    }
+    dexOptions {
+        //multi-dex 选项设置与预编译的library工程有冲突,如果你的应用中包含引用的lirary工程,需要将预编译设置为false
+        preDexLibraries = false
+        //一个字段用来增加java堆内存大小
+        javaMaxHeapSize "4g"
+    }
+    //打包忽略掉第三方jar相同的文件
+    packagingOptions {
+        exclude 'META-INF/DEPENDENCIES.txt'
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/NOTICE.txt'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/DEPENDENCIES'
+        exclude 'META-INF/notice.txt'
+        exclude 'META-INF/license.txt'
+        exclude 'META-INF/dependencies.txt'
+        exclude 'META-INF/LGPL2.1'
+    }
+    lintOptions {
+        abortOnError false
+    }
+}
+task copyOutputApk(type: Copy) {
+    from 'build/outputs/apk'
+    into 'apk'
+    exclude '**/*-unaligned.apk'
+}
+
+task runproject(dependsOn: ['clean', 'assembleInteraltest', 'assemblePreview', 'copyOutputApk']) {
+    assembleInteraltest.mustRunAfter clean
+    copyOutputApk.mustRunAfter assembleInteraltest
+    copyOutputApk.mustRunAfter assemblePreview
+}
+
+
+
+bugtags {
+    appKey "0444af17d16e3bc94281a6eaddf667ac"
+    appSecret "e3c290602dcf00e8dbda15dfb0a9301a"
+    mappingUploadEnabled true
+    trackingNetworkEnabled true
+}
+
+dependencies {
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+    compile project(':zllibrary')
+    compile project(':commonlibrary')
+    compile project(':chatlibrary')
+
+    testCompile "junit:junit:$rootProject.ext.junitVersion"
+    compile "com.android.support:appcompat-v7:$rootProject.supportLibraryVersion"
+
+    //改.J mvp-p层
+    compile project(':mvplib')
+    //LeakCanary
+    compile 'com.squareup.leakcanary:leakcanary-android:1.4-beta2'
+
+    // Dagger dependencies
+    apt "com.google.dagger:dagger-compiler:$rootProject.daggerVersion"
+    provided 'org.glassfish:javax.annotation:10.0-b28'
+    compile "com.google.dagger:dagger:$rootProject.daggerVersion"
+
+    compile 'com.squareup.retrofit2:converter-jackson:2.0.2'
+    compile 'joda-time:joda-time:2.9.3'
+    compile 'net.gotev:uploadservice:2.1'
+    compile 'jp.wasabeef:blurry:2.0.2'
+    compile 'com.mobsandgeeks:android-saripaar:2.0.3'
+    compile 'com.nineoldandroids:library:2.4.0'
+    compile 'com.github.sd6352051.niftydialogeffects:niftydialogeffects:1.0.0@aar'
+    compile 'com.github.chenupt.android:springindicator:1.0.2@aar'
+    compile 'com.google.android.gms:play-services-appindexing:8.1.0'
+    compile 'com.fasterxml.jackson.core:jackson-annotations:2.7.0'
+
+     //eventbus
+    compile 'org.greenrobot:eventbus:3.0.0'
+}

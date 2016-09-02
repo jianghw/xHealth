@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                tools:context=".main_v.MainActivity">
+
+    <com.kaurihealth.utilslib.widget.UiTableBottom
+        android:id="@+id/ui_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/main_bottom_height"
+        android:layout_alignParentBottom="true"
+        android:background="@color/color_white"/>
+
+
+    <RadioGroup
+        android:id="@+id/rg_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/main_bottom_height"
+        android:layout_alignParentBottom="true"
+        android:background="@color/color_white"
+        android:checkedButton="@+id/rbtn_home_main"
+        android:orientation="horizontal"
+        android:paddingTop="5dp"
+        android:visibility="gone">
+
+        <RadioButton
+            android:id="@+id/rbtn_home_main"
+            style="@style/Home_RadioButton"
+            android:background="@null"
+            android:drawableTop="@drawable/select_home"
+            android:text="@string/main_rb_home"
+            android:textSize="@dimen/main_rb_textSize"/>
+
+
+        <RelativeLayout
+            android:id="@+id/rlayBottom"
+            style="@style/Home_RadioButton"
+            android:clickable="true">
+
+            <RadioButton
+                android:id="@+id/rbtn_message_main"
+                style="@style/Home_RadioButton"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@null"
+                android:drawableTop="@drawable/select_message"
+                android:text="@string/main_rb_message"
+                android:textSize="@dimen/main_rb_textSize"/>
+
+            <ImageView
+                android:id="@+id/iv_dot"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="16dp"
+                android:src="@mipmap/ic_main_dot"/>
+        </RelativeLayout>
+
+        <RadioButton
+            android:id="@+id/rbtn_friend_main"
+            style="@style/Home_RadioButton"
+            android:background="@null"
+            android:drawableTop="@drawable/select_patient"
+            android:text="@string/main_rb_friend"
+            android:textSize="@dimen/main_rb_textSize"/>
+
+        <RadioButton
+            android:id="@+id/rbtn_clinical_main"
+            style="@style/Home_RadioButton"
+            android:background="@null"
+            android:drawableTop="@drawable/select_clinical"
+            android:text="@string/main_rb_clinical"
+            android:textSize="@dimen/main_rb_textSize"/>
+
+        <RadioButton
+            android:id="@+id/rbtn_mine_main"
+            style="@style/Home_RadioButton"
+            android:background="@null"
+            android:drawableTop="@drawable/select_mine"
+            android:text="@string/main_rb_mine"
+            android:textSize="@dimen/main_rb_textSize"/>
+
+    </RadioGroup>
+
+    <TextView
+        android:id="@+id/tv_line"
+        android:layout_width="match_parent"
+        android:layout_height="0.1dp"
+        android:layout_above="@id/ui_bottom"
+        android:background="@color/main_bg_line"/>
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/vp_content_main"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/tv_line"/>
+</RelativeLayout>

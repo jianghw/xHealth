@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+        <!--我的->设置->意见反馈Activity-->
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:id="@+id/lay_title_medicalhistory"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/toptitle_height"
+            android:background="@color/kaurihealth_header_background">
+
+            <ImageView
+                android:id="@+id/iv_back"
+                style="@style/toptitleback" />
+
+            <TextView
+                style="@style/toptitletv"
+                android:text="意见反馈" />
+
+            <TextView
+                android:id="@+id/tv_operate"
+                style="@style/toptitleedit"
+                android:text="提交" />
+
+        </RelativeLayout>
+
+
+        <!--<RelativeLayout style="@style/rlay_major_strength">-->
+
+            <!--<EditText-->
+                <!--android:id="@+id/edt_name"-->
+                <!--android:gravity="left|top"-->
+                <!--style="@style/edt_major_strength" />-->
+
+            <!--<TextView-->
+                <!--android:text="限500字"-->
+                <!--style="@style/tv_major_strength" />-->
+        <!--</RelativeLayout>-->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/lay_title_medicalhistory"
+            android:gravity="center"
+            android:text="暂时尚未开发，敬请期待" />
+
+    </LinearLayout>
+
+</ScrollView>

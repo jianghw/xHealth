@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#FFF2F2F2"
+                tools:context=".patient_v.PatientInfoActivity">
+
+    <RelativeLayout
+        android:id="@+id/lay_title_medicalhistory"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/toptitle_height"
+        android:background="@color/kaurihealth_header_background">
+
+        <ImageView
+            android:id="@+id/iv_back"
+            style="@style/toptitleback"/>
+
+        <TextView
+            style="@style/toptitletv"
+            android:text="患者信息"
+            android:textColor="@android:color/white"/>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/rlay1"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_below="@id/lay_title_medicalhistory"
+        android:layout_margin="10dp"
+        android:background="@drawable/bg_white">
+
+        <com.kaurihealth.utilslib.widget.CircleImageView
+            android:id="@+id/iv_photo_topleft_patientinfo"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_marginLeft="@dimen/pationinfoadapter_paddingleft"
+            android:layout_marginTop="10dp"
+            android:scaleType="centerCrop"
+            android:src="@mipmap/ic_login_head_default"
+            app:civ_border_color="#4FD3C1"
+            app:civ_border_overlay="true"
+            app:civ_border_width="0.1dp"/>
+
+        <TextView
+            android:id="@+id/tv_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/iv_photo_topleft_patientinfo"
+            android:layout_marginBottom="15dp"
+            android:layout_marginLeft="10dp"
+            android:layout_toRightOf="@id/iv_photo_topleft_patientinfo"
+            android:ellipsize="end"
+            android:maxEms="7"
+            android:singleLine="true"
+            android:textColor="@color/app_tv_color"
+            android:textSize="@dimen/btnlogin"
+            tools:text="李晓燕"/>
+
+
+        <TextView
+            android:id="@+id/tv_gendar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/tv_name"
+            android:layout_marginLeft="10dp"
+            android:layout_toRightOf="@id/tv_name"
+            android:textColor="@color/app_tv_color"
+            android:textSize="13sp"
+            tools:text="女"/>
+
+        <TextView
+            android:id="@+id/tv_age"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/tv_name"
+            android:layout_marginLeft="10dp"
+            android:layout_toRightOf="@id/tv_gendar"
+            android:textColor="@color/app_tv_color"
+            android:textSize="13sp"
+            tools:text="30岁"/>
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/vpager_top"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/tv_name"
+            android:layout_marginLeft="@dimen/pationinfoadapter_paddingleft"/>
+
+        <RadioGroup
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginBottom="5dp"
+            android:layout_marginRight="@dimen/dotmarginleft_patinentinfo"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/rbtn_one"
+                android:layout_width="10dp"
+                android:layout_height="10dp"
+                android:background="@drawable/bg_dot_sel"
+                android:button="@null"
+                android:checked="true"
+                android:clickable="false"/>
+
+            <RadioButton
+                android:id="@+id/rbtn_two"
+                android:layout_width="10dp"
+                android:layout_height="10dp"
+                android:layout_marginLeft="5dp"
+                android:background="@drawable/bg_dot_sel"
+                android:button="@null"
+                android:checked="false"
+                android:clickable="false"/>
+        </RadioGroup>
+    </RelativeLayout>
+
+    <ScrollView
+        android:id="@+id/scroll2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/rlay1"
+        android:layout_marginTop="5dp"
+        android:background="@color/white">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp">
+
+            <LinearLayout
+                android:id="@+id/layHealthyRecord"
+                style="@style/lay_patientinfoiteam">
+
+                <ImageView
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:src="@mipmap/healthcondition_icon"/>
+
+                <TextView
+                    style="@style/tv_patientinfoiteam"
+                    android:text="健康记录"/>
+            </LinearLayout>
+
+            <TextView style="@style/lin_patientinfoiteam"/>
+
+            <LinearLayout
+                android:id="@+id/lay_monitorstandard"
+                style="@style/lay_patientinfoiteam">
+
+                <ImageView
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:src="@mipmap/monitoringindex"/>
+
+                <TextView
+                    style="@style/tv_patientinfoiteam"
+                    android:text="长期监测指标"/>
+            </LinearLayout>
+
+            <TextView style="@style/lin_patientinfoiteam"/>
+
+            <LinearLayout
+                android:id="@+id/layMedicalhistory"
+                style="@style/lay_patientinfoiteam">
+
+                <ImageView
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:src="@mipmap/healthyrecord"/>
+
+                <TextView
+                    style="@style/tv_patientinfoiteam"
+                    android:text="医疗记录"/>
+            </LinearLayout>
+
+            <TextView style="@style/lin_patientinfoiteam"/>
+
+            <LinearLayout
+                android:id="@+id/layRecipe"
+                style="@style/lay_patientinfoiteam">
+
+                <ImageView
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:src="@mipmap/recipe"/>
+
+                <TextView
+                    style="@style/tv_patientinfoiteam"
+                    android:text="处方"/>
+            </LinearLayout>
+
+            <TextView style="@style/lin_patientinfoiteam"/>
+
+            <LinearLayout
+                android:id="@+id/layTeam"
+                style="@style/lay_patientinfoiteam">
+
+                <ImageView
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:src="@mipmap/team"/>
+
+                <TextView
+                    style="@style/tv_patientinfoiteam"
+                    android:text="医疗团队"/>
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+
+    <View
+        android:id="@+id/view"
+        android:layout_width="1dp"
+        android:layout_height="100dp"
+        android:layout_alignParentRight="true"
+        android:layout_centerInParent="true"/>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/floatbtn_chat"
+        android:layout_width="60dp"
+        android:layout_height="@dimen/floatbtn"
+        android:layout_alignParentRight="true"
+        android:layout_below="@id/view"
+        android:layout_marginRight="15dp"
+        android:src="@mipmap/message"
+        app:backgroundTint="@color/rbtnselect"
+        app:borderWidth="0dp">
+    </android.support.design.widget.FloatingActionButton>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/floatbtn_active"
+        android:layout_width="60dp"
+        android:layout_height="@dimen/floatbtn"
+        android:layout_alignParentRight="true"
+        android:layout_below="@id/view"
+        android:layout_marginRight="15dp"
+        android:src="@mipmap/activebtn"
+        app:backgroundTint="@color/holo_blue_bright"
+        app:borderWidth="0dp">
+    </android.support.design.widget.FloatingActionButton>
+
+</RelativeLayout>

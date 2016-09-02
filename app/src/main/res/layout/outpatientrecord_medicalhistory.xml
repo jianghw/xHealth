@@ -1,0 +1,632 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".common.activity.AddOutpatientRecordActivity">
+
+    <RelativeLayout
+        android:id="@+id/lay_title_medicalhistory"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/toptitle_height"
+        android:background="@color/kaurihealth_header_background">
+
+        <ImageView
+            android:id="@+id/iv_back"
+            style="@style/toptitleback" />
+
+        <TextView
+            style="@style/toptitletv"
+            android:text="医疗记录" />
+
+        <TextView
+            android:id="@+id/tv_operate"
+            style="@style/toptitleedit"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:text="添加" />
+    </RelativeLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/lay_title_medicalhistory"
+        android:background="#eaeeef">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#ffffff"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tvHint"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="right"
+                android:paddingRight="5dp"
+                android:text=""
+                android:visibility="gone" />
+
+            <include
+                android:id="@+id/includelay"
+                layout="@layout/medicalrecord_top"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"></include>
+
+            <TextView style="@style/medicalhistoryline" />
+
+            <LinearLayout style="@style/medicalhistorylinelay">
+
+                <TextView
+                    style="@style/medicalhistoryltv"
+                    android:text="类型:" />
+
+                <TextView
+                    android:id="@+id/tv_type"
+                    style="@style/medicalhistoryrtv"
+                    android:text="临床诊疗"
+                    android:textColor="#999999" />
+            </LinearLayout>
+
+            <TextView style="@style/medicalhistoryline" />
+
+            <LinearLayout style="@style/medicalhistorylinelay">
+
+                <TextView
+                    style="@style/medicalhistoryltv"
+                    android:text="项目:" />
+
+                <TextView
+                    android:id="@+id/tv_subject"
+                    style="@style/medicalhistoryrtv"
+                    android:text="门诊记录电子病历" />
+            </LinearLayout>
+
+            <TextView style="@style/medicalhistoryline" />
+
+            <LinearLayout style="@style/medicalhistorylinelay">
+
+                <TextView
+                    style="@style/medicalhistoryltv"
+                    android:layout_height="40dp"
+                    android:text="门诊时间:" />
+
+                <TextView
+                    android:id="@+id/tv_time"
+                    style="@style/medicalhistoryrtv"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="30dp"
+                    android:background="@drawable/exclusive_et"
+                    android:text="2015-09-23" />
+            </LinearLayout>
+
+            <TextView style="@style/medicalhistoryline" />
+
+            <LinearLayout style="@style/medicalhistorylinelay_prescr">
+
+                <TextView
+                    style="@style/medicalhistoryltv"
+                    android:text="科室:" />
+
+                <TextView
+                    android:id="@+id/edt_office"
+                    style="@style/medicalhistoryrtv"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginLeft="6dp"
+                    android:layout_marginRight="30dp"
+                    android:layout_marginTop="5dp"
+                    android:background="@drawable/exclusive_et"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:hint="请选择" />
+            </LinearLayout>
+
+            <TextView style="@style/medicalhistoryline" />
+
+            <LinearLayout style="@style/medicalhistorylinelay">
+
+                <TextView
+                    style="@style/medicalhistoryltv"
+                    android:text="机构:" />
+
+                <TextView
+                    android:id="@+id/edt_organization"
+                    style="@style/medicalhistoryrtv"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="30dp"
+                    android:background="@drawable/exclusive_et"
+                    android:hint="请选择" />
+            </LinearLayout>
+
+            <TextView style="@style/medicalhistoryline" />
+
+            <LinearLayout style="@style/medicalhistorylinelay">
+
+                <TextView
+                    style="@style/medicalhistoryltv"
+                    android:text="医师:" />
+
+                <EditText
+                    android:id="@+id/edt_doctor"
+                    style="@style/medicalhistoryrtv"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="30dp"
+                    android:background="@null"
+                    android:editable="false" />
+            </LinearLayout>
+
+            <TextView style="@style/medicalhistoryline" />
+
+            <LinearLayout style="@style/medicalhistorylinelay_add">
+
+                <TextView
+                    style="@style/medicalhistoryltv"
+                    android:text="主诉/现病史:" />
+
+                <EditText
+                    android:id="@+id/edt_history"
+                    style="@style/edthistory"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="30dp"
+                    android:background="@drawable/exclusive_et"
+                    android:hint="请输入" />
+
+            </LinearLayout>
+
+            <TextView style="@style/medicalhistoryline" />
+
+            <LinearLayout
+                style="@style/medicalhistorylinelay"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/medicalhistoryltv"
+                    android:layout_height="30dp"
+                    android:text="既往病史:" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="20dp"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            style="@style/tvpostmedicalhistory"
+                            android:text="患者系统病历记录已阅" />
+
+                        <com.rey.material.widget.CheckBox
+                            android:id="@+id/checkbox_hasread_history"
+                            style="@style/Material.Drawable.CheckBox"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            style="@style/tvpostmedicalhistory"
+                            android:text="患者系统病历记录已更新" />
+
+                        <com.rey.material.widget.CheckBox
+                            android:id="@+id/checkbox_hasupdate_history"
+                            style="@style/Material.Drawable.CheckBox"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" />
+                    </LinearLayout>
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <TextView style="@style/medicalhistoryline" />
+
+            <LinearLayout
+                style="@style/medicalhistorylinelay"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/medicalhistoryltv"
+                    android:layout_height="30dp"
+                    android:paddingLeft="10dp"
+                    android:text="目前使用药物:" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="20dp"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            style="@style/tvpostmedicalhistory"
+                            android:text="患者系统病历记录已阅" />
+
+                        <com.rey.material.widget.CheckBox
+                            android:id="@+id/checkbox_hasread_current"
+                            style="@style/Material.Drawable.CheckBox"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            style="@style/tvpostmedicalhistory"
+                            android:text="患者系统病历记录已更新" />
+
+                        <com.rey.material.widget.CheckBox
+                            android:id="@+id/checkbox_hasupdate_current"
+                            style="@style/Material.Drawable.CheckBox"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" />
+                    </LinearLayout>
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <TextView style="@style/medicalhistoryline" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/medicalhistoryltv"
+                    android:layout_height="50dp"
+                    android:paddingLeft="10dp"
+                    android:text="体格检查:" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginBottom="5dp"
+                        android:layout_marginTop="5dp"
+                        android:orientation="horizontal">
+
+                        <LinearLayout
+                            style="@style/laymedicalhistory"
+                            android:layout_width="match_parent"
+                            android:layout_marginTop="5dp"
+                            android:gravity="center">
+
+                            <TextView
+                                style="@style/tvdescribe"
+                                android:text="HR" />
+
+                            <EditText
+                                android:id="@+id/edt_hr"
+                                style="@style/edtcheckmedicalhistory"
+                                android:layout_width="match_parent"
+                                android:layout_height="30dp"
+                                android:layout_marginLeft="10dp"
+                                android:layout_marginRight="30dp"
+                                android:background="@drawable/exclusive_et"
+                                android:padding="5dp"
+                                android:textSize="12sp" />
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="5dp"
+                        android:orientation="horizontal">
+
+                        <LinearLayout
+                            style="@style/laymedicalhistory"
+                            android:layout_width="wrap_content"
+                            android:layout_weight="1">
+
+                            <TextView
+                                style="@style/tvdescribe"
+                                android:text="BP" />
+
+                            <EditText
+                                android:id="@+id/edt_upperbp"
+                                style="@style/edtcheckmedicalhistory"
+                                android:layout_width="match_parent"
+                                android:layout_height="30dp"
+                                android:layout_marginLeft="11dp"
+                                android:background="@drawable/exclusive_et"
+                                android:gravity="center"
+                                android:hint="upperBP"
+                                android:padding="5dp"
+                                android:textColorHint="@color/apptextts"
+                                android:textSize="12sp" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            style="@style/laymedicalhistory"
+                            android:layout_width="wrap_content"
+                            android:layout_weight="1.8"
+                            android:gravity="center_vertical">
+
+                            <TextView
+                                style="@style/tvdescribe"
+                                android:layout_width="wrap_content"
+                                android:layout_height="1dp"
+                                android:layout_marginLeft="3dp"
+                                android:layout_marginRight="3dp"
+                                android:layout_weight="1"
+                                android:background="@color/gray" />
+
+                            <EditText
+                                android:id="@+id/edt_lowerbp"
+                                style="@style/edtcheckmedicalhistory"
+                                android:layout_height="30dp"
+                                android:layout_marginRight="30dp"
+                                android:layout_weight="1"
+                                android:background="@drawable/exclusive_et"
+                                android:gravity="center"
+                                android:hint="lowerBP"
+                                android:padding="5dp"
+                                android:textColorHint="@color/apptextts"
+                                android:textSize="12sp" />
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="5dp"
+                        android:orientation="horizontal">
+
+                        <LinearLayout
+                            style="@style/laymedicalhistory"
+                            android:layout_width="match_parent"
+                            android:gravity="center">
+
+                            <TextView
+                                style="@style/tvdescribe"
+                                android:text="RR" />
+
+                            <EditText
+                                android:id="@+id/edt_rr"
+                                style="@style/edtcheckmedicalhistory"
+                                android:layout_width="match_parent"
+                                android:layout_height="30dp"
+                                android:layout_marginLeft="10dp"
+                                android:layout_marginRight="30dp"
+                                android:background="@drawable/exclusive_et"
+                                android:padding="5dp"
+                                android:textSize="12sp" />
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="5dp"
+                        android:orientation="horizontal">
+
+                        <LinearLayout
+                            style="@style/laymedicalhistory"
+                            android:layout_width="match_parent"
+                            android:gravity="center">
+
+                            <TextView
+                                style="@style/tvdescribe"
+                                android:layout_marginLeft="2dp"
+                                android:text="  T" />
+
+                            <EditText
+                                android:id="@+id/edt_t"
+                                style="@style/edtcheckmedicalhistory"
+                                android:layout_width="match_parent"
+                                android:layout_height="30dp"
+                                android:layout_marginLeft="11dp"
+                                android:layout_marginRight="30dp"
+                                android:background="@drawable/exclusive_et"
+                                android:padding="5dp"
+                                android:textSize="12sp" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <EditText
+                        android:id="@+id/edt_checkinfo"
+                        style="@style/edthistory"
+                        android:layout_marginBottom="5dp"
+                        android:layout_marginRight="30dp"
+                        android:background="@drawable/exclusive_et"
+                        android:hint="请输入" />
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <TextView style="@style/medicalhistoryline" />
+
+            <LinearLayout
+                style="@style/medicalhistorylinelay"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/medicalhistoryltv"
+                    android:layout_height="30dp"
+                    android:paddingLeft="10dp"
+                    android:text="辅助检查:" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="20dp"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            style="@style/tvpostmedicalhistory"
+                            android:text="患者系统医疗记录辅助检查已阅" />
+
+                        <com.rey.material.widget.CheckBox
+                            android:id="@+id/checkMedicalRecordHasreadSupplyTest_"
+                            style="@style/Material.Drawable.CheckBox"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            style="@style/tvpostmedicalhistory"
+                            android:text="患者长期检测指标已阅" />
+
+                        <com.rey.material.widget.CheckBox
+                            android:id="@+id/checkLongTestHasreadSupplyTest"
+                            style="@style/Material.Drawable.CheckBox"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" />
+                    </LinearLayout>
+
+                    <EditText
+                        android:id="@+id/edtSupplyTest"
+                        style="@style/edthistory"
+                        android:layout_marginBottom="5dp"
+                        android:layout_marginRight="10dp"
+                        android:background="@drawable/exclusive_et"
+                        android:hint="请输入" />
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <TextView style="@style/medicalhistoryline" />
+
+            <LinearLayout
+                style="@style/medicalhistorylinelay"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/medicalhistoryltv"
+                    android:layout_height="@dimen/medicalhistory_iteamheight"
+                    android:text="印象/计划:" />
+
+                <EditText
+                    android:id="@+id/edt_plan"
+                    style="@style/edthistory"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="30dp"
+                    android:background="@drawable/exclusive_et"
+                    android:hint="请输入" />
+            </LinearLayout>
+
+            <TextView style="@style/medicalhistoryline" />
+
+            <LinearLayout
+                android:id="@+id/lyouimage"
+                style="@style/medicalhistorylinelay"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        style="@style/medicalhistoryltv"
+                        android:layout_height="@dimen/medicalhistory_iteamheight"
+                        android:text="上传附件:" />
+
+                    <ImageView
+                        android:id="@+id/iv_uploadfile"
+                        style="@style/ivaddmedicalhistory" />
+
+                </LinearLayout>
+
+                <com.kaurihealth.kaurihealth.util.TagsGridview
+                    android:id="@+id/gvContent"
+                    android:layout_width="160dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginLeft="111dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginTop="5dp"
+                    android:horizontalSpacing="10dp"
+                    android:numColumns="3"
+                    android:verticalSpacing="10dp"></com.kaurihealth.kaurihealth.util.TagsGridview>
+
+            </LinearLayout>
+
+            <TextView
+                style="@style/medicalhistoryline"
+                android:layout_gravity="left" />
+
+            <LinearLayout style="@style/medicalhistorylinelay_add">
+
+                <TextView
+                    style="@style/medicalhistoryltv"
+                    android:layout_height="@dimen/medicalhistory_iteamheight"
+                    android:text="备注:" />
+
+                <EditText
+                    android:id="@+id/edt_remark"
+                    style="@style/edthistory"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="30dp"
+                    android:background="@drawable/exclusive_et"
+                    android:hint="请输入" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/tv_delete"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@color/red_light"
+                android:gravity="center"
+                android:paddingBottom="10dp"
+                android:paddingTop="10dp"
+                android:text="删除"
+                android:textColor="@android:color/white" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:background="#eaeeef" />
+
+        </LinearLayout>
+    </ScrollView>
+</RelativeLayout>

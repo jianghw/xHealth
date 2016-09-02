@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/healthyrecordnew_lay">
+
+    <RelativeLayout style="@style/healthyrecordnew_rlay">
+
+        <TextView
+            android:id="@+id/tvAge"
+            style="@style/healthyrecordnew_tvTitle"
+            android:text="目前主要健康问题" />
+
+        <ImageView
+            android:id="@+id/ivAddCurrentHealthyProblem"
+            style="@style/healthyrecordnew_iv"
+            android:scaleType="fitCenter"
+            android:src="@mipmap/addhealthyrecord" />
+    </RelativeLayout>
+    <RelativeLayout
+        android:id="@+id/rl_tv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+    <View
+        android:layout_width="match_parent"
+        android:layout_marginRight="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_height="0.2dp"
+        android:background="#c9c3c3" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/layContainer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/layCurrentHealthyProblem"
+
+            style="@style/healthyrecorditeam">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:layout_marginLeft="12dp"
+                android:gravity="center"
+                android:text="无信息"
+                android:textColor="@color/holo_orange_dark"
+                android:textSize="14sp" />
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

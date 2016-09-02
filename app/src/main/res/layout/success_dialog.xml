@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_white_circlrcoder">
+
+    <TextView
+        android:id="@+id/tvAge"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:gravity="center"
+        android:paddingBottom="10dp"
+        android:paddingTop="10dp"
+        android:textStyle="bold"
+        android:text="您的提现请求已发送完成"
+        android:textColor="#FF413B33"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/tvMes"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tvAge"
+        android:layout_centerHorizontal="true"
+        android:gravity="center"
+        android:paddingBottom="14dp"
+        android:paddingTop="14dp"
+        android:text="申请金额-手续费-个税(按税率)=910.00元"
+        android:textColor="#FF413B33"
+        android:textSize="13sp" />
+
+
+    <TextView
+        android:id="@+id/tvConfirm"
+        android:layout_width="match_parent"
+        android:layout_height="35dp"
+        android:layout_below="@id/tvMes"
+        android:background="@drawable/bottom_corner_white"
+        android:gravity="center"
+        android:text="确定"
+        android:textColor="@color/kaurihealth_header_background"
+        android:textSize="16sp" />
+</RelativeLayout>

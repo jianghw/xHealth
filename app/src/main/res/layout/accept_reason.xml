@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/kaurihealth_background"
+    android:orientation="vertical"
+    tools:context="com.kaurihealth.kaurihealth.home.activity.AcceptReasonActivity">
+
+    <RelativeLayout
+        android:id="@+id/lay_title_medicalhistory"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/toptitle_height"
+        android:background="@color/kaurihealth_header_background">
+
+        <ImageView
+            android:id="@+id/iv_back"
+            style="@style/toptitleback" />
+
+        <TextView
+            style="@style/toptitletv"
+            android:text="接受预约" />
+
+        <TextView
+            android:id="@+id/tv_operate"
+            style="@style/toptitleedit"
+            android:text="完成" />
+    </RelativeLayout>
+
+    <RelativeLayout style="@style/rlay_major_strength">
+
+        <EditText
+            android:id="@+id/edt_name"
+            style="@style/edt_major_strength"
+            android:hint="对患者说些什么..."/>
+
+        <TextView
+            android:text="限200字以内"
+            style="@style/tv_major_strength" />
+    </RelativeLayout>
+</LinearLayout>

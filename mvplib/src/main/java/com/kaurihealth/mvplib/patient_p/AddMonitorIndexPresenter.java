@@ -1,0 +1,87 @@
+package com.kaurihealth.mvplib.patient_p;
+
+import com.kaurihealth.datalib.repository.IDataSource;
+import com.kaurihealth.datalib.request_bean.bean.NewLongtermMonitoringBean;
+import com.kaurihealth.datalib.response_bean.ResponseDisplayBean;
+
+import java.util.List;
+
+import javax.inject.Inject;
+
+import rx.Subscriber;
+import rx.Subscription;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action0;
+import rx.schedulers.Schedulers;
+import rx.subscriptions.CompositeSubscription;
+
+/**
+ * Created by jianghw on 2016/8/5.
+ * <p/>
+ * 描述：登录逻辑
+ */
+public class AddMonitorIndexPresenter<V> implements IAddMonitorIndexPresenter<V> {
+
+    private final IDataSource mRepository;
+    private CompositeSubscription mSubscriptions;
+    private IAddMonitorIndexView mActivity;
+
+    @Inject
+    AddMonitorIndexPresenter(IDataSource repository) {
+        mRepository = repository;
+        mSubscriptions = new CompositeSubscription();
+    }
+
+    @Override
+    public void setPresenter(V view) {
+        mActivity = (IAddMonitorIndexView) view;
+    }
+
+    /**
+     * 创建普通病人关系
+     */
+    @Override
+    public void onSubscribe() {
+        List<NewLongtermMonitoringBean> beans = mActivity.getNewLongtermMonitoringBean();
+
+        Subscription subscription = mRepository.insertLongtermMonitorings(beans)
+                .subscribeOn(Schedulers.io())
+                .doOnSubscribe(new Action0() {
+                    @Override
+                    public void call() {
+                        mActivity.dataInteractionDialog(); //正在加载中...
+                    }
+                })
+                .subscribeOn(AndroidSchedulers.mainThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<ResponseDisplayBean>() {
+                    @Override
+                    public void onCompleted() {
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        mActivity.displayErrorDialog(e.getMessage());
+                    }
+
+                    @Override
+                    public void onNext(ResponseDisplayBean bean) {
+                        if (bean.isIsSucess()) {
+                            mActivity.showToast("添加成功");
+                        } else {
+                            mActivity.showToast(bean.getMessage());
+                        }
+                        mActivity.dismissInteractionDialog();
+                    }
+                });
+        mSubscriptions.add(subscription);
+    }
+
+
+    @Override
+    public void unSubscribe() {
+        mSubscriptions.clear();
+        mActivity = null;
+    }
+
+}

@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:paddingBottom="4dp"
+    android:layout_height="match_parent"
+    android:background="@color/kaurihealth_shallowgray">
+
+    <RelativeLayout
+        android:id="@+id/lay_title_medicalhistory"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/toptitle_height"
+        android:background="@color/kaurihealth_header_background">
+
+        <ImageView
+            android:id="@+id/iv_back"
+            style="@style/toptitleback" />
+
+        <TextView
+            android:id="@+id/tvOtherName"
+            style="@style/toptitletv"
+            android:text="李晓燕" />
+
+        <ImageView
+            android:id="@+id/tv_operate"
+            android:visibility="gone"
+            style="@style/toptitleedit"
+            android:src="@mipmap/portrait"
+            android:text="账户明细" />
+    </RelativeLayout>
+
+    <ImageView
+        android:layout_marginRight="6dp"
+        android:id="@+id/ivSendMessage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginLeft="8dp"
+        android:src="@mipmap/sendmes" />
+
+    <EditText
+        android:layout_marginLeft="6dp"
+        android:id="@+id/edtMesContent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_toLeftOf="@id/ivSendMessage"
+        android:background="@drawable/edt_bg"
+        android:maxLines="6"
+        android:paddingBottom="5dp"
+        android:paddingLeft="5dp"
+        android:paddingTop="5dp" />
+
+
+    <TextView
+        android:id="@+id/tvLine"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@id/lay_title_medicalhistory"
+        android:background="#E4E4E4" />
+
+    <ListView
+        android:id="@+id/lv_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/edtMesContent"
+        android:layout_below="@id/tvLine"
+        android:clickable="false"
+        android:focusable="false"
+
+        android:divider="#000000"
+        android:stackFromBottom="false"
+        android:transcriptMode="alwaysScroll">
+
+    </ListView>
+</RelativeLayout>
