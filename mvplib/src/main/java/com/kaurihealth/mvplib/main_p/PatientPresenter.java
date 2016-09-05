@@ -1,5 +1,8 @@
 package com.kaurihealth.mvplib.main_p;
 
+import android.annotation.TargetApi;
+import android.os.Build;
+
 import com.kaurihealth.datalib.repository.IDataSource;
 import com.kaurihealth.datalib.response_bean.DoctorPatientRelationshipBean;
 
@@ -16,7 +19,7 @@ import rx.subscriptions.CompositeSubscription;
 
 /**
  * Created by jianghw on 2016/8/5.
- * <p/>
+ * <p>
  * 描述：登录逻辑
  */
 public class PatientPresenter<V> implements IPatientPresenter<V> {
@@ -78,6 +81,12 @@ public class PatientPresenter<V> implements IPatientPresenter<V> {
                     }
                 });
         mSubscriptions.add(subscription);
+    }
+
+
+    @TargetApi(Build.VERSION_CODES.N)
+    public void lazyLoadingDataSuccess(List<DoctorPatientRelationshipBean> list) {
+        list.stream().map((cost) -> cost.getPatientId()).forEach(System.out::println);
     }
 
     @Override
