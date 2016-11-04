@@ -8,30 +8,37 @@ package com.kaurihealth.datalib.request_bean.bean;
 
 public class ConversationItemBean<T> {
 
-    private int count;
-    private String[] mStrings;
-    private T userBean;
+    private final long time;
+    private final CharSequence message;
+    private final int num;
+    private final T bean;
+    private final String conversationId;
 
-    public ConversationItemBean(int count, String[] mStrings, T userBean) {
-        this.count = count;
-        this.mStrings = mStrings;
-        this.userBean = userBean;
+    public ConversationItemBean(T bean, long time, CharSequence message, int num, String conversationId) {
+        this.bean = bean;
+        this.time = time;
+        this.message = message;
+        this.num = num;
+        this.conversationId = conversationId;
     }
 
-    public int getCount() {
-        return count;
+    public long getTime() {
+        return time;
     }
 
-    public void setCount(int count) {
-        this.count = count;
+    public CharSequence getMessage() {
+        return message;
     }
 
-    public T getUserBean() {
-        return userBean;
+    public int getNum() {
+        return num;
     }
 
-    public void setUserBean(T userBean) {
-        this.userBean = userBean;
+    public T getBean() {
+        return bean;
     }
 
+    public String getConversationId() {
+        return conversationId;
+    }
 }

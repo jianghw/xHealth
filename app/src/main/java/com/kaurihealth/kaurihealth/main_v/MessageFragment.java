@@ -5,9 +5,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.util.ArrayMap;
 import android.text.TextUtils;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -23,15 +21,12 @@ import com.avos.avoscloud.im.v2.AVIMTypedMessage;
 import com.avos.avoscloud.im.v2.callback.AVIMMessagesQueryCallback;
 import com.avos.avoscloud.im.v2.messages.AVIMTextMessage;
 import com.kaurihealth.chatlib.LCChatKit;
-import com.kaurihealth.chatlib.adapter.LCIMCommonListAdapter;
 import com.kaurihealth.chatlib.cache.LCIMConversationItem;
 import com.kaurihealth.chatlib.cache.LCIMConversationItemCache;
 import com.kaurihealth.chatlib.cache.LCIMProfileCache;
 import com.kaurihealth.chatlib.custom.LCChatMessageInterface;
-import com.kaurihealth.chatlib.event.LCIMConversationItemLongClickEvent;
 import com.kaurihealth.chatlib.event.LCIMIMTypeMessageEvent;
 import com.kaurihealth.chatlib.utils.LCIMLogUtils;
-import com.kaurihealth.chatlib.viewholder.LCIMConversationItemHolder;
 import com.kaurihealth.datalib.response_bean.ContactUserDisplayBean;
 import com.kaurihealth.kaurihealth.MyApplication;
 import com.kaurihealth.kaurihealth.R;
@@ -56,7 +51,6 @@ import java.util.Map;
 import javax.inject.Inject;
 
 import butterknife.Bind;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
@@ -99,8 +93,6 @@ public class MessageFragment extends BaseFragment implements IMessageView {
     @Bind(R.id.rl_doctor)
     RelativeLayout mRlDoctor;
 
-    protected LCIMCommonListAdapter<AVIMConversation> itemAdapter;
-
     public static MessageFragment newInstance() {
         return new MessageFragment();
     }
@@ -114,13 +106,6 @@ public class MessageFragment extends BaseFragment implements IMessageView {
     protected void initPresenterAndView(Bundle savedInstanceState) {
         MyApplication.getApp().getComponent().inject(this);
         mPresenter.setPresenter(this);
-
-//        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
-//        recyclerView.setLayoutManager(layoutManager);
-//        recyclerView.addItemDecoration(new LCIM_DividerItemDecoration(getActivity()));
-//        recyclerView.setAdapter(itemAdapter);
-
-        itemAdapter = new LCIMCommonListAdapter<>(LCIMConversationItemHolder.class);
     }
 
     @Override
@@ -136,6 +121,7 @@ public class MessageFragment extends BaseFragment implements IMessageView {
 
     @Override
     protected void lazyLoadingData() {
+        LogUtils.e("lazyLoadingData");
         loadContactListByDoctorIdSucceed();
     }
 
@@ -144,19 +130,12 @@ public class MessageFragment extends BaseFragment implements IMessageView {
         super.onDestroyView();
         mPresenter.unSubscribe();
         EventBus.getDefault().unregister(this);
-        ButterKnife.unbind(this);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        loadContactListByDoctorIdSucceed();
     }
 
     @OnClick({R.id.rl_patient, R.id.rl_doctor})
-    public void onClickItem() {
+    public void onClickItem(RelativeLayout relativeLayout) {
         Bundle bundle=new Bundle();
-        switch (getId()) {
+        switch (relativeLayout.getId()) {
             case R.id.rl_patient:
                 bundle.putString(Global.Bundle.CONVER_ITEM_BUNDLE,Global.Bundle.CONVER_ITEM_PATIENT);
                 break;
@@ -177,27 +156,6 @@ public class MessageFragment extends BaseFragment implements IMessageView {
         loadContactListByDoctorIdSucceed();
     }
 
-    /**
-     * 删除会话列表中的某个 item
-     */
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void eventBusMain(LCIMConversationItemLongClickEvent event) {
-        if (null != event.conversation) {
-            String conversationId = event.conversation.getConversationId();
-            LCIMConversationItemCache.getInstance().deleteConversation(conversationId);
-            loadContactListByDoctorIdSucceed();
-        }
-    }
-
-    /**
-     * 是否需要 获取关系列表
-     */
-//    private void updateConversationList() {
-//        List<String> convIdList = LCIMConversationItemCache.getInstance().getSortedConversationList();
-//        AVIMClient client = LCChatKit.getInstance().getClient();
-//        String currentUserId = LCChatKit.getInstance().getCurrentUserId();
-////本地有的
-//    }
     @Override
     public void switchPageUI(String className) {
 //TODO
@@ -211,7 +169,6 @@ public class MessageFragment extends BaseFragment implements IMessageView {
      */
     @Override
     public void loadContactListByDoctorIdSucceed() {
-        if (itemAdapter == null) return;
         noMessage();
         onNeedToRefreshUserMap();
     }
@@ -375,6 +332,7 @@ public class MessageFragment extends BaseFragment implements IMessageView {
                                     public ArrayMap<String, ContactUserDisplayBean> call(ContactUserDisplayBean bean) {
                                         ArrayMap<String, ContactUserDisplayBean> doctorMap = new ArrayMap<>();
                                         doctorMap.put(conversationId, bean);
+                                        LogUtils.jsonDate(doctorMap);
                                         return doctorMap;
                                     }
                                 });
@@ -504,11 +462,4 @@ public class MessageFragment extends BaseFragment implements IMessageView {
         mTvMessageDoctor.setText(tvMessageDoctor);
     }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        // TODO: inflate a fragment view
-        View rootView = super.onCreateView(inflater, container, savedInstanceState);
-        ButterKnife.bind(this, rootView);
-        return rootView;
-    }
 }

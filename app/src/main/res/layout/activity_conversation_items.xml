@@ -10,10 +10,11 @@
         android:id="@+id/swipe_refresh"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
-        <android.support.v7.widget.RecyclerView
+        <ListView
             android:id="@+id/rv_conversation"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent"
+            android:dividerHeight="1px"
+            android:fadeScrollbars="true"/>
     </com.kaurihealth.utilslib.widget.ScrollChildSwipeRefreshLayout>
 </LinearLayout>

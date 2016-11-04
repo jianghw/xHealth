@@ -32,8 +32,6 @@ public class LCIMCommonListAdapter<T> extends RecyclerView.Adapter<LCIMCommonVie
 
     /**
      * 获取该 Adapter 中存的数据
-     *
-     * @return
      */
     public List<T> getDataList() {
         return dataList;
@@ -41,8 +39,6 @@ public class LCIMCommonListAdapter<T> extends RecyclerView.Adapter<LCIMCommonVie
 
     /**
      * 设置数据，会清空以前数据
-     *
-     * @param datas
      */
     public void setDataList(List<T> datas) {
         dataList.clear();

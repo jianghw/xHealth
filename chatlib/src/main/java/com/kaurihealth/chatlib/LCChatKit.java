@@ -51,6 +51,7 @@ public final class LCChatKit {
          * 才会去通知 defaultMessageHandler 在 AVIMMessageManager 中多次注册 defaultMessageHandler ，
          * 只有最后一次调用的才是有效的 通过 registerMessageHandler 注册的 AVIMMessageHandler，则是可以同存的 */
         AVInstallation.getCurrentInstallation().saveInBackground();
+        AVIMClient.setMessageQueryCacheEnable(true);
         /*推送*/
         PushService.setDefaultPushCallback(context, cls);
         /*来从服务端取回未读消息*/
