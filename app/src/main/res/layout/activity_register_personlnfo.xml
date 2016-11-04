@@ -9,8 +9,8 @@
     <RelativeLayout
         android:id="@+id/lay_title_medicalhistory"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/toptitle_height"
-        android:background="@color/kaurihealth_header_background">
+        android:layout_height="@dimen/input_height_48"
+        android:background="@color/color_enable_green">
 
         <TextView
             style="@style/toptitletv"
@@ -27,7 +27,7 @@
         <TextView
             android:id="@+id/tv2"
             style="@style/tv1_open_an_account"
-            android:text="(患者)姓:" />
+            android:text="(医生)姓:" />
 
         <EditText
             android:id="@+id/tvLastName"
@@ -39,7 +39,7 @@
 
         <ImageView
             android:id="@+id/ivDelete2"
-            style="@style/delete_profession_title"
+            style="@style/Img_Delete"
             android:visibility="gone" />
     </RelativeLayout>
 
@@ -54,7 +54,7 @@
         <TextView
             android:id="@+id/tv5"
             style="@style/tv1_open_an_account"
-            android:text="(患者)名:" />
+            android:text="(医生)名:" />
 
         <EditText
             android:id="@+id/tvFirstName"
@@ -66,7 +66,7 @@
 
         <ImageView
             android:id="@+id/ivDelete5"
-            style="@style/delete_profession_title"
+            style="@style/Img_Delete"
             android:visibility="gone" />
     </RelativeLayout>
 
@@ -85,7 +85,7 @@
             style="@style/tv1_open_an_account"
             android:text="性       别:" />
 
-        <EditText
+        <TextView
             android:id="@+id/tv_gender"
             style="@style/content_open_an_account"
             android:layout_toRightOf="@id/tv3"
@@ -95,7 +95,7 @@
 
         <ImageView
             android:id="@+id/ivDelete3"
-            style="@style/delete_profession_title"
+            style="@style/Img_Delete"
             android:visibility="gone" />
     </RelativeLayout>
 
@@ -114,7 +114,7 @@
             style="@style/tv1_open_an_account"
             android:text="生       日:" />
 
-        <EditText
+        <TextView
             android:id="@+id/tvBirthday"
             style="@style/content_open_an_account"
             android:layout_toRightOf="@id/tv4"
@@ -124,7 +124,7 @@
 
         <ImageView
             android:id="@+id/ivDelete4"
-            style="@style/delete_profession_title"
+            style="@style/Img_Delete"
             android:visibility="gone" />
     </RelativeLayout>
 
@@ -142,7 +142,7 @@
         android:layout_marginRight="15dp"
         android:layout_marginTop="18dp"
         android:text="请您填写真实信息，填写后如需修改请联系我们的客服人员"
-        android:textColor="#FFFF5433"
+        android:textColor="@color/color_red"
         android:textSize="18sp" />
 
 </LinearLayout>

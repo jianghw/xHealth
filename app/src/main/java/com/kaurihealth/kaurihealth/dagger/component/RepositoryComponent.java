@@ -4,50 +4,86 @@ package com.kaurihealth.kaurihealth.dagger.component;
 import com.kaurihealth.datalib.dagger.ActivityScoped;
 import com.kaurihealth.datalib.repository.IDataSource;
 import com.kaurihealth.kaurihealth.MyApplication;
-import com.kaurihealth.kaurihealth.clinical_v.CommentActivity;
-import com.kaurihealth.kaurihealth.clinical_v.DynamicActivity;
-import com.kaurihealth.kaurihealth.clinical_v.DynamicFragment;
-import com.kaurihealth.kaurihealth.clinical_v.StudentFragment;
-import com.kaurihealth.kaurihealth.clinical_v.StudyFragment;
-import com.kaurihealth.kaurihealth.clinical_v.TreatmentFragment;
+import com.kaurihealth.kaurihealth.clinical_v.Fragment.DynamicFragment;
+import com.kaurihealth.kaurihealth.clinical_v.Fragment.StudentFragment;
+import com.kaurihealth.kaurihealth.clinical_v.Fragment.StudyFragment;
+import com.kaurihealth.kaurihealth.clinical_v.Fragment.TreatmentFragment;
+import com.kaurihealth.kaurihealth.clinical_v.activity.ClinicalListActivity;
+import com.kaurihealth.kaurihealth.clinical_v.activity.ClinicalSearchActivity;
+import com.kaurihealth.kaurihealth.clinical_v.activity.CommentActivity;
+import com.kaurihealth.kaurihealth.clinical_v.activity.DynamicActivity;
 import com.kaurihealth.kaurihealth.clinical_v.activity.LiteratureCommentActivity;
+import com.kaurihealth.kaurihealth.clinical_v.activity.MyClinicalListActivity;
 import com.kaurihealth.kaurihealth.dagger.module.ApplicationModule;
 import com.kaurihealth.kaurihealth.dagger.module.RepositoryModule;
 import com.kaurihealth.kaurihealth.department_v.SelectDepartmentLevel1Activity;
+import com.kaurihealth.kaurihealth.department_v.SelectDepartmentLevel2Activity;
+import com.kaurihealth.kaurihealth.doctor_v.DoctorFragment;
+import com.kaurihealth.kaurihealth.doctor_v.DoctorInfoActivity;
 import com.kaurihealth.kaurihealth.findpassword_v.FindPasswordActivity;
+import com.kaurihealth.kaurihealth.home_v.AcceptReasonActivity;
+import com.kaurihealth.kaurihealth.home_v.DoctorRequestActivity;
+import com.kaurihealth.kaurihealth.home_v.FriendRequestsActivity;
+import com.kaurihealth.kaurihealth.home_v.PatientRequestInfoActivity;
+import com.kaurihealth.kaurihealth.home_v.VerificationActivity;
+import com.kaurihealth.kaurihealth.home_v.referral.ReferralPatientRequestActivity;
+import com.kaurihealth.kaurihealth.home_v.referral.RejectReasonActivity;
 import com.kaurihealth.kaurihealth.login_v.LoginActivity;
 import com.kaurihealth.kaurihealth.main_v.ClinicalFragment;
+import com.kaurihealth.kaurihealth.main_v.HomeFragmentNew;
+import com.kaurihealth.kaurihealth.main_v.MainActivity;
 import com.kaurihealth.kaurihealth.main_v.MessageFragment;
 import com.kaurihealth.kaurihealth.main_v.MineFragment;
-import com.kaurihealth.kaurihealth.main_v.PatientFragment;
-import com.kaurihealth.kaurihealth.mine_v.DoctorDetailsActivity;
-import com.kaurihealth.kaurihealth.mine_v.EnterCertificationNumberActivity;
-import com.kaurihealth.kaurihealth.mine_v.EnterGraduateSchoolActivity;
-import com.kaurihealth.kaurihealth.mine_v.EnterHospitalActivity;
-import com.kaurihealth.kaurihealth.mine_v.EnterPracticeFieldActivity;
-import com.kaurihealth.kaurihealth.mine_v.EnterStudyExperienceActivity;
-import com.kaurihealth.kaurihealth.mine_v.MyAccountActivity;
-import com.kaurihealth.kaurihealth.mine_v.PersonalDoctorServiceSettingActivity;
-import com.kaurihealth.kaurihealth.mine_v.RemoteDoctorServiceSettingActivity;
-import com.kaurihealth.kaurihealth.mine_v.SelectTitleActivity;
-import com.kaurihealth.kaurihealth.mine_v.ServiceSettingActivity;
+import com.kaurihealth.kaurihealth.main_v.PatientRequestActivity;
+import com.kaurihealth.kaurihealth.mine_v.AccountDetailsActivity;
 import com.kaurihealth.kaurihealth.mine_v.SetPasswordActivity;
 import com.kaurihealth.kaurihealth.mine_v.SettingActivity;
-import com.kaurihealth.kaurihealth.mine_v.WithdrawActivity;
+import com.kaurihealth.kaurihealth.mine_v.account.AddBankCardActivity;
+import com.kaurihealth.kaurihealth.mine_v.account.WithdrawActivity;
+import com.kaurihealth.kaurihealth.mine_v.personal.DoctorDetailsActivity;
+import com.kaurihealth.kaurihealth.mine_v.personal.EnterCertificationNumberActivity;
+import com.kaurihealth.kaurihealth.mine_v.personal.EnterGraduateSchoolActivity;
+import com.kaurihealth.kaurihealth.mine_v.personal.EnterHospitalActivity;
+import com.kaurihealth.kaurihealth.mine_v.personal.EnterPracticeFieldActivity;
+import com.kaurihealth.kaurihealth.mine_v.personal.EnterStudyExperienceActivity;
+import com.kaurihealth.kaurihealth.mine_v.personal.SelectTitleActivity;
+import com.kaurihealth.kaurihealth.mine_v.service.PersonalDoctorServiceSettingActivity;
+import com.kaurihealth.kaurihealth.mine_v.service.RemoteDoctorServiceSettingActivity;
 import com.kaurihealth.kaurihealth.open_an_account_v.OpenAnAccountActivity;
-import com.kaurihealth.kaurihealth.patient_v.AddMonitorIndexActivity;
-import com.kaurihealth.kaurihealth.patient_v.CompileProgramActivity;
-import com.kaurihealth.kaurihealth.patient_v.LongHealthyStandardActivity;
+import com.kaurihealth.kaurihealth.patient_v.DoctorTeamActivity;
+import com.kaurihealth.kaurihealth.patient_v.DoctorTeamFragment;
+import com.kaurihealth.kaurihealth.patient_v.FamilyMembersActivity;
+import com.kaurihealth.kaurihealth.patient_v.HospitalNameActivity;
+import com.kaurihealth.kaurihealth.patient_v.PatientFragment;
 import com.kaurihealth.kaurihealth.patient_v.PatientInfoActivity;
+import com.kaurihealth.kaurihealth.patient_v.PrescriptionActivity;
+import com.kaurihealth.kaurihealth.patient_v.health_condition.HealthConditionActivity;
+import com.kaurihealth.kaurihealth.patient_v.long_monitoring.AddMonitorIndexActivity;
+import com.kaurihealth.kaurihealth.patient_v.long_monitoring.CompileProgramActivity;
+import com.kaurihealth.kaurihealth.patient_v.long_monitoring.LongHealthyStandardActivity;
+import com.kaurihealth.kaurihealth.patient_v.medical_records.AddAndEditLobTestActivity;
+import com.kaurihealth.kaurihealth.patient_v.medical_records.AddAndEditPrescriptionActivityNew;
+import com.kaurihealth.kaurihealth.patient_v.medical_records.AddCommonMedicalRecordActivity;
+import com.kaurihealth.kaurihealth.patient_v.medical_records.AdmissionRecordActivity;
+import com.kaurihealth.kaurihealth.patient_v.medical_records.DischargeRecordActivity;
+import com.kaurihealth.kaurihealth.patient_v.medical_records.MedicalRecordActivity;
+import com.kaurihealth.kaurihealth.patient_v.medical_records.NetworkMedicalConsultationActivity;
+import com.kaurihealth.kaurihealth.patient_v.medical_records.OutpatientElectronicActivity;
+import com.kaurihealth.kaurihealth.patient_v.medical_records.OutpatientPicturesActivity;
+import com.kaurihealth.kaurihealth.patient_v.medical_records.RemoteMedicalConsultationActivity;
+import com.kaurihealth.kaurihealth.patient_v.medical_records.TreatmentRelatedRecordsActivity;
+import com.kaurihealth.kaurihealth.patient_v.referrals_patient.ReferralDoctorActivity;
+import com.kaurihealth.kaurihealth.patient_v.referrals_patient.ReferralPatientActivity;
+import com.kaurihealth.kaurihealth.patient_v.referrals_patient.ReferralReasonActivity;
 import com.kaurihealth.kaurihealth.register_v.RegisterActivity;
 import com.kaurihealth.kaurihealth.register_v.RegisterPersonInfoActivity;
 import com.kaurihealth.kaurihealth.resetpassword_v.ResetPasswordActivity;
-import com.kaurihealth.kaurihealth.search_v.BlankAllFragment;
-import com.kaurihealth.kaurihealth.search_v.BlankDoctorFragment;
-import com.kaurihealth.kaurihealth.search_v.BlankHospitalFragment;
-import com.kaurihealth.kaurihealth.search_v.BlankMedicineFragment;
-import com.kaurihealth.kaurihealth.search_v.BlankPatientFragment;
 import com.kaurihealth.kaurihealth.search_v.SearchActivity;
+import com.kaurihealth.kaurihealth.search_v.SearchDepartmentFragment;
+import com.kaurihealth.kaurihealth.search_v.SearchDoctorFragment;
+import com.kaurihealth.kaurihealth.search_v.SearchFragment;
+import com.kaurihealth.kaurihealth.search_v.SearchHospotalFragment;
+import com.kaurihealth.kaurihealth.search_v.SearchPatientFragment;
 import com.kaurihealth.kaurihealth.welcome_v.WelcomeActivity;
 
 import javax.inject.Singleton;
@@ -56,7 +92,7 @@ import dagger.Component;
 
 /**
  * Created by jianghw on 2016/8/12.
- * <p/>
+ * <p>
  * 描述：注入器 @Inject和@Module的桥梁
  */
 @ActivityScoped
@@ -87,13 +123,7 @@ public interface RepositoryComponent {
 
     void inject(OpenAnAccountActivity activity);
 
-    void inject(SearchActivity activity);
-
     void inject(SettingActivity activity);
-
-    void inject(ServiceSettingActivity activity);
-
-    void inject(MyAccountActivity activity);
 
     void inject(DoctorDetailsActivity activity);
 
@@ -115,9 +145,17 @@ public interface RepositoryComponent {
 
     void inject(EnterHospitalActivity activity);
 
+    void inject(CompileProgramActivity activity);
+
     void inject(PatientFragment fragment);
 
+    void inject(DoctorFragment fragment);
+
     void inject(SetPasswordActivity activity);
+
+    void inject(DoctorInfoActivity activity);
+
+    void inject(FamilyMembersActivity activity);
 
     //临床支持Fragment
     void inject(DynamicFragment fragment);
@@ -132,29 +170,103 @@ public interface RepositoryComponent {
 
     void inject(CommentActivity activity);
 
-    void inject(LiteratureCommentActivity actuvity);
+    void inject(LiteratureCommentActivity activity);
 
-    //首页搜索Fragment'
-    void inject(BlankAllFragment fragment);
+    void inject(MyClinicalListActivity activity);
 
-    void inject(BlankDoctorFragment fragment);
+    void inject(ClinicalListActivity activity);
 
-    void inject(BlankHospitalFragment fragment);
+    void inject(ClinicalSearchActivity activity);
 
-    void inject(BlankMedicineFragment fragment);
-
-    void inject(BlankPatientFragment fragment);
-
-    //我的-->个人信息-->科室
+    //我的-->个人信息-->一级科室
     void inject(SelectDepartmentLevel1Activity activity);
 
-    void inject(PatientInfoActivity activity);
+    //我的-->个人信息-->二级科室
+    void inject(SelectDepartmentLevel2Activity activity);
 
+    void inject(PatientInfoActivity activity);
 
     void inject(LongHealthyStandardActivity activity);
 
     void inject(AddMonitorIndexActivity activity);
 
-    void inject(CompileProgramActivity activity);
+    void inject(DoctorTeamActivity activity);
 
+    void inject(PrescriptionActivity activity);
+
+    void inject(HealthConditionActivity activity);
+
+    void inject(MedicalRecordActivity activity);
+
+    void inject(HospitalNameActivity activity);
+
+    //门诊记录电子病历
+    void inject(OutpatientElectronicActivity activity);
+
+    void inject(AddBankCardActivity activity);
+
+    void inject(AccountDetailsActivity activity);
+
+    void inject(PatientRequestActivity activity);
+
+    void inject(VerificationActivity activity);
+
+    void inject(DoctorRequestActivity activity);
+
+    void inject(HomeFragmentNew fragment);
+
+    void inject(FriendRequestsActivity activity);
+
+    void inject(PatientRequestInfoActivity activity);
+
+    void inject(RejectReasonActivity activity);
+
+    void inject(AcceptReasonActivity activity);
+
+    //远程医疗咨询
+    void inject(RemoteMedicalConsultationActivity activity);
+
+    //网络医疗咨询
+    void inject(NetworkMedicalConsultationActivity activity);
+
+    void inject(AddCommonMedicalRecordActivity activity);
+
+    //临床诊疗-->院内治疗相关记录
+    void inject(TreatmentRelatedRecordsActivity activity);
+
+    void inject(AddAndEditPrescriptionActivityNew activity);
+
+    //临床诊疗-->入院记录
+    void inject(AdmissionRecordActivity activity);
+
+    //临床诊疗-->出院记录
+    void inject(DischargeRecordActivity activity);
+
+    //临床诊疗-->门诊记录图片存档
+    void inject(OutpatientPicturesActivity activity);
+
+    void inject(AddAndEditLobTestActivity activity);
+
+    void inject(MainActivity activity);
+
+    void inject(ReferralPatientRequestActivity activity);
+
+    void inject(ReferralDoctorActivity activity);
+
+    void inject(ReferralReasonActivity activity);
+
+    void inject(DoctorTeamFragment fragment);
+    void inject(ReferralPatientActivity activity);
+
+    void inject(SearchActivity activity);
+
+    void inject(SearchFragment fragment);
+
+    void inject(SearchDepartmentFragment fragment);
+
+    void inject(SearchDoctorFragment fragment);
+
+    void inject(SearchHospotalFragment fragment);
+
+    void inject(SearchPatientFragment fragment);
 }

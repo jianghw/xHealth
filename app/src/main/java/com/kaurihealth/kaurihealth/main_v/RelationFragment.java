@@ -1,5 +1,6 @@
 package com.kaurihealth.kaurihealth.main_v;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -7,11 +8,23 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.RadioButton;
 
 import com.kaurihealth.kaurihealth.R;
 import com.kaurihealth.kaurihealth.adapter.MainFragmentAdapter;
 import com.kaurihealth.kaurihealth.base_v.ChildBaseFragment;
+import com.kaurihealth.kaurihealth.doctor_v.DoctorFragment;
+import com.kaurihealth.kaurihealth.eventbus.DoctorFragmentEvent;
+import com.kaurihealth.kaurihealth.eventbus.DoctorFragmentRefreshEvent;
+import com.kaurihealth.kaurihealth.patient_v.PatientFragment;
+import com.kaurihealth.kaurihealth.search_v.SearchActivity;
+import com.kaurihealth.utilslib.TranslationAnim;
+import com.kaurihealth.utilslib.constant.Global;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +34,8 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 /**
- * 医患关系
+ * 医患关系 母页
+ * 描述:医患Fragment
  */
 public class RelationFragment extends Fragment {
 
@@ -31,6 +45,8 @@ public class RelationFragment extends Fragment {
     RadioButton mRbtnDoctor;
     @Bind(R.id.vp_relation)
     ViewPager mVpRelation;
+    @Bind(R.id.tv_add)
+    ImageView addText;
 
     List<Fragment> mFragmentList = new ArrayList<>();
     private int mCurItem = 0;
@@ -47,21 +63,23 @@ public class RelationFragment extends Fragment {
 
         initChildFragment();
         initViewPager();
+        //注册事件
+        EventBus.getDefault().register(this);
         return view;
     }
 
     private void initChildFragment() {
         if (mFragmentList.size() > 0) mFragmentList.clear();
         PatientFragment patientFragment = PatientFragment.newInstance();
-        MessageFragment messageFragment = MessageFragment.newInstance();
+        DoctorFragment doctorFragment = DoctorFragment.newInstance();
         mFragmentList.add(patientFragment);
-        mFragmentList.add(messageFragment);
+        mFragmentList.add(doctorFragment);
     }
 
     private void initViewPager() {
         MainFragmentAdapter mainFragmentAdapter = new MainFragmentAdapter(getChildFragmentManager(), mFragmentList);
         mVpRelation.setAdapter(mainFragmentAdapter);
-        mVpRelation.setOffscreenPageLimit(mFragmentList.size()-1);
+        mVpRelation.setOffscreenPageLimit(mFragmentList.size() - 1);
         mVpRelation.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -115,7 +133,24 @@ public class RelationFragment extends Fragment {
     }
 
     /**
-     *
+     * 添加医生
+     */
+    @OnClick(R.id.tv_add)
+    public void addDoctor() {
+        Bundle bundle = new Bundle();
+        if(mCurItem==0){
+            bundle.putString(Global.Bundle.SEARCH_BUNDLE, Global.Bundle.SEARCH_PATIENT);
+        }else{
+            bundle.putString(Global.Bundle.SEARCH_BUNDLE, Global.Bundle.SEARCH_DOCTOR);
+        }
+        skipToBundle(SearchActivity.class, bundle);
+    }
+
+    protected void skipToBundle(Class<? extends Activity> className, Bundle bundle) {
+        TranslationAnim.zlStartActivity(getActivity(), className, bundle);
+    }
+
+    /**
      * @param isVisibleToUser
      */
     @Override
@@ -142,13 +177,17 @@ public class RelationFragment extends Fragment {
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-    }
-
-    @Override
     public void onDestroyView() {
         super.onDestroyView();
         ButterKnife.unbind(this);
+        EventBus.getDefault().unregister(this);
     }
+
+    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
+    public void eventBusMain(DoctorFragmentEvent event) {
+        initCurPager(1);
+        mCurItem = 1;
+        EventBus.getDefault().postSticky(new DoctorFragmentRefreshEvent());//让其刷新
+    }
+
 }

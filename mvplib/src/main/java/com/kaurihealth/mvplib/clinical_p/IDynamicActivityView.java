@@ -1,6 +1,7 @@
 package com.kaurihealth.mvplib.clinical_p;
 
 import com.kaurihealth.datalib.request_bean.bean.LiteratureCommentDisplayBean;
+import com.kaurihealth.datalib.request_bean.bean.LiteratureReplyDisplayBean;
 import com.kaurihealth.datalib.request_bean.bean.MedicalLiteratureLikeDisplayBean;
 import com.kaurihealth.datalib.response_bean.ResponseDisplayBean;
 import com.kaurihealth.mvplib.base_p.IMvpView;
@@ -23,5 +24,10 @@ public interface IDynamicActivityView extends IMvpView{
     void DisLikeMedicalLiterature(ResponseDisplayBean responseDisplayBean);
 
     void checkIsSucess(ResponseDisplayBean bean);
+
+    void getDeleteCommentResponse(ResponseDisplayBean bean, int position);
+
+    void getLiteratureReplyDisplayBean(List<LiteratureReplyDisplayBean> been);
+
 
 }

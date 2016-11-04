@@ -3,105 +3,42 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/kaurihealth_background"
-    android:orientation="vertical"
-    tools:context="com.kaurihealth.kaurihealth.mine.activity.MyAccountActivity">
+    android:background="@color/color_bg_gray"
+    android:orientation="vertical">
+
+    <include
+        android:id="@+id/in_title"
+        layout="@layout/include_action_bar" />
 
     <RelativeLayout
-        android:id="@+id/lay_title_medicalhistory"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/toptitle_height"
-        android:background="@color/kaurihealth_header_background">
-
-        <ImageView
-            android:id="@+id/iv_back"
-            style="@style/toptitleback" />
+        style="@style/Bg_Lay_Press"
+        android:layout_marginTop="@dimen/margin_16">
 
         <TextView
-            style="@style/toptitletv"
-            android:text="我的账户" />
+            style="@style/Doctor_TitleText"
+            android:text="账户余额" />
 
         <TextView
-            android:id="@+id/tv_operate"
-            style="@style/toptitleedit"
-            android:text="账户明细" />
-
+            android:id="@+id/tv_totalCredit"
+            style="@style/Right_TitleText"
+            android:textColor="@color/color_enable_green"
+            tools:text="2000.00元" />
     </RelativeLayout>
 
-    <RelativeLayout
-
-        android:id="@+id/rlay_totalCredit"
-        style="@style/rlay_personinfo"
-        android:layout_marginTop="10dp"
-        android:background="@android:color/white"
-        android:paddingLeft="10dp">
-
-        <TextView
-            android:id="@+id/tv1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="4dp"
-            android:text="账户余额"
-            android:textColor="#1c1c1c"
-            android:textSize="15sp" />
-
-        <TextView
-            android:id="@+id/tvTotalCredit"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="15dp"
-            android:layout_toRightOf="@id/tv1"
-            android:gravity="right"
-            android:text="2000.00元"
-            android:textColor="@color/kaurihealth_header_background"
-            android:textSize="14sp" />
-    </RelativeLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/white"
-        android:orientation="vertical">
-
-        <TextView
-            style="@style/line_personinfo"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp" />
-    </LinearLayout>
-
+    <TextView style="@style/Line_Gap" />
 
     <RelativeLayout
-        android:id="@+id/rlay_availableCredit"
-        style="@style/rlay_personinfo"
-        android:background="@android:color/white"
-        android:paddingLeft="10dp">
+        style="@style/Bg_Lay_Press">
 
         <TextView
-            android:id="@+id/tv5"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="4dp"
-            android:text="可支取余额"
-            android:textColor="#1c1c1c"
-            android:textSize="15sp" />
+            style="@style/Doctor_TitleText"
+            android:text="可支取余额" />
 
         <TextView
-            android:id="@+id/tvAvailableCredit"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="15dp"
-            android:layout_toRightOf="@id/tv5"
-            android:gravity="right"
-            android:text="1000.00元"
-            android:textColor="@color/kaurihealth_header_background" />
+            android:id="@+id/tv_availableCredit"
+            style="@style/Right_TitleText"
+            android:textColor="@color/color_enable_green"
+            tools:text="2000.00元" />
     </RelativeLayout>
 
     <TextView
@@ -123,21 +60,6 @@
         android:text="1.每笔服务确认结束后，3-5个工作日后可提现;"
         android:textColor="@color/apptextcolormed"
         android:textSize="12sp" />
-
-    <!--<View-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="0.5dp" />-->
-
-    <!--<TextView-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_marginLeft="15dp"-->
-        <!--android:layout_marginRight="15dp"-->
-        <!--android:layout_marginTop="5dp"-->
-        <!--android:paddingLeft="10dp"-->
-        <!--android:text="现阶段只提供人工提现;"-->
-        <!--android:textColor="#999999"-->
-        <!--android:textSize="12sp" />-->
 
     <View
         android:layout_width="wrap_content"
@@ -167,22 +89,15 @@
         android:textColor="#999999"
         android:textSize="12sp" />
 
-    <TextView
-        android:id="@+id/tvWithDrawCash"
+    <Button
+        android:id="@+id/btn_drawCash"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginLeft="25dp"
-        android:layout_marginRight="25dp"
-        android:layout_marginTop="15dp"
-        android:background="@drawable/bg_blue"
-        android:gravity="center"
-        android:paddingBottom="10dp"
-        android:paddingLeft="80dp"
-        android:paddingRight="80dp"
-        android:paddingTop="10dp"
+        android:layout_height="@dimen/login_btn_height"
+        android:layout_margin="@dimen/margin_26"
+        android:background="@drawable/bg_btn_login"
+        android:enabled="true"
         android:text="提现"
-        android:textColor="@color/white" />
-
+        android:textColor="@color/color_white"
+        android:textSize="@dimen/textSize_16"/>
 
 </LinearLayout>

@@ -10,5 +10,5 @@ import com.kaurihealth.mvplib.base_p.IMvpView;
 public interface IDoctorDetailsView extends IMvpView {
     DoctorDisplayBean getDoctorDisplayBean();
 
-    void displayError(Throwable e);
+    void renderView();
 }

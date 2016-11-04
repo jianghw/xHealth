@@ -36,6 +36,6 @@
         android:background="@drawable/bottom_corner_white"
         android:gravity="center"
         android:text="知道了"
-        android:textColor="@color/kaurihealth_header_background"
+        android:textColor="@color/color_enable_green"
         android:textSize="16sp" />
 </RelativeLayout>

@@ -1,8 +1,6 @@
 package com.kaurihealth.datalib.service;
 
 
-
-
 import com.kaurihealth.datalib.response_bean.PatientDisplayBean;
 
 import java.util.List;
@@ -11,7 +9,6 @@ import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Query;
 import rx.Observable;
-
 
 /**
  * Created by Nick on 21/04/2016.

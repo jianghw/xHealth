@@ -3,7 +3,7 @@ package com.kaurihealth.datalib.service;
 
 import com.kaurihealth.datalib.request_bean.bean.DoctorProductPriceBean;
 import com.kaurihealth.datalib.request_bean.bean.NewPriceBean;
-import com.kaurihealth.datalib.request_bean.bean.PriceDisplayBean;
+import com.kaurihealth.datalib.response_bean.PriceDisplayBean;
 import com.kaurihealth.datalib.response_bean.ResponseDisplayBean;
 
 import retrofit2.Call;
@@ -24,6 +24,12 @@ public interface IPriceService {
     @POST("api/Price/UpdateDoctorProductPrice")
     Observable<ResponseDisplayBean> UpdateDoctorProductPrice(@Body PriceDisplayBean priceDisplayBean);
 
-    @POST("api/Price/InsertPrice_out")
+    /**
+     * 插入新的价格
+     *
+     * @param newPriceBean
+     * @return
+     */
+    @POST("api/Price/InsertPrice")
     Observable<ResponseDisplayBean> InsertPrice(@Body NewPriceBean newPriceBean);
 }

@@ -8,6 +8,4 @@ import com.kaurihealth.mvplib.base_p.IMvpView;
  */
 public interface ISelectTitleView extends IMvpView {
     DoctorDisplayBean getDoctorDisplayBean();
-
-    void displayError(Throwable e);
 }

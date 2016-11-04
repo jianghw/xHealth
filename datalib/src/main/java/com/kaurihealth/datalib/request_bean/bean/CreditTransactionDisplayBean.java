@@ -1,7 +1,5 @@
 package com.kaurihealth.datalib.request_bean.bean;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-
 import java.util.Date;
 
 /**
@@ -15,6 +13,5 @@ public class CreditTransactionDisplayBean {
     public String type;
     public int orderId;
     public OrderDisplayBean order;
-    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd'T'HH:mm:ss", timezone="GMT")
     public Date date;
 }

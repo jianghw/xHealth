@@ -1,58 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:app="http://schemas.android.com/apk/res-auto"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="#FFF2F2F2">
-
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_bg_gray">
+    <!--android:background="#FFF2F2F2"-->
     <RelativeLayout
         android:id="@+id/lay_title_medicalhistory"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/toptitle_height"
-        android:background="@color/kaurihealth_header_background">
+        android:layout_height="@dimen/input_height_48"
+        android:background="@color/color_enable_green">
 
         <ImageView
             android:id="@+id/iv_back"
-            style="@style/toptitleback"/>
+            style="@style/toptitleback" />
 
         <TextView
             style="@style/toptitletv"
             android:text="患者信息"
-            android:textColor="@android:color/white"/>
-
+            android:textColor="@android:color/white" />
     </RelativeLayout>
 
     <RelativeLayout
-        android:id="@+id/rlay1"
+        android:id="@+id/rl_info"
         android:layout_width="match_parent"
         android:layout_height="200dp"
         android:layout_below="@id/lay_title_medicalhistory"
         android:layout_margin="10dp"
         android:background="@drawable/bg_white">
 
-        <com.example.commonlibrary.widget.CircleImageView
-            android:id="@+id/iv_photo_topleft_patientinfo"
+        <com.kaurihealth.utilslib.widget.CircleImageView
+            android:id="@+id/iv_photo"
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:layout_marginLeft="@dimen/pationinfoadapter_paddingleft"
             android:layout_marginTop="10dp"
             android:scaleType="centerCrop"
-            android:src="@mipmap/ic_login_head_default"
+            android:src="@mipmap/ic_circle_head_green"
             app:civ_border_color="@color/green"
             app:civ_border_overlay="true"
-            app:civ_border_width="0.5dp"/>
+            app:civ_border_width="0.5dp" />
 
         <TextView
             android:id="@+id/tv_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignBottom="@id/iv_photo_topleft_patientinfo"
-            android:layout_marginBottom="15dp"
             android:layout_marginLeft="10dp"
-            android:layout_toRightOf="@id/iv_photo_topleft_patientinfo"
+            android:layout_marginTop="30dp"
+            android:layout_toRightOf="@id/iv_photo"
             android:text="李晓燕"
             android:textColor="@color/app_tv_color"
-            android:textSize="@dimen/btnlogin"/>
+            android:textSize="@dimen/btnlogin" />
 
         <TextView
             android:id="@+id/tv_gendar"
@@ -63,7 +61,7 @@
             android:layout_toRightOf="@id/tv_name"
             android:text="女"
             android:textColor="@color/app_tv_color"
-            android:textSize="13sp"/>
+            android:textSize="13sp" />
 
         <TextView
             android:id="@+id/tv_age"
@@ -74,13 +72,13 @@
             android:layout_toRightOf="@id/tv_gendar"
             android:text="30岁"
             android:textColor="@color/app_tv_color"
-            android:textSize="13sp"/>
+            android:textSize="13sp" />
 
         <android.support.v4.view.ViewPager
             android:id="@+id/vpager_top"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@id/tv_name"/>
+            android:layout_below="@id/iv_photo" />
 
         <RadioGroup
             android:layout_width="wrap_content"
@@ -98,7 +96,7 @@
                 android:background="@drawable/bg_dot_sel"
                 android:button="@null"
                 android:checked="true"
-                android:clickable="false"/>
+                android:clickable="false" />
 
             <RadioButton
                 android:id="@+id/rbtn_two"
@@ -108,7 +106,7 @@
                 android:background="@drawable/bg_dot_sel"
                 android:button="@null"
                 android:checked="false"
-                android:clickable="false"/>
+                android:clickable="false" />
         </RadioGroup>
     </RelativeLayout>
 
@@ -116,9 +114,9 @@
         android:id="@+id/scroll2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/rlay1"
+        android:layout_below="@id/rl_info"
         android:layout_marginTop="5dp"
-        android:background="@color/white">
+        android:background="@color/color_white">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -129,84 +127,108 @@
 
             <LinearLayout
                 android:id="@+id/layHealthyRecord"
-                style="@style/lay_patientinfoiteam">
+                style="@style/Bg_Lay_Press"
+                android:background="@drawable/btn_edge_radius">
 
                 <ImageView
                     android:layout_width="25dp"
                     android:layout_height="25dp"
-                    android:src="@mipmap/healthcondition_icon"/>
+                    android:src="@mipmap/ic_health_condition" />
 
                 <TextView
-                    style="@style/tv_patientinfoiteam"
-                    android:text="健康记录"/>
+                    style="@style/Tv_Patient_Info"
+                    android:text="健康记录" />
             </LinearLayout>
 
-            <TextView style="@style/lin_patientinfoiteam"/>
+            <TextView style="@style/Line_Match" />
 
             <LinearLayout
                 android:id="@+id/lay_monitorstandard"
-                style="@style/lay_patientinfoiteam">
+                style="@style/Bg_Lay_Press">
 
                 <ImageView
                     android:layout_width="25dp"
                     android:layout_height="25dp"
-                    android:src="@mipmap/monitoringindex"/>
+                    android:src="@mipmap/monitoringindex" />
 
                 <TextView
-                    style="@style/tv_patientinfoiteam"
-                    android:text="长期监测指标"/>
+                    style="@style/Tv_Patient_Info"
+                    android:text="长期监测指标" />
             </LinearLayout>
 
-            <TextView style="@style/lin_patientinfoiteam"/>
+            <TextView style="@style/Line_Match" />
 
             <LinearLayout
                 android:id="@+id/layMedicalhistory"
-                style="@style/lay_patientinfoiteam">
+                style="@style/Bg_Lay_Press">
 
                 <ImageView
                     android:layout_width="25dp"
                     android:layout_height="25dp"
-                    android:src="@mipmap/healthyrecord"/>
+                    android:src="@mipmap/healthyrecord" />
 
                 <TextView
-                    style="@style/tv_patientinfoiteam"
-                    android:text="医疗记录"/>
+                    style="@style/Tv_Patient_Info"
+                    android:text="医疗记录" />
             </LinearLayout>
 
-            <TextView style="@style/lin_patientinfoiteam"/>
+            <TextView style="@style/Line_Match" />
 
             <LinearLayout
                 android:id="@+id/layRecipe"
-                style="@style/lay_patientinfoiteam">
+                style="@style/Bg_Lay_Press">
 
                 <ImageView
                     android:layout_width="25dp"
                     android:layout_height="25dp"
-                    android:src="@mipmap/recipe"/>
+                    android:src="@mipmap/recipe" />
 
                 <TextView
-                    style="@style/tv_patientinfoiteam"
-                    android:text="处方"/>
+                    style="@style/Tv_Patient_Info"
+                    android:text="处方" />
             </LinearLayout>
 
-            <TextView style="@style/lin_patientinfoiteam"/>
+            <TextView style="@style/Line_Match" />
 
 
             <LinearLayout
                 android:id="@+id/layTeam"
-                style="@style/lay_patientinfoiteam">
+                style="@style/Bg_Lay_Press">
 
                 <ImageView
                     android:layout_width="25dp"
                     android:layout_height="25dp"
-                    android:src="@mipmap/team"/>
+                    android:src="@mipmap/team" />
 
                 <TextView
-                    style="@style/tv_patientinfoiteam"
-                    android:text="医疗团队"/>
+                    style="@style/Tv_Patient_Info"
+                    android:text="医疗团队" />
             </LinearLayout>
 
-            <TextView style="@style/lin_patientinfoiteam"/>
+            <TextView style="@style/Line_Match" />
+
+            <LinearLayout
+                android:id="@+id/lay_family"
+                style="@style/Bg_Lay_Press">
+
+                <ImageView
+                    android:layout_width="@dimen/margin_26"
+                    android:layout_height="@dimen/margin_26"
+                    android:src="@mipmap/team" />
+
+                <TextView
+                    style="@style/Tv_Patient_Info"
+                    android:background="@drawable/btn_edge_radius_bottom"
+                    android:text="家庭成员" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/lay_no"
+                style="@style/Bg_Lay_Press"
+                android:background="@color/color_bg_gray">
+
+            </LinearLayout>
+
         </LinearLayout>
     </ScrollView>
 
@@ -215,7 +237,7 @@
         android:layout_width="10dp"
         android:layout_height="50dp"
         android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"/>
+        android:layout_centerVertical="true" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/floatbtn_accept"
@@ -223,10 +245,10 @@
         android:layout_height="@dimen/floatbtn"
         android:layout_alignParentRight="true"
         android:layout_below="@id/line"
-
         android:layout_marginRight="15dp"
+
         android:src="@mipmap/accept"
-        app:backgroundTint="#4fd2c2"/>
+        app:backgroundTint="#4fd2c2" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/floatbtn_refuse"
@@ -238,6 +260,45 @@
         android:layout_marginTop="15dp"
         android:src="@mipmap/refuse"
         app:backgroundTint="#f87151"
-        app:borderWidth="0dp"/>
+        app:borderWidth="0dp" />
+
+    <LinearLayout
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:keepScreenOn="true">
+
+        <Button
+            android:id="@+id/floatbtn_accept_delay"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_marginBottom="3dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="5dp"
+            android:layout_weight="1"
+            android:background="@drawable/btn_referral"
+            android:keepScreenOn="true"
+            android:text="接受预约"
+            android:textColor="#ffffff" />
+
+        <Button
+            android:id="@+id/floatbtn_refuse_delay"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginBottom="3dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="10dp"
+            android:layout_weight="1"
+            android:background="@drawable/btn_referral_one"
+            android:keepScreenOn="true"
+            android:text="拒绝预约"
+            android:textColor="#ffffff" />
+    </LinearLayout>
 
 </RelativeLayout>

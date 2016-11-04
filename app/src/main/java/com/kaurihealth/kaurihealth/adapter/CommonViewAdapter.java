@@ -13,6 +13,7 @@ import java.util.List;
 public class CommonViewAdapter extends PagerAdapter {
     List<View> viewList;
 
+
     public CommonViewAdapter(List<View> viewList) {
         this.viewList = viewList;
     }

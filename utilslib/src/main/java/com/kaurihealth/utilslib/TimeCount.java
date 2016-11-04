@@ -29,13 +29,13 @@ public class TimeCount extends CountDownTimer {
 
     @Override
     public void onTick(long millisUntilFinished) {
-        tvShow.setClickable(false);
+        tvShow.setEnabled(false);
         tvShow.setText(String.format(formatStr, (int) (millisUntilFinished / 1000)));
     }
 
     @Override
     public void onFinish() {
         tvShow.setText(end);
-        tvShow.setClickable(true);
+        tvShow.setEnabled(true);
     }
 }

@@ -29,10 +29,11 @@ public class TreatmentPresenter<V> implements ITreatmentPresenter<V> {
     private ArrayList<Category> mListData;
 
     @Inject
-    public TreatmentPresenter(IDataSource mRepository){
+    public TreatmentPresenter(IDataSource mRepository) {
         this.mRepository = mRepository;
         mSubscriptions = new CompositeSubscription();
     }
+
     @Override
     public void setPresenter(V view) {
         mFragment = (ITreatmentView) view;
@@ -40,7 +41,7 @@ public class TreatmentPresenter<V> implements ITreatmentPresenter<V> {
 
     @Override
     public void onSubscribe() {
-
+        loadingRemoteData(mFirstLoad);
     }
 
     @Override
@@ -86,7 +87,7 @@ public class TreatmentPresenter<V> implements ITreatmentPresenter<V> {
                 .doOnSubscribe(new Action0() {
                     @Override
                     public void call() {
-                        mFragment.loadingIndicator(true);
+                        mFragment.dataInteractionDialog();
                         mFirstLoad = false;
                     }
                 })
@@ -95,12 +96,13 @@ public class TreatmentPresenter<V> implements ITreatmentPresenter<V> {
                 .subscribe(new Subscriber<MedicalLiteratureDisPlayBean>() {
                     @Override
                     public void onCompleted() {
-
+                        mFragment.dismissInteractionDialog();
+                        mFragment.switchPageUI("跳转至DynamicActivity");
                     }
 
                     @Override
                     public void onError(Throwable e) {
-
+                        mFragment.displayErrorDialog(e.getMessage());
                     }
 
                     @Override

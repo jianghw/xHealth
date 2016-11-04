@@ -1,13 +1,25 @@
 package com.kaurihealth.mvplib.welcome_p;
 
 
+import com.kaurihealth.datalib.local.LocalData;
 import com.kaurihealth.datalib.repository.IDataSource;
+import com.kaurihealth.datalib.response_bean.ContactUserDisplayBean;
+import com.kaurihealth.datalib.response_bean.DoctorDisplayBean;
+import com.kaurihealth.datalib.response_bean.TokenBean;
+import com.kaurihealth.datalib.response_bean.UserBean;
+import com.kaurihealth.utilslib.constant.Global;
+import com.kaurihealth.utilslib.log.LogUtils;
+
+import java.util.List;
 
 import javax.inject.Inject;
 
 import rx.Observable;
 import rx.Subscriber;
 import rx.Subscription;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
+import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
 /**
@@ -16,7 +28,6 @@ import rx.subscriptions.CompositeSubscription;
  * 描述：Observer观察者 Subscriber
  */
 public class WelcomePresenter<V> implements IWelcomePresenter<V> {
-
 
     private IWelcomeView mActivity;
     private final IDataSource mRepository;
@@ -34,43 +45,102 @@ public class WelcomePresenter<V> implements IWelcomePresenter<V> {
     }
 
     /**
-     * 事件订阅
+     * 判断是否需要自动登陆
      */
     @Override
     public void onSubscribe() {
-        //判断是否需要自动登陆
-        createSubscription();
+        Subscription subscription = Observable.create(
+                new Observable.OnSubscribe<TokenBean>() {
+                    @Override
+                    public void call(Subscriber<? super TokenBean> subscriber) {
+                        try {
+                            subscriber.onNext(LocalData.getLocalData().getTokenBean());
+                        } catch (Exception e) {
+                            subscriber.onError(e);
+                        }
+                    }
+                })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        new Action1<TokenBean>() {
+                            @Override
+                            public void call(TokenBean tokenBean) {
+                                if (tokenBean == null) return;
+                                UserBean userBean = tokenBean.getUser();
+                                if (userBean == null) return;
+                                if (userBean.getRegistPercentage() < 30) {
+                                    mActivity.completeRegister();
+                                } else {
+                                    loadContactListByDoctorId();
+                                    loadDoctorDetail();
+                                    mActivity.initChatKitOpen(tokenBean);
+                                }
+                            }
+                        },
+                        new Action1<Throwable>() {
+                            @Override
+                            public void call(Throwable throwable) {
+                                LogUtils.e(throwable.getMessage());
+                                try {
+                                    Thread.sleep(2000);
+                                } catch (InterruptedException e) {
+                                    e.printStackTrace();
+                                }
+                                mActivity.switchPageUI(Global.Jump.LoginActivity);
+                            }
+                        });
+        mSubscriptions.add(subscription);
+    }
+
+    /**
+     * 关系列表
+     */
+    @Override
+    public void loadContactListByDoctorId() {
+        Subscription subscription = mRepository.loadContactListByDoctorId()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        new Action1<List<ContactUserDisplayBean>>() {
+                            @Override
+                            public void call(List<ContactUserDisplayBean> beanList) {
+
+                            }
+                        },
+                        new Action1<Throwable>() {
+                            @Override
+                            public void call(Throwable throwable) {
+                                mActivity.showToast(throwable.getMessage());
+                            }
+                        });
+        mSubscriptions.add(subscription);
+    }
+
+    @Override
+    public void loadDoctorDetail() {
+        Subscription subscription = mRepository.loadDoctorDetail()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        new Action1<DoctorDisplayBean>() {
+                            @Override
+                            public void call(DoctorDisplayBean doctorDisplayBean) {
+                                LocalData.getLocalData().setMyself(doctorDisplayBean);
+                            }
+                        },
+                        new Action1<Throwable>() {
+                            @Override
+                            public void call(Throwable throwable) {
+                                mActivity.showToast(throwable.getMessage());
+                            }
+                        });
+        mSubscriptions.add(subscription);
     }
 
     @Override
     public void unSubscribe() {
-
-    }
-
-    private void createSubscription() {
-        Subscription subscription = Observable
-                .create(new Observable.OnSubscribe<Object>() {
-                    @Override
-                    public void call(Subscriber<? super Object> subscriber) {
-
-                    }
-                })
-                .subscribe(new Subscriber<Object>() {
-                    @Override
-                    public void onCompleted() {
-
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-
-                    }
-
-                    @Override
-                    public void onNext(Object o) {
-
-                    }
-                });
-        mSubscriptions.add(subscription);
+        mSubscriptions.clear();
+        mActivity = null;
     }
 }

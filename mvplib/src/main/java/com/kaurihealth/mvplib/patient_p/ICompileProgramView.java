@@ -13,4 +13,6 @@ import java.util.List;
 public interface ICompileProgramView extends IMvpView {
 
     List<LongTermMonitoringDisplayBean> getNewLongtermMonitoringBean();
+
+    void onCompileSucceed();
 }

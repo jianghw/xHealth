@@ -7,30 +7,10 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        tools:context="com.kaurihealth.kaurihealth.home.activity.VerificationActivity">
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
-        <RelativeLayout
-            android:id="@+id/lay_title_medicalhistory"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/toptitle_height"
-            android:background="@color/kaurihealth_header_background">
-
-            <ImageView
-                android:id="@+id/iv_back"
-                style="@style/toptitleback" />
-
-            <TextView
-                style="@style/toptitletv"
-                android:text="验证信息" />
-
-            <TextView
-                android:id="@+id/tv_operate"
-                style="@style/toptitleedit"
-                android:text="发送" />
-
-        </RelativeLayout>
+        <include layout="@layout/include_action_bar"/>
 
         <TextView
             android:layout_width="wrap_content"
@@ -46,7 +26,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
-            android:background="@color/white"
+            android:background="@color/color_white"
             android:gravity="top|left"
             android:lines="8"
             android:padding="8dp"

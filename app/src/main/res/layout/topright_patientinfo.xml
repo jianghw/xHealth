@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:fadingEdge="none"
-
-    android:fillViewport="false"
-    android:overScrollMode="never"
-    android:scrollbars="none">
+            xmlns:tools="http://schemas.android.com/tools"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fadingEdge="none"
+            android:fillViewport="false"
+            android:overScrollMode="never"
+            android:scrollbars="none">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -17,13 +17,13 @@
         <TextView
             android:id="@+id/tv1_topleft_patientinfo"
             style="@style/patientrelleft_tv"
-            android:text="联系电话：" />
+            android:text="联系电话："/>
 
         <TextView
             android:id="@+id/tv_apponintmenttype_topleft_patientinfo"
             style="@style/patientrelleft_tv"
             android:layout_marginLeft="70dp"
-            android:text="" />
+            tools:text="ddddddddddddddddddddddddddddddd"/>
 
         <TextView
             android:id="@+id/tv_remark_topleft_patientinfo"
@@ -34,19 +34,21 @@
             android:layout_toRightOf="@id/tv_apponintmenttype_topleft_patientinfo"
             android:text="(语音/视频)"
             android:textColor="@android:color/white"
-            android:textSize="13sp" />
+            android:textSize="13sp"/>
 
         <TextView
             android:id="@+id/tv2_topleft_patientinfo"
             style="@style/normaltext_topleft_patientinfo"
             android:layout_below="@id/tv_apponintmenttype_topleft_patientinfo"
-            android:text="联系地址：" />
+            android:text="联系地址："/>
 
         <TextView
             android:id="@+id/tv_appontmentdate_patientinfo"
             style="@style/normaltext_topleft_patientinfo"
             android:layout_alignLeft="@id/tv_apponintmenttype_topleft_patientinfo"
-            android:layout_below="@id/tv_apponintmenttype_topleft_patientinfo" />
+            android:layout_below="@id/tv_apponintmenttype_topleft_patientinfo"
+            android:singleLine="true"
+            tools:text="ddddddddddddddffffffffffffffffffffffffffffffffffffffffddddddd"/>
 
         <TextView
             android:id="@+id/tv_time_patientinfo"
@@ -57,7 +59,7 @@
             android:layout_toRightOf="@id/tv_appontmentdate_patientinfo"
             android:text="10:30"
             android:textColor="@android:color/white"
-            android:textSize="23sp" />
+            android:textSize="23sp"/>
 
         <TextView
             android:id="@+id/tv_isam_patientinfo"
@@ -68,7 +70,7 @@
             android:layout_toRightOf="@id/tv_time_patientinfo"
             android:text="AM"
             android:textColor="@android:color/white"
-            android:textSize="13sp" />
+            android:textSize="13sp"/>
 
     </RelativeLayout>
 </ScrollView>

@@ -29,10 +29,11 @@ public class Studentpresenter<V> implements IStudentPresenter<V> {
     private ArrayList<Category> mListData;
 
     @Inject
-    public Studentpresenter(IDataSource mRepository){
+    public Studentpresenter(IDataSource mRepository) {
         this.mRepository = mRepository;
         mSubscriptions = new CompositeSubscription();
     }
+
     @Override
     public void setPresenter(V view) {
         mFragment = (IStudentView) view;
@@ -40,7 +41,8 @@ public class Studentpresenter<V> implements IStudentPresenter<V> {
 
     @Override
     public void onSubscribe() {
-        if (mFirstLoad) loadingRemoteData(false);
+//        if (mFirstLoad) loadingRemoteData(false);
+        loadingRemoteData(mFirstLoad);
     }
 
     public void loadingRemoteData(boolean isDirty) {
@@ -86,8 +88,7 @@ public class Studentpresenter<V> implements IStudentPresenter<V> {
                 .doOnSubscribe(new Action0() {
                     @Override
                     public void call() {
-                        mFragment.loadingIndicator(true);
-                        mFirstLoad = false;
+                        mFragment.dataInteractionDialog();
                     }
                 })
                 .subscribeOn(AndroidSchedulers.mainThread())
@@ -95,12 +96,13 @@ public class Studentpresenter<V> implements IStudentPresenter<V> {
                 .subscribe(new Subscriber<MedicalLiteratureDisPlayBean>() {
                     @Override
                     public void onCompleted() {
-                    mFragment.switchPageUI("跳转至DynamicActivity");
+                        mFragment.dismissInteractionDialog();
+                        mFragment.switchPageUI("跳转至DynamicActivity");
                     }
 
                     @Override
                     public void onError(Throwable e) {
-
+                        mFragment.displayErrorDialog(e.getMessage());
                     }
 
                     @Override
@@ -121,7 +123,7 @@ public class Studentpresenter<V> implements IStudentPresenter<V> {
         Category categoryOne = new Category("图文");
         Category categoryTwo = new Category("课件");
         Category categoryThree = new Category("视频");
-        Category categoryFour = new Category("视频");
+        Category categoryFour = new Category("在线会议");
         mMedicalLiteratureDisPlayBeanList = mFragment.getMedicalLiteratureDisPlayBeanList();
         mListData = mFragment.getCategoryList();
         for (MedicalLiteratureDisPlayBean item : mMedicalLiteratureDisPlayBeanList) {

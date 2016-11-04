@@ -20,11 +20,10 @@ import java.util.List;
 
 /**
  * Created by jianghw on 2016/9/2.
- * <p/>
- * 描述：
+ * <p>
+ * 描述：编辑、删除adapter
  */
 public class ProgramSwipeAdapter extends BaseSwipeAdapter {
-
 
     private final Context mContext;
     private final List<LongTermMonitoringDisplayBean> mList;
@@ -57,31 +56,31 @@ public class ProgramSwipeAdapter extends BaseSwipeAdapter {
     @Override
     public View generateView(final int i, ViewGroup viewGroup) {
         View convertView = LayoutInflater.from(mContext).inflate(R.layout.listview_item_swipe_layout, null);
-        SwipeLayout swipeLayout = (SwipeLayout) convertView.findViewById(getSwipeLayoutResourceId(i));
-        final LongTermMonitoringDisplayBean bean = mList.get(i);
-        convertView.findViewById(R.id.tv_compile).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                EventBus.getDefault().post(new GraphDataFgtDeleteEvent(Global.Environment.COMPILE, bean));
-            }
-        });
-        convertView.findViewById(R.id.tv_delete).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                EventBus.getDefault().post(new GraphDataFgtDeleteEvent(Global.Environment.DELETE, bean));
-            }
-        });
-
         return convertView;
     }
 
     @Override
     public void fillValues(int i, View view) {
+        SwipeLayout swipeLayout = (SwipeLayout) view.findViewById(getSwipeLayoutResourceId(i));
+        LongTermMonitoringDisplayBean bean = mList.get(i);
+        view.findViewById(R.id.tv_compile).setOnClickListener(v -> {
+            swipeLayout.close();
+            EventBus.getDefault().postSticky(new GraphDataFgtDeleteEvent(Global.Environment.COMPILE, bean));
+        });
+        view.findViewById(R.id.tv_delete).setOnClickListener(v -> {
+            swipeLayout.close();
+            EventBus.getDefault().postSticky(new GraphDataFgtDeleteEvent(Global.Environment.DELETE, bean));
+        });
         TextView mData = (TextView) view.findViewById(R.id.tv_data);
         TextView mDate = (TextView) view.findViewById(R.id.tv_date);
-        LongTermMonitoringDisplayBean bean = mList.get(i);
+
         String unit = bean.getUnit();
-        mData.setText(bean.getMeasurement() + unit);
+        if (bean.getMeasurement().contains("--")) {
+            String[] strings = bean.getMeasurement().split("--");
+            mData.setText(strings[0] + "--" + strings[1] + unit);
+        } else {
+            mData.setText(bean.getMeasurement() + unit);
+        }
         String date = DateUtils.getFormatDate(bean.getDate());
         mDate.setText(date);
     }

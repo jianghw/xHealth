@@ -1,28 +1,28 @@
 package com.kaurihealth.mvplib.register_p;
 
+import com.kaurihealth.datalib.local.LocalData;
 import com.kaurihealth.datalib.repository.Repository;
 import com.kaurihealth.datalib.request_bean.bean.InitiateVerificationBean;
-import com.kaurihealth.datalib.request_bean.bean.InitiateVerificationResponse;
 import com.kaurihealth.datalib.request_bean.bean.NewRegisterBean;
-import com.kaurihealth.datalib.request_bean.bean.RegisterResponse;
 import com.kaurihealth.datalib.request_bean.builder.InitiateVerificationBeanBuilder;
-import com.kaurihealth.datalib.request_bean.builder.NewRegisterBeanBuilder;
+import com.kaurihealth.datalib.response_bean.InitiateVerificationResponse;
+import com.kaurihealth.datalib.response_bean.RegisterResponse;
+import com.kaurihealth.datalib.response_bean.TokenBean;
+import com.kaurihealth.utilslib.RegularUtils;
 import com.kaurihealth.utilslib.constant.Global;
-import com.kaurihealth.utilslib.log.LogUtils;
 
 import javax.inject.Inject;
 
+import rx.Observable;
 import rx.Observer;
 import rx.Subscriber;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action0;
+import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
-/**
- * Created by mip on 2016/8/10.
- */
+
 public class RegisterPresenter<V> implements IRegisterPresenter<V> {
 
     private Repository mRepository;
@@ -40,59 +40,12 @@ public class RegisterPresenter<V> implements IRegisterPresenter<V> {
         mActivity = (IRegisterView) view;
     }
 
-    @Override
-    public void onSubscribe() {
-        NewRegisterBean newRegisterBean = getNewRegisterBean();
-
-        Subscription subscribe = mRepository.userRegister(newRegisterBean)
-                .subscribeOn(Schedulers.io())
-                .doOnSubscribe(new Action0() {
-                    @Override
-                    public void call() {
-                        mActivity.dataInteractionDialog();
-                    }
-                })
-                .subscribeOn(AndroidSchedulers.mainThread())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Subscriber<RegisterResponse>() {
-                    @Override
-                    public void onCompleted() {
-                        mActivity.dismissInteractionDialog();
-                        mActivity.switchPageUI(Global.Jump.RegisterPersonInfoActivity);
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        mActivity.displayErrorDialog(e.getMessage());
-                    }
-
-                    @Override
-                    public void onNext(RegisterResponse registerResponse) {
-
-                    }
-                });
-        mSubscriptions.add(subscribe);
-    }
-
-    private NewRegisterBean getNewRegisterBean() {
-        String phoneNumber = mActivity.getPhoneNumber();
-        String passWord = mActivity.getPassword();
-        String verificationCode = mActivity.getVerificationCode();
-        return new NewRegisterBeanBuilder().Build(phoneNumber, passWord, verificationCode);
-    }
-
-    @Override
-    public void unSubscribe() {
-        mSubscriptions.clear();
-        mActivity = null;
-    }
-
     /**
      * 发送请求码并得到验证码
      */
     public void sendVerificationCodeRequest() {
         String phoneNumber = mActivity.getPhoneNumber();
-        if (phoneNumber.matches("\\d{11,}")) {
+        if (RegularUtils.matcherMyContent("^1[3|4|5|7|8]\\d{9}$", phoneNumber)) {
             InitiateVerificationBean initiateVerificationBean = new InitiateVerificationBeanBuilder().BuildRegisterInitiateVerification(phoneNumber);
             //发送请求
             getVerificationCode(initiateVerificationBean);
@@ -102,32 +55,110 @@ public class RegisterPresenter<V> implements IRegisterPresenter<V> {
         }
     }
 
-
     /**
      * 发送请求
-     *
-     * @param initiateVerificationBean
      */
-    private void getVerificationCode(InitiateVerificationBean initiateVerificationBean) {
-        Subscription subscribe = mRepository.InitiateVerification(initiateVerificationBean)
+    private void getVerificationCode(InitiateVerificationBean bean) {
+        Subscription subscribe = mRepository.InitiateVerification(bean)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<InitiateVerificationResponse>() {
                     @Override
                     public void onCompleted() {
-
                     }
 
                     @Override
                     public void onError(Throwable e) {
-                        LogUtils.e("Fail", e.getMessage());
+                        mActivity.showToast("短信验证码发送失败" + e.getMessage());
                     }
 
                     @Override
-                    public void onNext(InitiateVerificationResponse initiateVerificationResponse) {
-                        LogUtils.e("Success", initiateVerificationResponse.message);
+                    public void onNext(InitiateVerificationResponse response) {
+                        mActivity.showToast(response.getMessage());
                     }
                 });
         mSubscriptions.add(subscribe);
+    }
+
+    /**
+     * 注册
+     */
+    @Override
+    public void onSubscribe() {
+        NewRegisterBean newRegisterBean = mActivity.getNewRegisterBean();
+
+        Subscription subscribe = mRepository.userRegister(newRegisterBean)
+                .subscribeOn(Schedulers.io())
+                .doOnSubscribe(() -> mActivity.dataInteractionDialog())
+                .subscribeOn(AndroidSchedulers.mainThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<RegisterResponse>() {
+                    @Override
+                    public void onCompleted() {
+                        mActivity.dismissInteractionDialog();
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        mActivity.displayErrorDialog("注册失败" + e.getMessage());
+                    }
+
+                    @Override
+                    public void onNext(RegisterResponse response) {
+                        if (response.isSuccessful()) {
+                            saveTokenToDatabase(response);
+                        } else {
+                            mActivity.showToast(response.getMessage());
+                        }
+                    }
+                });
+        mSubscriptions.add(subscribe);
+    }
+
+    /**
+     * Token 保存
+     *
+     * @param response
+     */
+    @Override
+    public void saveTokenToDatabase(RegisterResponse response) {
+        TokenBean tokenBean = response.getToken();
+        if (tokenBean == null) return;
+        Observable<TokenBean> observable = Observable.create(new Observable.OnSubscribe<TokenBean>() {
+            @Override
+            public void call(Subscriber<? super TokenBean> subscriber) {
+                try {
+                    subscriber.onNext(tokenBean);
+                    subscriber.onCompleted();
+                } catch (Exception e) {
+                    subscriber.onError(e);
+                }
+            }
+        });
+        Subscription subscribe = mRepository.persistentData(observable)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        new Action1<TokenBean>() {
+                            @Override
+                            public void call(TokenBean tokenBean) {
+                                LocalData.getLocalData().setTokenBean(tokenBean);
+                                mActivity.switchPageUI(Global.Jump.RegisterPersonInfoActivity);
+                                mActivity.manualFinishCurrent();
+                            }
+                        },
+                        new Action1<Throwable>() {
+                            @Override
+                            public void call(Throwable throwable) {
+                                mActivity.showToast(throwable.getMessage());
+                            }
+                        });
+        mSubscriptions.add(subscribe);
+    }
+
+    @Override
+    public void unSubscribe() {
+        mSubscriptions.clear();
+        mActivity = null;
     }
 }

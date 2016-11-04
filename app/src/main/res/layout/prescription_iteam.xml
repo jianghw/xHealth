@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#FFFFFF"
     android:paddingBottom="10dp"
@@ -17,21 +17,40 @@
         android:textColor="#9A9A9A"
         android:textSize="18dp" />
 
-    <com.example.commonlibrary.widget.CircleImageView
+    <ImageView
         android:id="@+id/iv_photo_homeiteam"
-        android:layout_width="45dp"
-        android:layout_height="45dp"
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        android:layout_centerHorizontal="true"
+        android:src="@mipmap/ic_el_group_child"
         android:layout_centerVertical="true"
-        android:layout_marginLeft="60dp"
-        android:layout_toRightOf="@id/tv_type" />
 
-    <com.example.commonlibrary.widget.CircleImageView
+         />
+
+    <ImageView
         android:id="@+id/iv_photo_homeiteam2"
-        android:layout_width="45dp"
-        android:layout_height="45dp"
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        android:src="@mipmap/ic_el_group_child"
         android:layout_centerVertical="true"
         android:layout_marginLeft="12dp"
         android:layout_toRightOf="@id/iv_photo_homeiteam" />
+
+    <!--<com.kaurihealth.utilslib.widget.CircleImageView-->
+        <!--android:id="@+id/iv_photo_homeiteam"-->
+        <!--android:layout_width="45dp"-->
+        <!--android:layout_height="45dp"-->
+        <!--android:layout_centerVertical="true"-->
+        <!--android:layout_marginLeft="60dp"-->
+        <!--android:layout_toRightOf="@id/tv_type" />-->
+
+    <!--<com.kaurihealth.utilslib.widget.CircleImageView-->
+        <!--android:id="@+id/iv_photo_homeiteam2"-->
+        <!--android:layout_width="45dp"-->
+        <!--android:layout_height="45dp"-->
+        <!--android:layout_centerVertical="true"-->
+        <!--android:layout_marginLeft="12dp"-->
+        <!--android:layout_toRightOf="@id/iv_photo_homeiteam" />-->
 
     <TextView
         android:id="@+id/tv_time_homitam"

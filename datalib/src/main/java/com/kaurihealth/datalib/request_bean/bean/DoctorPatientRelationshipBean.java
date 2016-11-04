@@ -3,6 +3,7 @@ package com.kaurihealth.datalib.request_bean.bean;
 import android.text.TextUtils;
 
 import com.kaurihealth.datalib.response_bean.DoctorDisplayBean;
+import com.kaurihealth.datalib.response_bean.PatientDisplayBean;
 
 import java.io.Serializable;
 import java.util.Date;

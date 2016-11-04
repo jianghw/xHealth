@@ -25,7 +25,7 @@ public class StudyPresenter<V> implements IStudyPresenter<V> {
     private boolean mFirstLoad = true;
 
     @Inject
-    public StudyPresenter(IDataSource mRepository){
+    public StudyPresenter(IDataSource mRepository) {
         this.mRepository = mRepository;
         mSubscriptions = new CompositeSubscription();
     }
@@ -37,7 +37,8 @@ public class StudyPresenter<V> implements IStudyPresenter<V> {
 
     @Override
     public void onSubscribe() {
-        if (mFirstLoad) loadingRemoteData(false);
+//        if (mFirstLoad) loadingRemoteData(false);
+        loadingRemoteData(mFirstLoad);
     }
 
     @Override
@@ -83,7 +84,7 @@ public class StudyPresenter<V> implements IStudyPresenter<V> {
                 .doOnSubscribe(new Action0() {
                     @Override
                     public void call() {
-                        mFragment.loadingIndicator(true);
+                        mFragment.dataInteractionDialog();
                         mFirstLoad = false;
                     }
                 })
@@ -92,12 +93,13 @@ public class StudyPresenter<V> implements IStudyPresenter<V> {
                 .subscribe(new Subscriber<MedicalLiteratureDisPlayBean>() {
                     @Override
                     public void onCompleted() {
-
+                        mFragment.dismissInteractionDialog();
+                        mFragment.switchPageUI("跳转至DynamicActivity");
                     }
 
                     @Override
                     public void onError(Throwable e) {
-
+                        mFragment.displayErrorDialog(e.getMessage());
                     }
 
                     @Override

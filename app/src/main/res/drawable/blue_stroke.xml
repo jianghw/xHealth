@@ -2,14 +2,14 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:state_enabled="true">
         <shape>
-            <corners android:radius="5dp"></corners>
-            <stroke android:width="0.5dp" android:color="@color/kaurihealth_header_background"></stroke>
-            <solid android:color="@color/white"></solid>
+            <corners android:radius="5dp"/>
+            <stroke android:width="0.5dp" android:color="@color/color_enable_green"/>
+            <solid android:color="@color/color_white"/>
         </shape>
     </item>
     <item>
         <shape>
-            <solid android:color="@color/white"></solid>
+            <solid android:color="@color/color_white"/>
         </shape>
     </item>
 </selector>

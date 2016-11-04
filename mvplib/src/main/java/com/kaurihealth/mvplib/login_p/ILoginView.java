@@ -1,5 +1,7 @@
 package com.kaurihealth.mvplib.login_p;
 
+import com.kaurihealth.datalib.request_bean.bean.LoginBean;
+import com.kaurihealth.datalib.response_bean.TokenBean;
 import com.kaurihealth.mvplib.base_p.IMvpView;
 
 /**
@@ -13,13 +15,9 @@ public interface ILoginView extends IMvpView {
 
     String getPassword();
 
-    void setUserName();
+    void setUserName(String name);
 
-    void setPassword();
-
-    void setImageHead();
-
-    void loginSuccessful();
+    void setPassword(String password);
 
     void completeRegister();
 
@@ -27,11 +25,18 @@ public interface ILoginView extends IMvpView {
 
     void showSuccessToast();
 
+
+    //将用户名用sharedPerference存储起来
+    void saveUsername();
+
+
+
     /**
      * 创建请求bean
-     *
-     * @param <T>
-     * @return
      */
-    <T> T createRequestBean();
+    LoginBean createRequestBean();
+
+    void setLoginBtnEnable(boolean flag);
+
+    void initChatKitOpen(TokenBean tokenBean);
 }

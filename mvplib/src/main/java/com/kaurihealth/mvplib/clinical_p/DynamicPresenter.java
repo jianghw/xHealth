@@ -42,10 +42,10 @@ public class DynamicPresenter<V> implements IDynamicPresenter<V> {
 
     @Override
     public void onSubscribe() {
-        if (mFirstLoad) {
-            loadingRemoteData(false);
-        }
-
+//        if (mFirstLoad) {
+//            loadingRemoteData(false);
+//        }
+        loadingRemoteData(mFirstLoad);
     }
 
     @Override
@@ -93,8 +93,7 @@ public class DynamicPresenter<V> implements IDynamicPresenter<V> {
                 .doOnSubscribe(new Action0() {
                     @Override
                     public void call() {
-//                        mFragment.loadingIndicator(true);
-//                        mFirstLoad = false;
+                        mFragment.dataInteractionDialog();
                     }
                 })
                 .subscribeOn(AndroidSchedulers.mainThread())
@@ -102,12 +101,13 @@ public class DynamicPresenter<V> implements IDynamicPresenter<V> {
                 .subscribe(new Subscriber<MedicalLiteratureDisPlayBean>() {
                     @Override
                     public void onCompleted() {
+                        mFragment.dismissInteractionDialog();
                         mFragment.switchPageUI("跳转至DynamicActivity");
                     }
 
                     @Override
                     public void onError(Throwable e) {
-
+                        mFragment.displayErrorDialog(e.getMessage());
                     }
 
                     @Override

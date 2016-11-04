@@ -7,8 +7,8 @@
     <RelativeLayout
         android:id="@+id/lay_title_medicalhistory"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/toptitle_height"
-        android:background="@color/kaurihealth_header_background">
+        android:layout_height="@dimen/input_height_48"
+        android:background="@color/color_enable_green">
 
         <RadioGroup
             android:layout_width="wrap_content"
@@ -24,15 +24,26 @@
                 style="@style/Friend_Fgt_RadioButton"
                 android:background="@drawable/rbtnleft"
                 android:text="患者"
-                android:textColor="@color/color_rbtn_friend"/>
+                android:textColor="@color/color_rb_friend"/>
 
             <RadioButton
                 android:id="@+id/rbtn_doctor"
                 style="@style/Friend_Fgt_RadioButton"
                 android:background="@drawable/rbtnright"
                 android:text="医生"
-                android:textColor="@color/color_rbtn_friend"/>
+                android:textColor="@color/color_rb_friend"/>
         </RadioGroup>
+
+        <ImageView
+            android:id="@+id/tv_add"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="14dp"
+            android:src="@mipmap/add_doctor"
+            android:textColor="@color/color_white"
+            />
     </RelativeLayout>
 
     <android.support.v4.view.ViewPager

@@ -2,66 +2,33 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/kaurihealth_background"
+    android:background="@color/color_bg_gray"
     android:orientation="vertical">
 
-    <RelativeLayout
-        android:id="@+id/lay_title_medicalhistory"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/toptitle_height"
-        android:background="@color/kaurihealth_header_background">
-
-        <ImageView
-            android:id="@+id/iv_back"
-            style="@style/toptitleback" />
-
-        <TextView
-            style="@style/toptitletv"
-            android:text="执业证号" />
-
-        <TextView
-            android:id="@+id/tv_operate"
-            style="@style/toptitleedit"
-            android:text="保存" />
-    </RelativeLayout>
+    <include
+        android:id="@+id/in_title"
+        layout="@layout/include_action_bar" />
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:background="@android:color/white"
-        android:paddingBottom="8dp"
-        android:paddingLeft="12dp"
-        android:paddingRight="12dp"
-        android:paddingTop="8dp">
+        android:layout_height="@dimen/input_height_48"
+        android:layout_marginTop="@dimen/margin_16"
+        android:background="@color/color_white">
 
-        <!--<TextView-->
-            <!--android:id="@+id/tv1_mine"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_centerVertical="true"-->
-            <!--android:background="@null"-->
-            <!--android:gravity="center_vertical"-->
-            <!--android:text="执业证号：" />-->
-
-        1<EditText
+        <EditText
             android:id="@+id/edtCertificationNumber"
+            style="@style/EditText_Frame"
             android:layout_width="match_parent"
-            android:layout_height="30dp"
             android:layout_centerVertical="true"
-            android:padding="5dp"
-            android:background="@drawable/edt_bg"
-            android:inputType="number"
-            android:maxLength="15"
+            android:layout_margin="@dimen/padding_6"
             android:hint="请输入执业证号"
-            android:textColorHint="#ABABAD"
-            android:textColor="#666666"
-            android:textSize="15sp" />
+            android:inputType="number"
+            android:maxLength="15" />
 
         <ImageView
             android:id="@+id/ivDelete"
-            android:visibility="gone"
-            android:paddingRight="4dp"
-            style="@style/delete_profession_title" />
+            style="@style/Img_Delete"
+            android:layout_marginRight="@dimen/margin_16"
+            android:visibility="gone" />
     </RelativeLayout>
 </LinearLayout>

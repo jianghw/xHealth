@@ -7,22 +7,26 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.kaurihealth.utilslib.dialog.PopUpNumberPickerDialog;
-import com.kaurihealth.utilslib.dialog.SelectDateDialog;
 import com.kaurihealth.datalib.request_bean.bean.NewRegistByDoctorBean;
 import com.kaurihealth.datalib.request_bean.builder.NewRegistByDoctorBeanBuilder;
+import com.kaurihealth.datalib.response_bean.RegisterResponse;
 import com.kaurihealth.kaurihealth.MyApplication;
 import com.kaurihealth.kaurihealth.R;
 import com.kaurihealth.kaurihealth.base_v.BaseActivity;
-import com.kaurihealth.kaurihealth.util.TextWatchClearError;
+import com.kaurihealth.kaurihealth.eventbus.OpenAnAccountToHomeFragmentEvent;
 import com.kaurihealth.mvplib.open_an_account_p.IOpenAnAccountView;
 import com.kaurihealth.mvplib.open_an_account_p.OpenAnAccountPresenter;
 import com.kaurihealth.utilslib.ValidatorUtils;
+import com.kaurihealth.utilslib.dialog.PopUpNumberPickerDialog;
+import com.kaurihealth.utilslib.dialog.SelectDateDialog;
+import com.kaurihealth.utilslib.widget.TextWatchClearError;
 import com.mobsandgeeks.saripaar.ValidationError;
 import com.mobsandgeeks.saripaar.Validator;
 import com.mobsandgeeks.saripaar.annotation.Length;
 import com.mobsandgeeks.saripaar.annotation.NotEmpty;
 import com.mobsandgeeks.saripaar.annotation.Pattern;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.List;
 
@@ -35,6 +39,8 @@ import butterknife.OnClick;
  * Created by Garnet_Wu on 2016/8/22.
  */
 public class OpenAnAccountActivity extends BaseActivity implements IOpenAnAccountView, Validator.ValidationListener {
+    @Inject
+    OpenAnAccountPresenter<IOpenAnAccountView> mOpenAnAccountPresenter;
 
     //电话
     @Bind(R.id.tvPhone)
@@ -57,12 +63,12 @@ public class OpenAnAccountActivity extends BaseActivity implements IOpenAnAccoun
     //性别
     @NotEmpty(message = "性别不能为空")
     @Bind(R.id.tv_gender)
-    EditText tvGendar;
+    TextView tvGendar;
 
     //生日
     @NotEmpty(message = "生日不能为空")
     @Bind(R.id.tvBirthday)
-    EditText tvBirthday;
+    TextView tvBirthday;
 
     //注册完成
     @Bind(R.id.tv_operate)
@@ -84,13 +90,9 @@ public class OpenAnAccountActivity extends BaseActivity implements IOpenAnAccoun
     @Bind(R.id.ivDelete5)
     ImageView ivDelete5;
 
-
-    @Inject
-    OpenAnAccountPresenter<IOpenAnAccountView> mOpenAnAccountPresenter;
     private Validator validator;
-    private Dialog gendarDialog;
+    private Dialog genderDialog;
     private Dialog dateDialog;
-
 
     //BaseActiivty
     @Override
@@ -100,19 +102,19 @@ public class OpenAnAccountActivity extends BaseActivity implements IOpenAnAccoun
 
     //BaseActivity
     @Override
-    protected void initPresenterAndData(Bundle savedInstanceState) {
+    protected void initPresenterAndView(Bundle savedInstanceState) {
         MyApplication.getApp().getComponent().inject(this);
         mOpenAnAccountPresenter.setPresenter(this);
         //回退键,结束当前Activity
         initBackBtn(R.id.iv_back);
-        final String[] gendars = {"男", "女"};
-        PopUpNumberPickerDialog gendarDialogPopUp = new PopUpNumberPickerDialog(this, gendars, new PopUpNumberPickerDialog.SetClickListener() {
+        String[] genders = getResources().getStringArray(R.array.gender);
+        PopUpNumberPickerDialog genderDialogPopUp = new PopUpNumberPickerDialog(this, genders, new PopUpNumberPickerDialog.SetClickListener() {
             @Override
             public void onClick(int index) {
-                tvGendar.setText(gendars[index]);
+                tvGendar.setText(genders[index]);
             }
         });
-        gendarDialog = gendarDialogPopUp.getDialog();
+        genderDialog = genderDialogPopUp.getDialog();
         SelectDateDialog selectDateDialog = new SelectDateDialog(this, new SelectDateDialog.DialogListener() {
             @Override
             public void onclick(String year, String month, String day) {
@@ -126,14 +128,19 @@ public class OpenAnAccountActivity extends BaseActivity implements IOpenAnAccoun
         tvLastName.addTextChangedListener(new TextWatchClearError(tvLastName, ivDelete5));
         tvGendar.addTextChangedListener(new TextWatchClearError(tvGendar, ivDelete3));
         tvBirthday.addTextChangedListener(new TextWatchClearError(tvBirthday, ivDelete4));
-
     }
 
     //BaseActivity  -- 初始化表达验证器
     @Override
-    protected void initDelayedView() {
+    protected void initDelayedData() {
         validator = new Validator(this);
         validator.setValidationListener(this);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mOpenAnAccountPresenter.unSubscribe();
     }
 
     //IOpenAnAccountView 得到医生为患者快速注册的bean
@@ -147,6 +154,25 @@ public class OpenAnAccountActivity extends BaseActivity implements IOpenAnAccoun
         String dayOfBirth = getTvValue(tvBirthday);
         NewRegistByDoctorBean newRegistByDoctorBean = new NewRegistByDoctorBeanBuilder().Build(userName, firstName, lastName, gender, dayOfBirth);
         return newRegistByDoctorBean;
+    }
+
+    /**
+     * 开户成功
+     *
+     * @param response
+     */
+    @Override
+    public void openAnAccountSuccess(RegisterResponse response) {
+        showToast("为患者开户成功");
+        tvOperate.setClickable(false);
+        clearTextview(tvLastName);
+        clearTextview(tvPhone);
+        clearTextview(tvFirstName);
+        clearTextview(tvBirthday);
+        clearTextview(tvGendar);
+
+        EventBus.getDefault().postSticky(new OpenAnAccountToHomeFragmentEvent());
+        finishCur();
     }
 
 
@@ -207,7 +233,7 @@ public class OpenAnAccountActivity extends BaseActivity implements IOpenAnAccoun
                 clearTextView(tvLastName);
                 break;
             case R.id.rlay_gendar:   //性别条目相对布局
-                gendarDialog.show();
+                genderDialog.show();
                 break;
             case R.id.rlay_birthday:  //生日条目相对布局
                 dateDialog.show();
@@ -216,7 +242,7 @@ public class OpenAnAccountActivity extends BaseActivity implements IOpenAnAccoun
                 dateDialog.show();
                 break;
             case R.id.tv_gender:
-                gendarDialog.show();
+                genderDialog.show();
                 break;
             case R.id.tv_operate:           //注册完成按钮
                 validator.validate();   //调重写方法

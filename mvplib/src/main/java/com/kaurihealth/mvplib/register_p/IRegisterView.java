@@ -1,5 +1,6 @@
 package com.kaurihealth.mvplib.register_p;
 
+import com.kaurihealth.datalib.request_bean.bean.NewRegisterBean;
 import com.kaurihealth.mvplib.base_p.IMvpView;
 
 /**
@@ -17,4 +18,8 @@ public interface IRegisterView extends IMvpView {
     void showPhoneNumberErrorMessage();
 
     void startCountDown();
+
+    NewRegisterBean getNewRegisterBean();
+
+    void manualFinishCurrent();
 }

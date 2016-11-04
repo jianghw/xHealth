@@ -22,15 +22,16 @@ import javax.inject.Singleton;
 
 /**
  * Created by jianghw on 2016/8/8.
- * <p/>
+ * <p>
  * 描述：
  */
 @Singleton
 public class LocalData implements ILocalSource {
-    private static LocalData INSTANCE = null;
+
     private final LiteOrm liteOrm;
     private final ResponseCache mResponseCache;
     private final Context mContext;
+    private static LocalData INSTANCE;
     /**
      * 全局调用，暂存
      */
@@ -41,11 +42,11 @@ public class LocalData implements ILocalSource {
     public LocalData(@NonNull Context context) {
         CheckUtils.checkNotNull(context, "context is must be null");
         liteOrm = LiteOrm.newCascadeInstance(context, "health.db");
-        liteOrm.setDebugged(true);
+        liteOrm.setDebugged(false);
 
         int memClass = ((ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE)).getMemoryClass();
         mResponseCache = new ResponseCache(1024 * 1024 * memClass / 8);
-        mContext = context;
+        mContext = context.getApplicationContext();
         INSTANCE = this;
     }
 
@@ -97,6 +98,7 @@ public class LocalData implements ILocalSource {
 
 
     public <T> long insertEnsureByOne(T t) {
+        if (t == null) throw new IllegalArgumentException("data is null,it can not insert table");
         List list = liteOrm.query(t.getClass());
         int size = list.size();
         if (size == 0) {
@@ -107,7 +109,7 @@ public class LocalData implements ILocalSource {
     }
 
     public <T> void insertEnsureByOneList(List<T> list) {
-        if (list.size() <= 0) throw new IllegalStateException("list must be not null");
+        if (list.size() <= 0) return;
         Class<?> clazz = list.get(0).getClass();
         List listTable = getQueryAll(clazz);
         int size = listTable.size();
@@ -216,7 +218,7 @@ public class LocalData implements ILocalSource {
         if (token != null) return token;
         List<TokenBean> list = getQueryAll(TokenBean.class);
         if (list != null && list.size() <= 0 || list == null) {
-            throw new NullPointerException("token is null,it must not be null");
+            throw new IllegalStateException("token is null,it must not be null");
         }
         int size = list.size();
         token = list.get(size - 1);
@@ -234,13 +236,16 @@ public class LocalData implements ILocalSource {
         }
         List<DoctorDisplayBean> list = getQueryAll(DoctorDisplayBean.class);
         if (list != null && list.size() <= 0 || list == null) {
-            return null;
+            throw new IllegalArgumentException("DoctorDisplayBean is null,it must be init");
         }
         int size = list.size();
         myself = list.get(size - 1);
         return myself;
     }
 
+    /**
+     * set 不是用来初始化,他是有用来改值
+     */
     public void setMyself(DoctorDisplayBean bean) {
         myself = bean;
     }

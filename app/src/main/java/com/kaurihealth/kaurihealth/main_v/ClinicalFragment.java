@@ -12,12 +12,12 @@ import com.kaurihealth.kaurihealth.MyApplication;
 import com.kaurihealth.kaurihealth.R;
 import com.kaurihealth.kaurihealth.adapter.MainFragmentAdapter;
 import com.kaurihealth.kaurihealth.base_v.BaseFragment;
-import com.kaurihealth.kaurihealth.clinical.activity.ClinicalSearchActivity;
-import com.kaurihealth.kaurihealth.clinical.activity.MyClinicalListActivity;
-import com.kaurihealth.kaurihealth.clinical_v.DynamicFragment;
-import com.kaurihealth.kaurihealth.clinical_v.StudentFragment;
-import com.kaurihealth.kaurihealth.clinical_v.StudyFragment;
-import com.kaurihealth.kaurihealth.clinical_v.TreatmentFragment;
+import com.kaurihealth.kaurihealth.clinical_v.Fragment.DynamicFragment;
+import com.kaurihealth.kaurihealth.clinical_v.Fragment.StudentFragment;
+import com.kaurihealth.kaurihealth.clinical_v.Fragment.StudyFragment;
+import com.kaurihealth.kaurihealth.clinical_v.Fragment.TreatmentFragment;
+import com.kaurihealth.kaurihealth.clinical_v.activity.ClinicalSearchActivity;
+import com.kaurihealth.kaurihealth.clinical_v.activity.MyClinicalListActivity;
 import com.kaurihealth.mvplib.main_p.ClinicalPresenter;
 import com.kaurihealth.mvplib.main_p.IClinicalView;
 
@@ -29,7 +29,13 @@ import javax.inject.Inject;
 import butterknife.Bind;
 import butterknife.OnClick;
 
+/**
+ * 临床支持 母页
+ * 描述: 临床支持Fragment
+ */
 public class ClinicalFragment extends BaseFragment implements IClinicalView {
+    @Inject
+    ClinicalPresenter<IClinicalView> mPresenter;
 
     //医疗动态
     @Bind(R.id.rbtn_clinical_treatment_medicalhistory)
@@ -43,14 +49,11 @@ public class ClinicalFragment extends BaseFragment implements IClinicalView {
     //会议及学习
     @Bind(R.id.rbtn_pathologycheck_medicalhistory)
     RadioButton rbtnPathologycheckMedicalhistory;
+
     @Bind(R.id.vp_content_main)
     ViewPager vpagerContent;
 
     private List<Fragment> mFragment = new ArrayList<>();
-
-    @Inject
-    ClinicalPresenter<IClinicalView> mPresenter;
-
 
     public static ClinicalFragment newInstance() {
         return new ClinicalFragment();
@@ -62,20 +65,18 @@ public class ClinicalFragment extends BaseFragment implements IClinicalView {
     }
 
     @Override
-    protected void initPresenterAndData() {
+    protected void initPresenterAndView(Bundle savedInstanceState) {
         MyApplication.getApp().getComponent().inject(this);
         mPresenter.setPresenter(this);
 
         createCurrentFragment();//创建当前的fragment
-
     }
 
     /**
      * 得到用户id
-     * @return
      */
-    public int getUserId(){
-         UserBean user= LocalData.getLocalData().getTokenBean().getUser();
+    public int getUserId() {
+        UserBean user = LocalData.getLocalData().getTokenBean().getUser();
         if (user == null) throw new IllegalStateException("userBean is null ,it must be not null");
         return user.getUserId();
     }
@@ -83,8 +84,8 @@ public class ClinicalFragment extends BaseFragment implements IClinicalView {
     /**
      * 创建当前的fragment
      */
-    public void createCurrentFragment(){
-        if (mFragment.size()>0) mFragment.clear();
+    public void createCurrentFragment() {
+        if (mFragment.size() > 0) mFragment.clear();
         //医疗动态
         DynamicFragment dynamicFragment = DynamicFragment.newInstance();
         //医学教育
@@ -101,7 +102,7 @@ public class ClinicalFragment extends BaseFragment implements IClinicalView {
     }
 
     @Override
-    protected void initDelayedView() {
+    protected void initDelayedData() {
 
         initPagerView();
     }
@@ -130,6 +131,7 @@ public class ClinicalFragment extends BaseFragment implements IClinicalView {
 
     /**
      * 导航Button点击事件
+     *
      * @param view
      */
     @OnClick({R.id.rbtn_clinical_treatment_medicalhistory, R.id.rbt_assist_check_medicalhistory, R.id.rbtn_labcheck_medicalhistory, R.id.rbtn_pathologycheck_medicalhistory})

@@ -4,12 +4,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#EAEEEF"
-    tools:context="com.kaurihealth.kaurihealth.patientwithdoctor.activity.AddHealothyRecordActivity">
+    tools:context="com.kaurihealth.kaurihealth.patient_v.health_condition.AddHealothyRecordActivity">
 
     <RelativeLayout
         android:id="@+id/lay_title_medicalhistory"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/toptitle_height"
+        android:layout_height="@dimen/input_height_48"
         android:background="@color/green">
 
         <ImageView
@@ -32,7 +32,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/lay_title_medicalhistory"
-        android:background="@color/white"
+        android:background="@color/color_white"
         android:orientation="horizontal"
         android:padding="15dp">
 
@@ -46,11 +46,10 @@
             android:layout_width="match_parent"
             android:layout_height="30dp"
             android:layout_marginLeft="10dp"
-            android:background="@drawable/bg_border"
+            android:background="@drawable/bg_edt_login"
             android:paddingLeft="15dp"
             android:textColor="#666666"
             android:textSize="15sp"
-
             android:singleLine="true" />
     </LinearLayout>
 </RelativeLayout>

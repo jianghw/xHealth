@@ -1,0 +1,181 @@
+package com.kaurihealth.datalib.request_bean.bean;
+
+import java.io.Serializable;
+import java.util.Date;
+
+/**
+ * Created by Garnet_Wu on 2016/9/12.
+ */
+//mobileUpdateDoctor
+//移动端更新医生用户信息的bean
+public class MobileUpdateDoctorBean implements Serializable {
+    private String firstName;  //名
+    private String lastName;  //姓
+    private String gender;   //性别
+    private Date dateOfBirth;  //出生日期
+    private String avatar;   //头像
+    private String educationTitle;  //教育职称
+    private String mentorshipTitle;  //导师职称
+    private String hospitalTitle;  //医院职称
+    private String certificationNumber;  //证书编号
+    private Integer departmentId; //科室ID
+    private String departmentName; //科室名称
+    private String hospitalName;  //医院名称
+    private String workingExperience; //工作经历
+    private String practiceField; //实践领域
+
+
+
+    private String introduction; //介绍
+
+
+
+    private String educationLevel;  //教育程度
+    private String educationHistory; //教育史
+    private String nationalIdentity; //身份证
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
+    public void setDateOfBirth(Date dateOfBirth) {
+        this.dateOfBirth = dateOfBirth;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
+    }
+
+    public void setEducationTitle(String educationTitle) {
+        this.educationTitle = educationTitle;
+    }
+
+    public void setMentorshipTitle(String mentorshipTitle) {
+        this.mentorshipTitle = mentorshipTitle;
+    }
+
+    public void setHospitalTitle(String hospitalTitle) {
+        this.hospitalTitle = hospitalTitle;
+    }
+
+    public void setCertificationNumber(String certificationNumber) {
+        this.certificationNumber = certificationNumber;
+    }
+
+    public void setDepartmentId(Integer departmentId) {
+        this.departmentId = departmentId;
+    }
+
+    public void setDepartmentName(String departmentName) {
+        this.departmentName = departmentName;
+    }
+
+    public void setHospitalName(String hospitalName) {
+        this.hospitalName = hospitalName;
+    }
+
+    public void setWorkingExperience(String workingExperience) {
+        this.workingExperience = workingExperience;
+    }
+
+    public void setPracticeField(String practiceField) {
+        this.practiceField = practiceField;
+    }
+
+    public void setIntroduction(String introduction) {
+        this.introduction = introduction;
+    }
+
+    public void setEducationLevel(String educationLevel) {
+        this.educationLevel = educationLevel;
+    }
+
+    public void setEducationHistory(String educationHistory) {
+        this.educationHistory = educationHistory;
+    }
+
+    public void setNationalIdentity(String nationalIdentity) {
+        this.nationalIdentity = nationalIdentity;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public String getEducationTitle() {
+        return educationTitle;
+    }
+
+    public String getMentorshipTitle() {
+        return mentorshipTitle;
+    }
+
+    public String getHospitalTitle() {
+        return hospitalTitle;
+    }
+
+    public String getCertificationNumber() {
+        return certificationNumber;
+    }
+
+    public Integer getDepartmentId() {
+        return departmentId;
+    }
+
+    public String getDepartmentName() {
+        return departmentName;
+    }
+
+    public String getHospitalName() {
+        return hospitalName;
+    }
+
+    public String getWorkingExperience() {
+        return workingExperience;
+    }
+
+    public String getPracticeField() {
+        return practiceField;
+    }
+
+    public String getIntroduction() {
+        return introduction;
+    }
+
+    public String getEducationLevel() {
+        return educationLevel;
+    }
+
+    public String getEducationHistory() {
+        return educationHistory;
+    }
+
+    public String getNationalIdentity() {
+        return nationalIdentity;
+    }
+
+    public Date getDateOfBirth() {
+        return dateOfBirth;
+    }
+}

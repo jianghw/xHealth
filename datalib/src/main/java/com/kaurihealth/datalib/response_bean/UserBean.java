@@ -6,7 +6,7 @@ import com.litesuits.orm.db.enums.AssignType;
 /**
  * Created by jianghw on 2016/8/24.
  * <p/>
- * 描述：
+ * 描述：用户的参数
  */
 public class UserBean {
     // 指定自增，每个对象需要有一个主键

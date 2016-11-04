@@ -14,6 +14,4 @@ public interface IBlankPatientView extends IMvpView {
 
     //清除数据
     void  clear();
-
-
 }

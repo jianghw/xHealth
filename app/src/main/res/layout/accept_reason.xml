@@ -3,35 +3,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/kaurihealth_background"
-    android:orientation="vertical"
-    tools:context="com.kaurihealth.kaurihealth.home.activity.AcceptReasonActivity">
+    android:background="@color/color_bg_gray"
+    android:orientation="vertical">
 
-    <RelativeLayout
-        android:id="@+id/lay_title_medicalhistory"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/toptitle_height"
-        android:background="@color/kaurihealth_header_background">
-
-        <ImageView
-            android:id="@+id/iv_back"
-            style="@style/toptitleback" />
-
-        <TextView
-            style="@style/toptitletv"
-            android:text="接受预约" />
-
-        <TextView
-            android:id="@+id/tv_operate"
-            style="@style/toptitleedit"
-            android:text="完成" />
-    </RelativeLayout>
+    <include layout="@layout/include_action_bar"/>
 
     <RelativeLayout style="@style/rlay_major_strength">
 
         <EditText
             android:id="@+id/edt_name"
-            style="@style/edt_major_strength"
+            style="@style/EditText_Content"
             android:hint="对患者说些什么..."/>
 
         <TextView

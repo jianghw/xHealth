@@ -1,222 +1,234 @@
 package com.kaurihealth.kaurihealth.search_v;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 
 import com.kaurihealth.datalib.request_bean.bean.InitialiseSearchRequestBean;
+import com.kaurihealth.datalib.request_bean.bean.SearchBooleanResultBean;
 import com.kaurihealth.datalib.request_bean.builder.InitialiseSearchRequestBeanBuilder;
 import com.kaurihealth.kaurihealth.MyApplication;
 import com.kaurihealth.kaurihealth.R;
+import com.kaurihealth.kaurihealth.adapter.SearchFragmentAdapter;
 import com.kaurihealth.kaurihealth.base_v.BaseActivity;
-import com.kaurihealth.kaurihealth.home.adapter.ModelPagerAdapter;
-import com.kaurihealth.kaurihealth.home.util.PagerManager;
-import com.kaurihealth.mvplib.search_p.ISearchView;
-import com.kaurihealth.mvplib.search_p.SearchPresenter;
-import com.kaurihealth.utilslib.ValidatorUtils;
-import com.mobsandgeeks.saripaar.ValidationError;
-import com.mobsandgeeks.saripaar.Validator;
-import com.mobsandgeeks.saripaar.annotation.NotEmpty;
+import com.kaurihealth.kaurihealth.eventbus.SearchAtyToFgtEvent;
+import com.kaurihealth.mvplib.home_p.ISearchActivityView;
+import com.kaurihealth.mvplib.home_p.SearchActivityPresenter;
+import com.kaurihealth.utilslib.constant.Global;
 
+import org.greenrobot.eventbus.EventBus;
+
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.OnClick;
-import github.chenupt.springindicator.SpringIndicator;
-//import github.chenupt.springindicator.SpringIndicator;
 
 /**
- * Created by Garnet_Wu on 2016/8/23.
+ * Created by jianghw .
+ * <p/>
+ * Describle: 搜索母页
  */
-public class SearchActivity extends BaseActivity implements ISearchView, Validator.ValidationListener {
+public class SearchActivity extends BaseActivity implements ISearchActivityView, TextWatcher {
+    @Inject
+    SearchActivityPresenter<ISearchActivityView> mPresenter;
 
-    @Bind(R.id.iv_delete)
-    ImageView ivDeleteText;
-
-    @NotEmpty(message = "请输入您想搜索的内容！")
     @Bind(R.id.etSearch)
     EditText etSearch;
+    @Bind(R.id.iv_delete)
+    ImageView iv_delete;
+    @Bind(R.id.vpContent)
+    ViewPager vpContent;
+    @Bind(R.id.tablayTop)
+    TabLayout tablayTop;
 
+    List<Fragment> fragmentList = new ArrayList<>();//页面
 
-    @Inject
-    SearchPresenter<ISearchView> mSearchPresenter;
-    private Validator validator;
-    private ViewPager vp_content;
-    private  Fragment[] fragments;
-    private String[] indicators =  {"所有", "医生", "科室", "医院", "患者"};
-    //用于关键字搜索(里面元素就是type)
-    private  String[] keyWords = {"default", "doctor", "hospital", "department", "patient"};
-    private ModelPagerAdapter adapter;
-    private String content;
-    private int index;
+    List<String> searchList = new ArrayList<>();//历史记录
+    private SearchFragmentAdapter adapter;
 
-    //BaseActivity 返回布局id
     @Override
     protected int getActivityLayoutID() {
-        return R.layout.activity_search;
+        return R.layout.search_new;
     }
 
-    //初始化presenter和数据
     @Override
-    protected void initPresenterAndData(Bundle savedInstanceState) {
+    protected void initPresenterAndView(Bundle savedInstanceState) {
         MyApplication.getApp().getComponent().inject(this);
-        mSearchPresenter.setPresenter(this);
+        mPresenter.setPresenter(this);
+
+        initBackBtn(R.id.tvBack);
+        initDelayedView();
     }
 
-    //初始化表单验证器
+    //历史数据初始化
     @Override
-    protected void initDelayedView() {
-        validator = new Validator(this);
-        validator.setValidationListener(this);
-        ivDeleteText.setVisibility(View.GONE);
-        etSearch.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-                if (editable.length() == 0) {
-                    ivDeleteText.setVisibility(View.GONE);
-                } else {
-                    ivDeleteText.setVisibility(View.VISIBLE);
-                }
-            }
-        });
-
-        //添加fragment
-        SpringIndicator indicator = (SpringIndicator) findViewById(R.id.indicator);
-        vp_content = (ViewPager) findViewById(R.id.vp_content);  //找到ViewPager控件
-        Fragment fragment0 = new BlankAllFragment();//所有
-        Fragment fragment1 = new BlankDoctorFragment();//医生
-        Fragment fragment2 = new BlankHospitalFragment();//医院
-        Fragment fragment3 = new BlankMedicineFragment();//科室
-        BlankPatientFragment fragment4 = new BlankPatientFragment();
-        //这句话干嘛的???
-        //fragment4.setSkip(skip);
-        fragments = new Fragment[]{fragment0,fragment1,fragment2,fragment3,fragment4};
-        PagerManager pagerManager = new PagerManager();
-        pagerManager.addFragment(fragment0,indicators[0]);
-        pagerManager.addFragment(fragment1,indicators[1]);
-        pagerManager.addFragment(fragment2,indicators[2]);
-        pagerManager.addFragment(fragment3,indicators[3]);
-        pagerManager.addFragment(fragment4,indicators[4]);
-        adapter = new ModelPagerAdapter(getSupportFragmentManager(), pagerManager);
-        //将pagerManger放入到ViewPager中
-        vp_content.setAdapter(adapter);
-        //将ViewPager放入到SpringIndicator中
-        indicator.setViewPager(vp_content);
-        indicator.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-                switch (position) {
-                    case 0:
-                        etSearch.setHint("请输入...");
-                        break;
-                    case 1:
-                        etSearch.setHint("请输入...");
-                        break;
-                    case 2:
-                        etSearch.setHint("请输入...");
-                        break;
-                    case 3:
-                        etSearch.setHint("请输入...");
-                        break;
-                    case 4:
-                        etSearch.setHint("请输入患者电话号码");
-                        break;
-                }
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-
-            }
-        });
+    protected void initDelayedData() {
+        etSearch.addTextChangedListener(this);
     }
 
-    //跳转界面
     @Override
-    public void switchPageUI(String className) {
-
+    protected void onDestroy() {
+        super.onDestroy();
+        removeStickyEvent(SearchAtyToFgtEvent.class);
+        if (!searchList.isEmpty()) searchList.clear();
+        if (!fragmentList.isEmpty()) fragmentList.clear();
+        mPresenter.unSubscribe();
     }
 
-    //验证表单成功
-    @Override
-    public void onValidationSucceeded() {
-        //拿到搜索的内容
-        content = etSearch.getText().toString().trim();
-        //去请求数据
-        mSearchPresenter.clickSearchButton(content);
-
-
-    }
-
-    //验证表单失败
-    @Override
-    public void onValidationFailed(List<ValidationError> errors) {
-        //弹出sweetDialog对话框,提示
-        String message = ValidatorUtils.validationErrorMessage(getApplicationContext(), errors);
-        displayErrorDialog(message);
-
-    }
-
-    //拿到所有，医院，科室，医生的bean
-    @Override
-    public InitialiseSearchRequestBean getInitialiseSearchRequestBean() {
-        //TODO
-        index = vp_content.getCurrentItem();
-        String type = keyWords[index];
-
-        InitialiseSearchRequestBean initialiseSearchRequestBean = new InitialiseSearchRequestBeanBuilder().Build(type, content);
-        return initialiseSearchRequestBean;
-    }
-
-    //获得界面索引
-    @Override
-    public int getIndex() {
-        return index;
-    }
-
-
-    @OnClick({R.id.btnSearch, R.id.iv_delete, R.id.tvBack})
-    public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.btnSearch:
-                //点击搜索按钮请求表单验证
-                validator.validate();
-                break;
-            case R.id.iv_delete:
-                //删除按钮进行清空
-                etSearch.setText("");
-                break;
-            case R.id.tvBack:   //回退键
-                initBackBtn(R.id.tvBack);   //BaseActivity 回退，结束当前页面
+    private void initDelayedView() {
+        if (fragmentList.size() > 0) fragmentList.clear();
+        String[] stringArray;
+        Bundle bundle = getBundle();
+        if (bundle != null) {
+            String bundleString = bundle.getString(Global.Bundle.SEARCH_BUNDLE);
+            if (bundleString.equals(Global.Bundle.SEARCH_DOCTOR)) {
+                addDoctorFragment();
+                stringArray = new String[]{"医生"};
+            } else if (bundleString.equals(Global.Bundle.SEARCH_PATIENT)) {
+                addPatientFragment();
+                stringArray = new String[]{"患者"};
+            } else {
+                addDefaultAll();
+                stringArray = getResources().getStringArray(R.array.search_tab);
+            }
+            adapter = new SearchFragmentAdapter(getSupportFragmentManager(), fragmentList, stringArray);
+            vpContent.setAdapter(adapter);
+            vpContent.setOffscreenPageLimit(fragmentList.size() - 1);
+            tablayTop.setupWithViewPager(vpContent);
         }
     }
 
+    private void addDefaultAll() {
+        SearchFragment searchFragment = SearchFragment.newInstance();  //所有
+        searchFragment.setTitle(Global.Bundle.SEARCH_DEFAULT);
+        fragmentList.add(searchFragment);
+
+        SearchHospotalFragment hospotalFragment = SearchHospotalFragment.newInstance();
+        hospotalFragment.setTitle(Global.Bundle.SEARCH_HOSPITAL);
+        fragmentList.add(hospotalFragment);
+
+        SearchDepartmentFragment departmentFragment = SearchDepartmentFragment.newInstance();
+        departmentFragment.setTitle(Global.Bundle.SEARCH_DEPARTMENT);
+        fragmentList.add(departmentFragment);
+
+        addDoctorFragment();
+
+        addPatientFragment();
+    }
+
+    private void addDoctorFragment() {
+        SearchDoctorFragment doctorFragment = SearchDoctorFragment.newInstance();
+        doctorFragment.setTitle(Global.Bundle.SEARCH_DOCTOR);
+        fragmentList.add(doctorFragment);
+    }
+
+    private void addPatientFragment() {
+        SearchPatientFragment patientFragment = SearchPatientFragment.newInstance();
+        fragmentList.add(patientFragment);
+    }
 
     @Override
-    public String[] getKeyWordsList() {
-        return keyWords;
+    public void switchPageUI(String className) {
+//TODO 暂时无
+    }
+
+    /**
+     * 请求bean
+     */
+    @Override
+    public InitialiseSearchRequestBean getCurrentSearchRequestBean() {
+        return new InitialiseSearchRequestBeanBuilder().Build("default", getEditTextSearch());
+    }
+
+    @Override
+    public void updataDataSucceed(List<SearchBooleanResultBean> been) {
+        if (!searchList.contains(getEditTextSearch())) {
+            searchList.add(getEditTextSearch());
+        }
+        EventBus.getDefault().post(new SearchAtyToFgtEvent(been));
+    }
+
+    @Override
+    public String getEditTextSearch() {
+        return etSearch.getText().toString().trim();
+    }
+
+    public List<String> getSearchHistroyList() {
+        return searchList;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK) {
+            mPresenter.onSubscribe();
+        }
+    }
+
+    /**
+     * ··················点击事件··················
+     */
+    @OnClick({R.id.btnSearch, R.id.iv_delete})
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.btnSearch:
+                if (editTextIsEmpter()) {
+                    mPresenter.onSubscribe();
+                }
+                hideSoftInput();
+                break;
+            case R.id.iv_delete:
+                clearTextview(etSearch);
+                break;
+            default:
+                break;
+        }
+    }
+
+    public boolean editTextIsEmpter() {
+        if (getEditTextSearch() == null || getEditTextSearch().isEmpty() || getEditTextSearch().length() < 1) {
+            displayErrorDialog("请输入搜索关键字");
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * 历史记录
+     */
+    public void onSearchHistory(String content) {
+        etSearch.setText(content);
+        mPresenter.onSubscribe();//搜索
+    }
+
+    /**
+     * 文本输入监听
+     */
+    @Override
+    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+    }
+
+    @Override
+    public void onTextChanged(CharSequence s, int start, int before, int count) {
+        if (TextUtils.isEmpty(etSearch.getText().toString().trim()))
+            EventBus.getDefault().post(new SearchAtyToFgtEvent(null));
+    }
+
+    @Override
+    public void afterTextChanged(Editable s) {
+
     }
 
 

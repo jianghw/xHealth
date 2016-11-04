@@ -14,8 +14,8 @@
         android:layout_height="50dp"
         android:layout_marginLeft="10dp"
         android:gravity="center"
-        android:text="月经与生育史"
-        android:textColor="@color/black_de" />
+        android:textColor="#FF0D0D0D"
+        android:text="月经与生育史" />
 
     <RelativeLayout
         android:id="@+id/rL_tvline"
@@ -30,7 +30,7 @@
             android:layout_height="0.2dp"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
-            android:background="@color/gray" />
+            android:background="@color/color_gray" />
     </RelativeLayout>
 
     <LinearLayout

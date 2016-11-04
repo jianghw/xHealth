@@ -18,12 +18,12 @@ public class FeedbackActivity extends BaseActivity {
     }
 
     @Override
-    protected void initPresenterAndData(Bundle savedInstanceState) {
+    protected void initPresenterAndView(Bundle savedInstanceState) {
 
     }
 
     @Override
-    protected void initDelayedView() {
+    protected void initDelayedData() {
         initBackBtn(R.id.iv_back);
     }
 
@@ -45,6 +45,7 @@ public class FeedbackActivity extends BaseActivity {
     @Override
     protected void onStop() {
         super.onStop();
+
     }
 
     @Override

@@ -4,15 +4,77 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.kaurihealth.kaurihealth.clinical.activity.ClinicalSearchActivity">
+    tools:context=".clinical_v.activity.ClinicalSearchActivity">
 
+    <!--<RelativeLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="@dimen/toptitle_height"-->
+        <!--android:background="@color/kaurihealth_header_background">-->
+
+        <!--<ImageView-->
+            <!--android:id="@+id/iv_back"-->
+            <!--style="@style/toptitleback" />-->
+
+        <!--<TextView-->
+            <!--android:id="@+id/tv_Search"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_alignParentRight="true"-->
+            <!--android:layout_centerVertical="true"-->
+            <!--android:text="搜索"-->
+            <!--android:textColor="#ffffff"-->
+            <!--android:textSize="15dp" />-->
+
+        <!--<RelativeLayout-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="60dp"-->
+            <!--android:layout_marginLeft="40dp"-->
+            <!--android:layout_marginRight="40dp"-->
+            <!--android:gravity="center">-->
+
+            <!--<RelativeLayout-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content">-->
+
+                <!--<EditText-->
+                    <!--android:id="@+id/et_Search"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="30dp"-->
+                    <!--android:background="@mipmap/searchbackground"-->
+                    <!--android:hint=""-->
+                    <!--android:lines="1"-->
+                    <!--android:paddingLeft="34dp"-->
+                    <!--android:textSize="15sp" />-->
+
+                <!--<ImageView-->
+                    <!--android:id="@+id/iv_delete"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_alignParentRight="true"-->
+                    <!--android:layout_centerVertical="true"-->
+                    <!--android:layout_marginRight="10dp"-->
+                    <!--android:src="@mipmap/ic_login_delete" />-->
+
+                <!--<ImageView-->
+                    <!--android:id="@+id/iv_search"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_alignParentLeft="true"-->
+                    <!--android:layout_centerVertical="true"-->
+                    <!--android:layout_marginLeft="13dp"-->
+                    <!--android:background="@mipmap/search_icon" />-->
+            <!--</RelativeLayout>-->
+
+        <!--</RelativeLayout>-->
+    <!--</RelativeLayout>-->
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/toptitle_height"
-        android:background="@color/kaurihealth_header_background">
+        android:layout_height="48dp"
+        android:background="@color/color_enable_green">
 
         <ImageView
             android:id="@+id/iv_back"
+            android:layout_marginLeft="2dp"
             style="@style/toptitleback" />
 
         <TextView
@@ -22,6 +84,7 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:text="搜索"
+            android:layout_marginRight="5dp"
             android:textColor="#ffffff"
             android:textSize="15dp" />
 
@@ -41,10 +104,13 @@
                     android:layout_width="match_parent"
                     android:layout_height="30dp"
                     android:background="@mipmap/searchbackground"
-                    android:hint=""
-                    android:lines="1"
-                    android:paddingLeft="34dp"
-                    android:textSize="15sp" />
+                    android:hint="请输入关键字"
+                    android:drawableLeft="@mipmap/search_icon"
+                    android:drawablePadding="10dp"
+                    android:imeOptions="actionSearch"
+                    android:singleLine="true"
+                    android:paddingLeft="20dp"
+                    android:textSize="14sp" />
 
                 <ImageView
                     android:id="@+id/iv_delete"
@@ -53,16 +119,17 @@
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="10dp"
-                    android:src="@mipmap/ic_login_delete" />
-
-                <ImageView
-                    android:id="@+id/iv_search"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentLeft="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="13dp"
-                    android:background="@mipmap/search_icon" />
+                     />
+                android:src="@mipmap/delete"
+                <!--<ImageView-->
+                <!--android:id="@+id/iv_search"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_centerHorizontal="true"-->
+                <!--android:layout_centerVertical="true"-->
+                <!---->
+                <!--android:layout_marginLeft="13dp"-->
+                <!--android:background="@mipmap/search_icon" />-->
             </RelativeLayout>
 
         </RelativeLayout>
@@ -70,5 +137,5 @@
 
     <ListView
         android:id="@+id/lv_clinical"
-        style="@style/refreshview"></ListView>
+        style="@style/refreshview"/>
 </LinearLayout>

@@ -2,7 +2,7 @@ package com.kaurihealth.datalib.service;
 
 
 import com.kaurihealth.datalib.request_bean.bean.InitialiseSearchRequestBean;
-import com.kaurihealth.datalib.request_bean.bean.SearchResultBean;
+import com.kaurihealth.datalib.response_bean.SearchResultBean;
 
 import retrofit2.Call;
 import retrofit2.http.Body;

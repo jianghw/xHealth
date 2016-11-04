@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:gravity="center_vertical"
+              android:orientation="vertical">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <TextView
+            style="@style/BodyText_Title"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/input_height_48"
+            android:layout_weight="1"
+            android:gravity="center|right"
+            android:text="上传附件:"/>
+
+        <ImageView
+            android:id="@+id/iv_add_upload"
+            style="@style/Add_Image"
+            android:layout_width="0dp"
+            android:layout_weight="0.5"
+            android:padding="@dimen/padding_6"/>
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="2"/>
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <TextView
+            style="@style/BodyText_Title"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/input_height_48"
+            android:layout_weight="1"
+            android:gravity="center|right"/>
+
+        <com.kaurihealth.utilslib.widget.TagsGridview
+            android:id="@+id/gv_image"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/padding_6"
+            android:layout_marginTop="@dimen/padding_6"
+            android:layout_weight="2"
+            android:horizontalSpacing="10dp"
+            android:numColumns="3"
+            android:verticalSpacing="10dp"/>
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.5"/>
+    </LinearLayout>
+</merge>

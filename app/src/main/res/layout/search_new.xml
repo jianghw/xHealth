@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context="com.kaurihealth.kaurihealth.home.activity.SearchActivityNew">
+    android:orientation="vertical">
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/appbar"
@@ -15,27 +15,26 @@
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
         <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar2"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/toptitle_height"
+            android:layout_height="@dimen/input_height_48"
             android:elevation="4dp"
-
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/toptitle_height"
-                android:background="#50d2c2"
-                android:layout_marginRight="16dp"
-                >
+                android:layout_height="@dimen/input_height_48"
+                android:layout_marginRight="@dimen/margin_16"
+                android:background="@color/color_enable_green">
 
-                <TextView
+                <ImageView
                     android:id="@+id/tvBack"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="2dp"
-                    android:background="@mipmap/backkey" />
+                    android:src="@mipmap/right_back"/>
 
                 <TextView
                     android:id="@+id/btnSearch"
@@ -43,54 +42,49 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
-
-
                     android:text="搜索"
-
-                    android:textColor="#ffffff"
-                    android:textSize="15dp" />
+                    android:textColor="@color/color_white"
+                    android:textSize="@dimen/textSize_16"/>
 
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
-
-                    android:layout_marginLeft="45dp"
-                    android:layout_marginRight="45dp"
+                    android:layout_marginLeft="@dimen/input_height_46"
+                    android:layout_marginRight="@dimen/input_height_46"
                     android:gravity="center">
-
 
                     <EditText
                         android:id="@+id/etSearch"
                         android:layout_width="match_parent"
                         android:layout_height="30dp"
-                        android:background="@drawable/bg_white"
-                        android:hint="搜索医院,科室，医生或患者"
-
-                        android:singleLine="true"
-                        android:paddingLeft="34dp"
                         android:layout_marginRight="1dp"
+                        android:background="@drawable/bg_white"
+                        android:hint="请填写搜索信息"
+                        android:paddingLeft="@dimen/margin_26"
+                        android:singleLine="true"
                         android:textColor="@color/app_tv_color"
-                        android:textSize="15sp" />
+                        android:textColorHint="@color/color_label_gray"
+                        android:textSize="@dimen/textSize_14"
+                        tools:text="dfdfdfdfdfdfdfdfdfdfdf"/>
 
                     <ImageView
                         android:id="@+id/iv_delete"
-                        android:visibility="gone"
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
                         android:layout_marginRight="10dp"
-                        android:src="@mipmap/ic_login_delete" />
+                        android:src="@mipmap/ic_login_delete"
+                        android:visibility="gone"/>
 
                     <ImageView
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:layout_alignParentLeft="true"
                         android:layout_centerVertical="true"
-                        android:layout_marginLeft="10dp"
-                        android:background="@mipmap/search_icon" />
-
+                        android:layout_marginLeft="@dimen/padding_8"
+                        android:src="@mipmap/search_icon"/>
                 </RelativeLayout>
             </RelativeLayout>
         </android.support.v7.widget.Toolbar>
@@ -99,28 +93,48 @@
         <android.support.design.widget.TabLayout
             android:id="@+id/tablayTop"
             android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:background="@android:color/white"
+            android:layout_height="@dimen/input_height_40"
+            android:background="@color/color_white"
             android:clickable="true"
-
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
             app:tabGravity="fill"
             app:tabMode="fixed"
-            app:tabSelectedTextColor="@color/kaurihealth_header_background"
-            app:tabTextColor="@color/normalText"></android.support.design.widget.TabLayout>
+            app:tabSelectedTextColor="@color/color_enable_green"
+            app:tabTextColor="@color/normalText"/>
     </android.support.design.widget.AppBarLayout>
 
+    <android.support.v4.view.ViewPager
+        android:id="@+id/vpContent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/appbar"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 
-    <!--<android.support.v4.widget.SwipeRefreshLayout-->
-        <!--android:id="@+id/search_swipe"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_below="@id/appbar">-->
-        <android.support.v4.view.ViewPager
-            android:id="@+id/vpContent"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@id/appbar"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior"></android.support.v4.view.ViewPager>
-    <!--</android.support.v4.widget.SwipeRefreshLayout>-->
+    <!--<RelativeLayout-->
+    <!--android:id="@+id/rl_history"-->
+    <!--android:visibility="gone"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="match_parent"-->
+    <!--android:layout_below="@id/appbar"-->
+    <!--app:layout_behavior="@string/appbar_scrolling_view_behavior">-->
+
+    <!--<TextView-->
+    <!--android:id="@+id/tv_hint"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_margin="@dimen/padding_8"-->
+    <!--android:textColor="@color/color_label_back"-->
+    <!--android:textSize="@dimen/textSize_18"-->
+    <!--tools:text="搜搜到数据共100条"/>-->
+
+    <!--<android.support.v7.widget.RecyclerView-->
+    <!--android:id="@+id/rv_history"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:scrollbars="vertical"-->
+    <!--android:layout_below="@+id/tv_hint"-->
+    <!--android:layout_alignParentRight="true"-->
+    <!--android:layout_alignParentEnd="true"/>-->
+    <!--</RelativeLayout>-->
+
 </android.support.design.widget.CoordinatorLayout>

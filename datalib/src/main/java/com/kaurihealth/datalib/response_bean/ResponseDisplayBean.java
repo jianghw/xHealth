@@ -5,6 +5,8 @@ package com.kaurihealth.datalib.response_bean;
  * <p/>
  * 描述：
  */
+//mobileUpdateDoctor
+// 移动端更新医生用户的信息: 返回回来的数据
 public class ResponseDisplayBean {
 
     /**

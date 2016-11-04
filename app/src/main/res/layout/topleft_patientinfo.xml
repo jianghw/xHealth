@@ -22,7 +22,7 @@
             style="@style/normaltext_topleft_patientinfo"
             android:layout_alignParentLeft="true"
             android:layout_marginLeft="70dp"
-            android:text=""
+            android:text="xxxxxxxxx"
             android:textColor="#FFFF6600" />
 
         <TextView
@@ -36,7 +36,7 @@
             style="@style/normaltext_topleft_patientinfo"
             android:layout_alignLeft="@id/tv_disease_topleft_patientinfo"
             android:layout_below="@id/tv_disease_topleft_patientinfo"
-            android:text="" />
+            android:text="xxxxxxx" />
 
         <TextView
             android:id="@+id/tv4_topleft_patientinfo"
@@ -49,7 +49,7 @@
             style="@style/normaltext_topleft_patientinfo"
             android:layout_alignLeft="@id/tv_disease_topleft_patientinfo"
             android:layout_below="@id/tv_tel_patientinfo"
-            android:text=" " />
+            android:text="xxxxxxxxxxxxxxxx " />
 
     </RelativeLayout>
 </ScrollView>

@@ -35,6 +35,9 @@ public interface IMedicalLiteratureService {
     @GET("api/MedicalLiterature/LoadAllMedicalLiteratures")
     Call<List<MedicalLiteratureDisPlayBean>> LoadAllMedicalLiteratures();
 
+    @GET("api/MedicalLiterature/LoadAllMedicalLiteratures")
+    Observable<List<MedicalLiteratureDisPlayBean>> LoadAllMedicalLiteratures_new();
+
     /**
      * 移动端简化版读取所有的临床支持(为初始加载时读取所有数据，无传参)
      *

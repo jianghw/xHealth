@@ -10,4 +10,44 @@ public class NewCashOutBean {
     public String cashOutMethod;
     public String cashOutMethodDetail;
     public int accountId;
+
+    public double getAmount() {
+        return amount;
+    }
+
+    public void setAmount(double amount) {
+        this.amount = amount;
+    }
+
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
+
+    public String getCashOutMethod() {
+        return cashOutMethod;
+    }
+
+    public void setCashOutMethod(String cashOutMethod) {
+        this.cashOutMethod = cashOutMethod;
+    }
+
+    public String getCashOutMethodDetail() {
+        return cashOutMethodDetail;
+    }
+
+    public void setCashOutMethodDetail(String cashOutMethodDetail) {
+        this.cashOutMethodDetail = cashOutMethodDetail;
+    }
+
+    public int getAccountId() {
+        return accountId;
+    }
+
+    public void setAccountId(int accountId) {
+        this.accountId = accountId;
+    }
 }

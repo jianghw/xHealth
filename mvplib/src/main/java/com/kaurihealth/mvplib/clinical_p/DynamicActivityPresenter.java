@@ -1,7 +1,10 @@
 package com.kaurihealth.mvplib.clinical_p;
 
+import android.widget.BaseAdapter;
+
 import com.kaurihealth.datalib.repository.IDataSource;
 import com.kaurihealth.datalib.request_bean.bean.LiteratureCommentDisplayBean;
+import com.kaurihealth.datalib.request_bean.bean.LiteratureReplyDisplayBean;
 import com.kaurihealth.datalib.request_bean.bean.MedicalLiteratureLikeDisplayBean;
 import com.kaurihealth.datalib.request_bean.bean.NewMedicalLiteratureLikeDisplayBean;
 import com.kaurihealth.datalib.request_bean.builder.NewMedicalLiteratureLikeDisplayBeanBuilder;
@@ -177,6 +180,73 @@ public class DynamicActivityPresenter<V> implements IDynamicActivityPresenter<V>
         mSubscriptions.add(subscription);
     }
 
+    public void DeleteLiteratureComment(int medicalLiteratureId, final int position){
+
+        Subscription subscription = mRepository.DeleteLiteratureComment(medicalLiteratureId)
+                .subscribeOn(Schedulers.io())
+                .doOnSubscribe(new Action0() {
+                    @Override
+                    public void call() {
+                        mActivity.loadingIndicator(true);
+                        mFirstLoad = false;
+                    }
+                })
+                .subscribeOn(AndroidSchedulers.mainThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<ResponseDisplayBean>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onNext(ResponseDisplayBean responseDisplayBean) {
+                        mActivity.getDeleteCommentResponse(responseDisplayBean,position);
+                    }
+                });
+        mSubscriptions.add(subscription);
+    }
+
+    //加载所有的回复信息
+    public void LoadLiteratureReplyByLiteratureCommentId(int literatureCommentId, final List<LiteratureReplyDisplayBean> been, final BaseAdapter adapter){
+
+        Subscription subscription = mRepository.LoadLiteratureReplyByLiteratureCommentId(literatureCommentId)
+                .subscribeOn(Schedulers.io())
+                .doOnSubscribe(new Action0() {
+                    @Override
+                    public void call() {
+                        mActivity.loadingIndicator(true);
+                        mFirstLoad = false;
+                    }
+                })
+                .subscribeOn(AndroidSchedulers.mainThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<List<LiteratureReplyDisplayBean>>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onNext(List<LiteratureReplyDisplayBean> DisplayBean) {
+//                            mActivity.getLiteratureReplyDisplayBean(DisplayBean);
+                        been.clear();
+                        been.addAll(DisplayBean);
+                        adapter.notifyDataSetChanged();
+                    }
+                });
+        mSubscriptions.add(subscription);
+    }
 
     @Override
     public void unSubscribe() {

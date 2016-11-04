@@ -9,6 +9,8 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.kaurihealth.datalib.request_bean.bean.NewRegisterBean;
+import com.kaurihealth.datalib.request_bean.builder.NewRegisterBeanBuilder;
 import com.kaurihealth.kaurihealth.MyApplication;
 import com.kaurihealth.kaurihealth.R;
 import com.kaurihealth.kaurihealth.base_v.BaseActivity;
@@ -34,71 +36,60 @@ import butterknife.Bind;
 import butterknife.OnClick;
 
 /**
- * Created by mip on 2016/8/10.
+ * 注册
  */
 public class RegisterActivity extends BaseActivity implements Validator.ValidationListener, IRegisterView {
-
-    @Bind(R.id.tv_errchoose)
-    TextView tvErrchoose;
-
-    //电话
-    @Pattern(regex = "^1[3|4|5|7|8]\\d{9}$", messageResId = R.string.register_phone_pattern)
-    @Bind(R.id.edt_phone_number)
-    EditText edtPhonenumber;
-    @Bind(R.id.tv_errorphone)
-    TextView tvErrorphone;
-
-    //验证码
-    @Pattern(regex = "^\\d{4}$", messageResId = R.string.register_verification_pattern)
-    @Bind(R.id.edt_verification_code)
-    EditText edtVerificationCode;
-    @Bind(R.id.tv_get_verificationcode)
-    TextView tvGetVerificationcode;
-    @Bind(R.id.tv_errorversioncode)
-    TextView tvErrorversioncode;
-
-    //设置密码
-    @Password(scheme = Password.Scheme.ALPHA_NUMERIC, messageResId = R.string.register_pw_password)
-    @Length(min = 6, max = 20, messageResId = R.string.register_pw_length)
-    @Bind(R.id.edt_password)
-    EditText edtPassword;
-    @Bind(R.id.tv_errorpassword)
-    TextView tvErrorpassword;
-
-    //确认密码
-    @ConfirmPassword(messageResId = R.string.register_pw_confirm)
-    @Bind(R.id.edt_confirmpassword)
-    EditText edtConfirmpassword;
-
-    @Bind(R.id.tv_errorconfirmpassword)
-    TextView tvErrorconfirmpassword;
-
-    @Checked(messageResId = R.string.register_checked)
-    @Bind(R.id.checkbox_agree)
-    CheckBox checkboxAgree;
-    @Bind(R.id.tv_erroragreement)
-    TextView tvErroragreement;
 
     @Inject
     RegisterPresenter<IRegisterView> mPresenter;
 
+    //电话
+    @Pattern(regex = "^1[3|4|5|7|8]\\d{9}$", messageResId = R.string.register_phone_pattern)
+    @Bind(R.id.edt_phone_number)
+    EditText edtPhoneNumber;
+    //验证码
+    @Pattern(regex = "^\\d{4}$", messageResId = R.string.register_verification_pattern)
+    @Bind(R.id.edt_verification_code)
+    EditText edtVerificationCode;
+
+    @Bind(R.id.tv_get_verificationcode)
+    TextView tvGetVerificationCode;
+
+    //设置密码
+   // @Password(scheme = Password.Scheme.ALPHA_NUMERIC, messageResId = R.string.register_pw_password)
+    @Pattern(regex ="^[^\\u4e00-\\u9fa5]{0,}$",messageResId = R.string.register_pw_password)   //里面不能包含中文正则
+    @Password(messageResId = R.string.register_pw_password)
+    @Length(min = 6, max = 20, messageResId = R.string.register_pw_length)
+    @Bind(R.id.edt_password)
+    EditText edtPassword;
+
+    //确认密码
+    @ConfirmPassword(messageResId = R.string.register_pw_confirm)
+    @Bind(R.id.edt_confirmpassword)
+    EditText edtConfirmPassword;
+
+    @Checked(messageResId = R.string.register_checked)
+    @Bind(R.id.checkbox_agree)
+    CheckBox checkboxAgree;
+
     private Validator mValidator;//调用.validate()
     private BroadcastReceiver broadcastReceiver;
-    private final int agreement = 100;
+    private final static int agreement = 100;
+    private TimeCount timeCount;
 
     @Override
     protected int getActivityLayoutID() {
-        return R.layout.register;
+        return R.layout.activiyt_register;
     }
 
     @Override
-    protected void initPresenterAndData(Bundle savedInstanceState) {
+    protected void initPresenterAndView(Bundle savedInstanceState) {
         MyApplication.getApp().getComponent().inject(this);
         mPresenter.setPresenter(this);
     }
 
     @Override
-    protected void initDelayedView() {
+    protected void initDelayedData() {
         mValidator = new Validator(this);
         mValidator.setValidationListener(this);
     }
@@ -109,6 +100,19 @@ public class RegisterActivity extends BaseActivity implements Validator.Validati
         IntentFilter intentFilter = BroadcastFactory.getSmsIntentFileter();
         broadcastReceiver = BroadcastFactory.getSmsReceiver(edtVerificationCode);
         this.registerReceiver(broadcastReceiver, intentFilter);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        this.unregisterReceiver(broadcastReceiver);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mPresenter.unSubscribe();
+        if (timeCount != null) timeCount.cancel();
     }
 
     /**
@@ -128,29 +132,8 @@ public class RegisterActivity extends BaseActivity implements Validator.Validati
             case R.id.tv_agreement:
                 skipToForResult(AgreementActivity.class, null, agreement);
                 break;
+            default:break;
         }
-    }
-
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        this.unregisterReceiver(broadcastReceiver);
-    }
-
-    @Override
-    public String getPhoneNumber() {
-        return edtPhonenumber.getText().toString().trim();
-    }
-
-    @Override
-    public String getPassword() {
-        return edtPassword.getText().toString().trim();
-    }
-
-    @Override
-    public String getVerificationCode() {
-        return edtVerificationCode.getText().toString().trim();
     }
 
     public void showPhoneNumberErrorMessage() {
@@ -160,7 +143,8 @@ public class RegisterActivity extends BaseActivity implements Validator.Validati
 
     @Override
     public void startCountDown() {
-        TimeCount timeCount = new TimeCount(60000, 1000, tvGetVerificationcode, "%d秒后重新获取", "获取验证码");
+        if (timeCount != null) timeCount.cancel();
+        timeCount = new TimeCount(60000, 1000, tvGetVerificationCode, "%d秒后重新获取", "获取验证码");
         timeCount.start();
     }
 
@@ -184,21 +168,15 @@ public class RegisterActivity extends BaseActivity implements Validator.Validati
     }
 
     /**
-     * 跳转信息完善页面
-     * @param className
+     * 跳转信息完善页
      */
     @Override
     public void switchPageUI(String className) {
         skipTo(RegisterPersonInfoActivity.class);
     }
 
-
     /**
      * 界面返回信息处理
-     *
-     * @param requestCode
-     * @param resultCode
-     * @param data
      */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -210,6 +188,37 @@ public class RegisterActivity extends BaseActivity implements Validator.Validati
                         break;
                 }
                 break;
+            default:
+                break;
         }
+    }
+
+
+    @Override
+    public NewRegisterBean getNewRegisterBean() {
+        String phoneNumber = getPhoneNumber();
+        String passWord = getPassword();
+        String verificationCode = getVerificationCode();
+        return new NewRegisterBeanBuilder().Build(phoneNumber, passWord, verificationCode);
+    }
+
+    @Override
+    public String getPhoneNumber() {
+        return edtPhoneNumber.getText().toString().trim();
+    }
+
+    @Override
+    public String getPassword() {
+        return edtPassword.getText().toString().trim();
+    }
+
+    @Override
+    public String getVerificationCode() {
+        return edtVerificationCode.getText().toString().trim();
+    }
+
+    @Override
+    public void manualFinishCurrent() {
+        finishCur();
     }
 }

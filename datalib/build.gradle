@@ -22,10 +22,5 @@ dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     testCompile "junit:junit:$rootProject.ext.junitVersion"
     compile "com.android.support:appcompat-v7:$rootProject.supportLibraryVersion"
-
-
     compile project(':utilslib')
-    compile project(path: ':commonlibrary')
-    compile project(path: ':zllibrary')
-    compile project(':chatlibrary')
 }

@@ -3,7 +3,7 @@ package com.kaurihealth.datalib.service;
 
 import com.kaurihealth.datalib.request_bean.bean.NewCashOutAccountBean;
 import com.kaurihealth.datalib.request_bean.bean.NewCashOutBean;
-import com.kaurihealth.datalib.request_bean.bean.UserCashOutAccountDisplayBean;
+import com.kaurihealth.datalib.response_bean.UserCashOutAccountDisplayBean;
 import com.kaurihealth.datalib.response_bean.ResponseDisplayBean;
 
 import java.util.List;
@@ -27,6 +27,14 @@ public interface IUserCashOutAccountService {
     @POST("api/UserCashOutAccount/InsertUserCashOutAccount")
     Call<UserCashOutAccountDisplayBean> InsertUserCashOutAccount(@Body NewCashOutAccountBean account);
 
+    /**
+     * 添加提现用户账号
+     * @param account
+     * @return
+     */
+    @POST("api/UserCashOutAccount/InsertUserCashOutAccount")
+    Observable<UserCashOutAccountDisplayBean> InsertUserCashOutAccount_new(@Body NewCashOutAccountBean account);
+
     //发起提现请求
     @POST("api/CashOut/StartNewCashOut")
     Call<ResponseDisplayBean> StartNewCashOut_out(@Body NewCashOutBean newRequest);
@@ -36,9 +44,11 @@ public interface IUserCashOutAccountService {
     @GET("api/UserCashOutAccount/GetUserCashOutAccounts")
     Observable<List<UserCashOutAccountDisplayBean>> GetUserCashOutAccounts();
 
-
-
-    //发起提现请求
+    /**
+     *  发起提现请求
+     * @param newRequest
+     * @return
+     */
     @POST("api/CashOut/StartNewCashOut")
     Observable<ResponseDisplayBean> StartNewCashOut(@Body NewCashOutBean newRequest);
 

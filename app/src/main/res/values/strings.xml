@@ -1,9 +1,7 @@
 <resources>
     <string name="app_name">佳仁健康</string>
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="rbtn_register">尚未选择类型</string>
-    <string name="phone_register">手机号码长度有误</string>
-    <string name="versioncode_register">验证码有误</string>
+
     <string name="password_register">密码不合法</string>
     <string name="confirm_password_register">密码不一致</string>
     <string name="agreement_register">尚未同意协议，无法注册</string>
@@ -41,7 +39,14 @@
 
     <!--ServiceSettingActivity-->
     <string name="service_price">价格不能小于0.01</string>
-
+    <string name="personal_doctor_service">专属医生服务</string>
+    <string name="remote_doctor_service">远程医疗咨询</string>
+    <string name="default_service_price">未开通</string>
+    <!--性别-->
+    <string-array name="gender">
+        <item>男</item>
+        <item>女</item>
+    </string-array>
     <!--学历职称-->
     <string-array name="educationTitles">
         <item>教授</item>
@@ -68,14 +73,9 @@
         <item>博士后</item>
     </string-array>
     <!--ClinicalDiagnosisAndTreatment:临床诊疗 SupplementaryTest:辅助检查 LabTest:实验室检查 Pathology:病理-->
-    <string-array name="medicalrecod">
-        <item>临床诊疗</item>
-        <item>辅助检查</item>
-        <item>实验室检查</item>
-        <item>病理</item>
-    </string-array>
+
     <!--临床诊疗值-->
-    <string-array name="ClinicalDiagnosisAndTreatment">
+    <string-array name="clinical_medical_diagnosis">
         <item>门诊记录电子病历</item>
         <item>远程医疗咨询</item>
         <item>网络医疗咨询</item>
@@ -202,6 +202,7 @@
         <item>高密度脂蛋白</item>
         <item>低密度脂蛋白</item>
     </string-array>
+
     <string-array name="array_monitor_unit">
         <item>mmol/L</item>
         <item>cm</item>
@@ -240,8 +241,16 @@
         <item>mmol/L</item>
     </string-array>
 
+    <string-array name="search_tab">
+        <item>所有</item>
+        <item>医院</item>
+        <item>科室</item>
+        <item>医生</item>
+        <item>患者</item>
+    </string-array>
+
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+
     <string name="main_table_home">首页</string>
     <string name="main_table_message">消息</string>
     <string name="main_table_patient">医患</string>
@@ -249,11 +258,12 @@
     <string name="main_table_mine">我的</string>
 
     <string name="patient_age_null">年龄:无</string>
-    <string name="patient_age">年龄:%d</string>
+    <string name="patient_age">年龄:%d岁</string>
     <string name="patient_gender">性别:%s</string>
     <string name="long_standard_title">监测指标</string>
+    <string name="prescription_title">处方</string>
     <string name="more_add">添加</string>
-    <string name="more_save">保存</string>
+
     <string name="monitor_time">监测时间:</string>
     <string name="monitor_program">监测项目:</string>
     <string name="monitor_data">监测数据:</string>
@@ -263,5 +273,40 @@
     <string name="charts_null">&#160;&#160;&#160;&#160;</string>
     <string name="swipe_tv_compile">编辑</string>
     <string name="swipe_tv_delete">删除</string>
-    <string name="standard_rbtn_progarm">监测项目</string>
+    <string name="patient_tv_title">患者信息</string>
+    <string name="doctor_tv_title">医生信息</string>
+    <string name="details_tv_title">个人信息</string>
+    <string name="mr_tv_title">医疗记录</string>
+    <string name="mr_table_clinica">临床医疗</string>
+    <string name="mr_table_supplementary">辅助检查</string>
+    <string name="mr_table_lab">实验室检查</string>
+    <string name="mr_table_pathology">病理</string>
+    <string name="being_no">暂无</string>
+    <string name="doctor_tv_experience">学习与工作经历</string>
+    <string name="doctor_tv_speciality">专业特长</string>
+    <string name="mine_hello">你好!&#160;&#160;&#160;&#160;%s</string>
+    <string name="mine_regist_percentage">资料完成度%1$s</string>
+    <string name="professional_title_tv_title">职称</string>
+    <string name="title_save">保存</string>
+    <string name="certification_title_tv_title">职业证号</string>
+    <string name="graduate_title_tv_title">毕业院校</string>
+    <string name="practice_title_tv_title">专业特长</string>
+    <string name="hospital_title_tv_title">机构</string>
+    <string name="study_experience_tv_title">学习与工作经历</string>
+    <string name="department">科室一</string>
+    <string name="department_two">科室二</string>
+    <string name="tv_title_setting">设置</string>
+    <string name="service_title">服务项目</string>
+    <string name="account_title">我的账户</string>
+    <string name="title_account">账户明细</string>
+    <string name="title_complete">完成</string>
+    <string name="add_bank_card">添加银行卡</string>
+    <string name="find_password">找回密码</string>
+    <string name="set_password">设置密码</string>
+    <string name="no_search_data">暂无搜索到相关数据:%s</string>
+    <string name="search_data_size">当前共搜索到%d条数据</string>
+    <string name="no_doctor_message">暂无医生给你留言消息</string>
+    <string name="no_patient_message">暂无患者给你留言消息</string>
+
+
 </resources>

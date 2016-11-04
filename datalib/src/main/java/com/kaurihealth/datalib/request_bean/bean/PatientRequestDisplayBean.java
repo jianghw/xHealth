@@ -1,7 +1,9 @@
 package com.kaurihealth.datalib.request_bean.bean;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import com.kaurihealth.datalib.response_bean.ConsultationReferralDisplayBean;
 import com.kaurihealth.datalib.response_bean.DoctorDisplayBean;
+import com.kaurihealth.datalib.response_bean.PatientDisplayBean;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -10,6 +12,128 @@ import java.util.Date;
  * Created by Nick on 22/04/2016.
  */
 public class PatientRequestDisplayBean implements Serializable {
+    public int getPatientRequestId() {
+        return patientRequestId;
+    }
+
+    public void setPatientRequestId(int patientRequestId) {
+        this.patientRequestId = patientRequestId;
+    }
+
+    public int getDoctorId() {
+        return doctorId;
+    }
+
+    public void setDoctorId(int doctorId) {
+        this.doctorId = doctorId;
+    }
+
+    public int getPatientId() {
+        return patientId;
+    }
+
+    public void setPatientId(int patientId) {
+        this.patientId = patientId;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getRequestReason() {
+        return requestReason;
+    }
+
+    public void setRequestReason(String requestReason) {
+        this.requestReason = requestReason;
+    }
+
+    public String getRequestType() {
+        return requestType;
+    }
+
+    public void setRequestType(String requestType) {
+        this.requestType = requestType;
+    }
+
+    public String getDoctorComment() {
+        return doctorComment;
+    }
+
+    public void setDoctorComment(String doctorComment) {
+        this.doctorComment = doctorComment;
+    }
+
+    public Date getRequestDate() {
+        return requestDate;
+    }
+
+    public void setRequestDate(Date requestDate) {
+        this.requestDate = requestDate;
+    }
+
+    public Date getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(Date createdDate) {
+        this.createdDate = createdDate;
+    }
+
+    public Date getReplyDate() {
+        return replyDate;
+    }
+
+    public void setReplyDate(Date replyDate) {
+        this.replyDate = replyDate;
+    }
+
+    public Date getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(Date endDate) {
+        this.endDate = endDate;
+    }
+
+    public int getConsultationId() {
+        return consultationId;
+    }
+
+    public void setConsultationId(int consultationId) {
+        this.consultationId = consultationId;
+    }
+
+    public int getOrderId() {
+        return orderId;
+    }
+
+    public void setOrderId(int orderId) {
+        this.orderId = orderId;
+    }
+
+    public DoctorDisplayBean getDoctor() {
+        return doctor;
+    }
+
+    public void setDoctor(DoctorDisplayBean doctor) {
+        this.doctor = doctor;
+    }
+
+    public PatientDisplayBean getPatient() {
+        return patient;
+    }
+
+    public void setPatient(PatientDisplayBean patient) {
+        this.patient = patient;
+    }
+
+
+
     /// <summary>
     /// 患者请求ID
     /// </summary>
@@ -88,7 +212,14 @@ public class PatientRequestDisplayBean implements Serializable {
     /// </summary>
     public PatientDisplayBean patient;
 
-    @JsonIgnoreProperties
-    public PatientRequestDisplayBean doctorPatientRelationship;
+    public ConsultationReferralDisplayBean getConsultationReferral() {
+        return consultationReferral;
+    }
+
+    public void setConsultationReferral(ConsultationReferralDisplayBean consultationReferral) {
+        consultationReferral = consultationReferral;
+    }
+
+    public ConsultationReferralDisplayBean consultationReferral;
 
 }

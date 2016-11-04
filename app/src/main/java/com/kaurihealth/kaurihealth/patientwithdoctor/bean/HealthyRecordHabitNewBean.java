@@ -108,6 +108,7 @@ public class HealthyRecordHabitNewBean {
                 }
             }
 
+
             @Override
             public List<HealthConditionDisplayBean> getAll() {
                 List<HealthConditionDisplayBean> list = new LinkedList<>();

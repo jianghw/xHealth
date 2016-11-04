@@ -9,8 +9,7 @@ import com.kaurihealth.datalib.request_bean.bean.LiteratureReplyDisplayBean;
 import com.kaurihealth.kaurihealth.MyApplication;
 import com.kaurihealth.kaurihealth.R;
 import com.kaurihealth.kaurihealth.base_v.BaseActivity;
-import com.kaurihealth.kaurihealth.clinical.util.ClinicalUtil;
-import com.kaurihealth.kaurihealth.clinical_v.DynamicActivity;
+import com.kaurihealth.kaurihealth.clinical_v.Utils.ClinicalUtil;
 import com.kaurihealth.mvplib.clinical_p.ILiteratureCommentActivityView;
 import com.kaurihealth.mvplib.clinical_p.LiteratureCommentActivityPresenter;
 
@@ -43,13 +42,13 @@ public class LiteratureCommentActivity extends BaseActivity implements ILiteratu
     }
 
     @Override
-    protected void initPresenterAndData(Bundle savedInstanceState) {
+    protected void initPresenterAndView(Bundle savedInstanceState) {
         MyApplication.getApp().getComponent().inject(this);
         mPresenter.setPresenter(this);
     }
 
     @Override
-    protected void initDelayedView() {
+    protected void initDelayedData() {
 
         bundle = getBundle();
         literatureCommentDisplayBean = (LiteratureCommentDisplayBean) bundle.getSerializable("LiteratureCommentDisplayBean");

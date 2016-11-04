@@ -35,4 +35,9 @@ public class BlankDoctorPresenter<T>  implements  IBlankDoctorPresenter <T>{
         mActivity = null;
 
     }
+
+    @Override
+    public void RemoveDoctorRelationship() {
+
+    }
 }

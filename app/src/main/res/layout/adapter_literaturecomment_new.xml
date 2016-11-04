@@ -10,13 +10,13 @@
     android:paddingBottom="10dp"
     android:layout_gravity="center">
 
-    <com.example.commonlibrary.widget.CircleImageView
+    <com.kaurihealth.utilslib.widget.CircleImageView
         android:id="@+id/iv_userAvartar"
         android:layout_width="54dp"
         android:layout_height="54dp"
         android:layout_marginBottom="12dp"
         android:layout_marginLeft="12dp"
-        android:src="@mipmap/xxhdp" />
+        android:src="@mipmap/ic_circle_head_green" />
 
     <TextView
         android:id="@+id/tv_userFullName"
@@ -61,7 +61,7 @@
         android:layout_margin="5dp"
         android:layout_toRightOf="@+id/tv_createTime"
         android:text="删除"
-        android:textColor="#50d2c2"
+        android:textColor="@color/color_red"
         android:textSize="14sp" />
 
     <TextView

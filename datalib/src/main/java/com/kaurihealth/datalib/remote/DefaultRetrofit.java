@@ -29,7 +29,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * Created by jianghw on 2016/8/18.
- * <p/>
+ * <p>
  * 描述：
  */
 public class DefaultRetrofit implements IRetrofit {
@@ -48,9 +48,10 @@ public class DefaultRetrofit implements IRetrofit {
         client = new OkHttpClient.Builder()
                 .addInterceptor(loggingInterceptor)
                 .retryOnConnectionFailure(true)
-                .connectTimeout(15, TimeUnit.SECONDS)
+                .connectTimeout(20, TimeUnit.SECONDS)
                 .addInterceptor(mTokenInterceptor)
                 .authenticator(mAuthenticator)
+//                .sslSocketFactory(RetrofitFactory.getInstance().getSslSocketFactory())
                 .build();
     }
 
@@ -72,7 +73,9 @@ public class DefaultRetrofit implements IRetrofit {
                 public void log(String message) {
                     Log.d("OKHttp", message);
                 }
-            }).setLevel(HttpLoggingInterceptor.Level.BODY);
+            })
+            .setLevel(!LocalData.getLocalData().getEnvironment().equals(Global.Environment.PREVIEW)?HttpLoggingInterceptor.Level.BODY:HttpLoggingInterceptor.Level.NONE);
+//            .setLevel(HttpLoggingInterceptor.Level.BODY);
     //打印信息
 
     /**

@@ -9,9 +9,7 @@ import com.kaurihealth.kaurihealth.base_v.BaseActivity;
 import butterknife.OnClick;
 
 /**
- * 版权:    张磊
- * 作者:    张磊
- * 描述：
+ * 描述：协议
  * 修订日期:
  */
 public class AgreementActivity extends BaseActivity {
@@ -20,27 +18,21 @@ public class AgreementActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
     }
 
     @Override
     protected int getActivityLayoutID() {
-        return R.layout.agreement;
+        return R.layout.activity_agreement;
     }
 
     @Override
-    protected void initPresenterAndData(Bundle savedInstanceState) {
+    protected void initPresenterAndView(Bundle savedInstanceState) {
 
     }
 
     @Override
-    protected void initDelayedView() {
+    protected void initDelayedData() {
 
-    }
-
-    public void agree() {
-        setResult(RESULT_OK);
-        finishCur();
     }
 
     @OnClick({R.id.iv_cancle, R.id.tv_agree})
@@ -53,5 +45,10 @@ public class AgreementActivity extends BaseActivity {
                 agree();
                 break;
         }
+    }
+
+    public void agree() {
+        setResult(RESULT_OK);
+        finishCur();
     }
 }

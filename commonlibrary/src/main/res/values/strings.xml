@@ -1,5 +1,0 @@
-<resources>
-    <string name="app_name">CommonLibrary</string>
-    <string name="messageDefault">拼命加载中，请稍后</string>
-    <string name="messageDefault_new">加载中···</string>
-</resources>

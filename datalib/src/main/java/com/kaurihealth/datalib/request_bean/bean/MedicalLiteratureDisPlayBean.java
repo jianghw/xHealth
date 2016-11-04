@@ -88,4 +88,8 @@ public class MedicalLiteratureDisPlayBean implements Serializable {
      */
     public List<MedicalLiteratureDocumentDisplayBean> documents;
 
+    /**
+     * 最近更新时间
+     */
+    public String lastUpdateTime;
 }

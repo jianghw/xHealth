@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="#FFF2F2F2"
-                android:paddingLeft="5dp"
-                android:paddingRight="5dp">
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/color_bg_gray"
+    android:paddingLeft="@dimen/padding_6"
+    android:paddingRight="@dimen/padding_6">
 
     <com.kaurihealth.utilslib.widget.ScrollChildSwipeRefreshLayout
         android:id="@+id/swipe_refresh"
@@ -18,7 +18,15 @@
             android:layout_gravity="center"
             android:numColumns="2"
             android:scrollbars="none"
-            android:stretchMode="columnWidth"/>
+            android:stretchMode="columnWidth" />
 
     </com.kaurihealth.utilslib.widget.ScrollChildSwipeRefreshLayout>
+
+    <TextView
+        android:id="@+id/tv_note"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:text="暂无记录,待添加"
+        android:textColor="@color/color_gold" />
 </RelativeLayout>

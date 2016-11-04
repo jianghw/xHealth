@@ -1,8 +1,10 @@
 package com.kaurihealth.mvplib.mine_p;
 
+import com.kaurihealth.datalib.local.LocalData;
 import com.kaurihealth.datalib.repository.IDataSource;
 import com.kaurihealth.datalib.request_bean.bean.NewPriceBean;
-import com.kaurihealth.datalib.request_bean.bean.PriceDisplayBean;
+import com.kaurihealth.datalib.response_bean.DoctorDisplayBean;
+import com.kaurihealth.datalib.response_bean.PriceDisplayBean;
 import com.kaurihealth.datalib.response_bean.ResponseDisplayBean;
 import com.kaurihealth.utilslib.constant.Global;
 
@@ -11,7 +13,6 @@ import javax.inject.Inject;
 import rx.Subscriber;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action0;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
@@ -29,6 +30,7 @@ public class PersonalDoctorServiceSettingPresenter<V> implements IPersonalDoctor
         mRepository = repository;
         mSubscriptions = new CompositeSubscription();
     }
+
     @Override
     public void setPresenter(V view) {
         mActivity = (IPersonalDoctorServiceSettingView) view;
@@ -36,7 +38,34 @@ public class PersonalDoctorServiceSettingPresenter<V> implements IPersonalDoctor
 
     @Override
     public void onSubscribe() {
+        NewPriceBean newPriceBean = mActivity.createNewPriceBean();
+        //调用repository
+        Subscription subscription = mRepository.insertPrice(newPriceBean)
+                .subscribeOn(Schedulers.io())
+                .doOnSubscribe(() -> mActivity.dataInteractionDialog())
+                .subscribeOn(AndroidSchedulers.mainThread())   //只可以在主线程运行
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<ResponseDisplayBean>() {
+                    @Override
+                    public void onCompleted() {
 
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        mActivity.displayErrorDialog(e.getMessage());
+                    }
+
+                    @Override
+                    public void onNext(ResponseDisplayBean responseDisplayBean) {
+                        if (responseDisplayBean.isIsSucess()) {
+                            loadDoctorDetail();
+                        } else {
+                            mActivity.displayErrorDialog(responseDisplayBean.getMessage());
+                        }
+                    }
+                });
+        mSubscriptions.add(subscription);
     }
 
     @Override
@@ -48,72 +77,66 @@ public class PersonalDoctorServiceSettingPresenter<V> implements IPersonalDoctor
     @Override
     public void updatePrice() {
         PriceDisplayBean priceDisplayBean = mActivity.getPriceDisplayBean();
+        if (priceDisplayBean == null) {
+            mActivity.showToast("数据出错,请重新登录");
+            return;
+        }
         //调用repository
         Subscription subscription = mRepository.updateDoctorProductPrice(priceDisplayBean)
                 .subscribeOn(Schedulers.io())
-                .doOnSubscribe(new Action0() {
-                    @Override
-                    public void call() {
-                        mActivity.dataInteractionDialog();
-                    }
-                })
+                .doOnSubscribe(() -> mActivity.dataInteractionDialog())
                 .subscribeOn(AndroidSchedulers.mainThread())   //只可以在主线程运行
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Subscriber<ResponseDisplayBean>() {
                     @Override
                     public void onCompleted() {
-                        mActivity.dismissInteractionDialog();
+
                     }
 
                     @Override
                     public void onError(Throwable e) {
-                        mActivity.showToast("修改价格失败!");
+                        mActivity.displayErrorDialog(e.getMessage());
                     }
 
                     @Override
                     public void onNext(ResponseDisplayBean responseDisplayBean) {
-                        mActivity.showToast("修改价格成功!");
                         //销毁当前页面,返回设置页面
-                        mActivity.switchPageUI(Global.Jump.ServiceSettingActivity);
+                        if (responseDisplayBean.isIsSucess()) {
+                            loadDoctorDetail();
+                        } else {
+                            mActivity.displayErrorDialog(responseDisplayBean.getMessage());
+                        }
                     }
                 });
 
         mSubscriptions.add(subscription);
     }
 
-    @Override
-    public void insertPrice() {
-        NewPriceBean newPriceBean = mActivity.createNewPriceBean();
-        //调用repository
-        Subscription subscription = mRepository.insertPrice(newPriceBean)
+    /**
+     * 查询医生信息
+     */
+    public void loadDoctorDetail() {
+        Subscription subscription = mRepository.loadDoctorDetail()
                 .subscribeOn(Schedulers.io())
-                .doOnSubscribe(new Action0() {
-                    @Override
-                    public void call() {
-                        mActivity.dataInteractionDialog();
-                    }
-                })
-                .subscribeOn(AndroidSchedulers.mainThread())   //只可以在主线程运行
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Subscriber<ResponseDisplayBean>() {
+                .subscribe(new Subscriber<DoctorDisplayBean>() {
                     @Override
                     public void onCompleted() {
                         mActivity.dismissInteractionDialog();
+                        mActivity.showToast("保存成功!");
+                        mActivity.switchPageUI(Global.Jump.ServiceSettingActivity);
                     }
 
                     @Override
                     public void onError(Throwable e) {
-                        mActivity.showToast("修改价格失败!");
+                        mActivity.displayErrorDialog(e.getMessage());
                     }
 
                     @Override
-                    public void onNext(ResponseDisplayBean responseDisplayBean) {
-                        mActivity.showToast("修改价格成功!");
-                        //销毁当前页面,返回设置页面
-                        mActivity.switchPageUI(Global.Jump.ServiceSettingActivity);
+                    public void onNext(DoctorDisplayBean doctorDisplayBean) {
+                        LocalData.getLocalData().setMyself(doctorDisplayBean);
                     }
                 });
-
         mSubscriptions.add(subscription);
     }
 }

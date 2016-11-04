@@ -1,15 +1,14 @@
 package com.kaurihealth.mvplib.mine_p;
 
+import com.kaurihealth.datalib.local.LocalData;
 import com.kaurihealth.datalib.repository.IDataSource;
 import com.kaurihealth.datalib.response_bean.DoctorDisplayBean;
-
 
 import javax.inject.Inject;
 
 import rx.Subscriber;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action0;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
@@ -37,29 +36,25 @@ public class EnterPracticeFieldPresenter<V> implements IEnterPracticeFieldPresen
         //调用repository
         Subscription subscription = mRepository.updateDoctor(myself)
                 .subscribeOn(Schedulers.io())
-                .doOnSubscribe(new Action0() {
-                    @Override
-                    public void call() {
-                        mActivity.dataInteractionDialog();
-                    }
-                })
+                .doOnSubscribe(() -> mActivity.dataInteractionDialog())
                 .subscribeOn(AndroidSchedulers.mainThread())   //只可以在主线程运行
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Subscriber<DoctorDisplayBean>() {
                     @Override
                     public void onCompleted() {
-                        mActivity.dismissInteractionDialog();
+                        mActivity.showToast("修改成功!");
+                          mActivity.switchPageUI("");  //关闭当前页面
                     }
 
                     @Override
                     public void onError(Throwable e) {
-                        mActivity.displayError(e);
+                        mActivity.displayErrorDialog(e.getMessage());
                     }
 
                     @Override
                     public void onNext(DoctorDisplayBean myself) {
-                        mActivity.showToast("修改成功!");
-                        mActivity.switchPageUI("");
+                        mActivity.dismissInteractionDialog();
+                        LocalData.getLocalData().setMyself(myself);
                     }
                 });
 

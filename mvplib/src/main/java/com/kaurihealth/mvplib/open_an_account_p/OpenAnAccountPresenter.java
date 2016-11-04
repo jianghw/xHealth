@@ -3,11 +3,10 @@ package com.kaurihealth.mvplib.open_an_account_p;
 import com.kaurihealth.datalib.repository.IDataSource;
 import com.kaurihealth.datalib.repository.Repository;
 import com.kaurihealth.datalib.request_bean.bean.NewRegistByDoctorBean;
-import com.kaurihealth.datalib.request_bean.bean.RegisterResponse;
+import com.kaurihealth.datalib.response_bean.RegisterResponse;
 
 import javax.inject.Inject;
 
-import rx.Observable;
 import rx.Subscriber;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
@@ -39,7 +38,6 @@ public class OpenAnAccountPresenter<T> implements  IOpenAnAccountPresenter<T> {
     public void setPresenter(T view) {
         //初始化mActivity
         mActivity = (IOpenAnAccountView)view;
-
     }
 
     //订阅  IMvpPresenter  请求数据
@@ -60,17 +58,21 @@ public class OpenAnAccountPresenter<T> implements  IOpenAnAccountPresenter<T> {
                 .subscribe(new Subscriber<RegisterResponse>() {
                     @Override
                     public void onCompleted() {
-
+                    mActivity.dismissInteractionDialog();
                     }
 
                     @Override
                     public void onError(Throwable e) {
-
+                        mActivity.displayErrorDialog(e.getMessage());
                     }
 
                     @Override
                     public void onNext(RegisterResponse registerResponse) {
-
+                        if(registerResponse.isSuccessful()){
+                            mActivity.openAnAccountSuccess(registerResponse);
+                        }else{
+                            mActivity.displayErrorDialog(registerResponse.getMessage());
+                        }
                     }
                 });
         mSubscriptions.add(subscription);
@@ -80,6 +82,7 @@ public class OpenAnAccountPresenter<T> implements  IOpenAnAccountPresenter<T> {
     //取消订阅
     @Override
     public void unSubscribe() {
-
+        mSubscriptions.clear();
+        mActivity=null;
     }
 }

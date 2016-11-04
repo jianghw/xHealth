@@ -2,7 +2,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.kaurihealth.kaurihealth.clinical.fragment.DynamicFragment">
+    android:background="@color/color_bg_gray"
+    tools:context="com.kaurihealth.kaurihealth.clinical_v.activity.DynamicActivity">
 
     <TextView
         android:id="@+id/tvTemp"
@@ -44,8 +45,9 @@
         android:id="@+id/swipe_refresh"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#FFFFFF"
-        android:paddingBottom="10dp">
+        android:background="@color/color_bg_gray"
+
+        >
         <ListView
             android:id="@+id/lv_content"
             android:layout_width="match_parent"

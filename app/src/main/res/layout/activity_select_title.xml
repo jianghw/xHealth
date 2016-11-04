@@ -1,83 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/kaurihealth_background"
+    android:background="@color/color_bg_gray"
     android:orientation="vertical">
 
-    <RelativeLayout
-        android:id="@+id/lay_title_medicalhistory"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/toptitle_height"
-        android:background="@color/kaurihealth_header_background">
-
-        <ImageView
-            android:id="@+id/iv_back"
-            style="@style/toptitleback" />
-
-        <TextView
-            style="@style/toptitletv"
-            android:text="职称" />
-
-        <TextView
-            android:id="@+id/tv_operate"
-            style="@style/toptitleedit"
-            android:text="保存" />
-    </RelativeLayout>
+    <include
+        android:id="@+id/in_title"
+        layout="@layout/include_action_bar" />
 
     <RelativeLayout
-        style="@style/rlay_professionaltitle"
-        android:layout_marginTop="10dp">
-
+        style="@style/Bg_Lay_Press"
+        android:layout_marginTop="@dimen/margin_16">
         <TextView
             android:id="@+id/tv3_mine"
-            style="@style/tvname_professional_title"
+            style="@style/Doctor_TitleText"
             android:text="医疗职称：" />
 
         <TextView
             android:id="@+id/tvHospitalTitles"
-            style="@style/tv_prfessional_title"
+            style="@style/TextView_Frame"
             android:layout_toRightOf="@id/tv3_mine"
-            android:text="住院医师"
+            tools:text="住院医师"
             android:hint="请选择"
             android:textColorHint="#919090"/>
     </RelativeLayout>
 
-    <TextView style="@style/line_professional_title" />
+    <TextView style="@style/Line_Gap" />
 
-    <RelativeLayout style="@style/rlay_professionaltitle">
-
+    <RelativeLayout style="@style/Bg_Lay_Press">
         <TextView
             android:id="@+id/tv1_mine"
-            style="@style/tvname_professional_title"
+            style="@style/Doctor_TitleText"
             android:text="教学职称：" />
 
         <TextView
             android:id="@+id/tvEducationTitles"
-            style="@style/tv_prfessional_title"
+            style="@style/TextView_Frame"
             android:layout_toRightOf="@id/tv1_mine"
             android:hint="请选择"
             android:textColorHint="#919090"
             android:text="教授" />
     </RelativeLayout>
 
-    <TextView style="@style/line_professional_title" />
+    <TextView style="@style/Line_Gap" />
 
-    <RelativeLayout style="@style/rlay_professionaltitle">
-
+    <RelativeLayout style="@style/Bg_Lay_Press">
         <TextView
             android:id="@+id/tv2_mine"
-            style="@style/tvname_professional_title"
+            style="@style/Doctor_TitleText"
             android:text="导        师：" />
 
         <TextView
             android:id="@+id/tvMentorshipTitles"
-            style="@style/tv_prfessional_title"
+            style="@style/TextView_Frame"
             android:layout_toRightOf="@id/tv2_mine"
             android:hint="请选择"
             android:textColorHint="#919090"
-            android:text="博士生导师"
-
-           />
+            tools:text="博士生导师" />
     </RelativeLayout>
 </LinearLayout>

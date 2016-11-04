@@ -4,18 +4,29 @@ import com.kaurihealth.datalib.response_bean.DoctorPatientRelationshipBean;
 
 /**
  * Created by jianghw on 2016/8/24.
- * <p/>
- * 描述：传 DoctorPatientRelationshipBean 给  LongHealthyStandardActivity
+ * <p>
+ * 描述：传 id 给  LongHealthyStandardActivity
  */
 public class LongHStandardBeanEvent {
 
     private final DoctorPatientRelationshipBean bean;
-
-    public LongHStandardBeanEvent(DoctorPatientRelationshipBean bean) {
+    private final int id;
+    private final boolean isAble;
+    public LongHStandardBeanEvent(int id,boolean isAble,DoctorPatientRelationshipBean bean) {
+        this.id = id;
+        this.isAble = isAble;
         this.bean = bean;
     }
 
-    public DoctorPatientRelationshipBean getBean() {
+    public int getPatientId() {
+        return id;
+    }
+
+    public boolean getIsAble(){
+        return isAble;
+    }
+
+    public DoctorPatientRelationshipBean getBean(){
         return bean;
     }
 }

@@ -7,16 +7,14 @@ import android.support.v4.app.FragmentPagerAdapter;
 import java.util.List;
 
 /**
- * 版权:    张磊
- * 作者:    张磊
- * 描述：
- * 修订日期:
+ *
  */
 public class MainFragmentAdapter extends FragmentPagerAdapter {
     List<Fragment> list;
-    public MainFragmentAdapter(FragmentManager fm,List<Fragment> list) {
+
+    public MainFragmentAdapter(FragmentManager fm, List<Fragment> list) {
         super(fm);
-        this.list=list;
+        this.list = list;
     }
 
     @Override

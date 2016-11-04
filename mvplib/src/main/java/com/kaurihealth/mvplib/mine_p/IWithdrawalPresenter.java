@@ -8,6 +8,7 @@ import com.kaurihealth.mvplib.base_p.IMvpPresenter;
  */
 public interface IWithdrawalPresenter<V> extends IMvpPresenter<V> {
 
+    void loadUserCashOutAccounts(boolean isDirty);
     //发送提现请求
     void startNewCashOut();
 }

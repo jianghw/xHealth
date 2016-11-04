@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:tools="http://schemas.android.com/tools"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:orientation="vertical"
-              android:background="@color/color_bg_gray"
-              tools:context=".patient_v.AddMonitorIndexActivity">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_bg_gray"
+    android:orientation="vertical"
+    tools:context=".patient_v.long_monitoring.AddMonitorIndexActivity">
 
-    <include layout="@layout/include_action_bar"/>
+    <include layout="@layout/include_action_bar" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -27,7 +27,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="@string/monitor_time"/>
+                android:text="@string/monitor_time" />
 
             <TextView
                 android:id="@+id/tv_time"
@@ -35,13 +35,10 @@
                 android:layout_height="match_parent"
                 android:layout_weight="2"
                 android:gravity="center|left"
-                android:hint="@string/monitor_hint_time"/>
+                android:text="@string/monitor_hint_time" />
         </LinearLayout>
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1px"
-            android:background="@color/tv_press_color"/>
+        <View style="@style/Line_Match" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -54,7 +51,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="@string/monitor_program"/>
+                android:text="@string/monitor_program" />
 
             <TextView
                 android:id="@+id/tv_program"
@@ -62,13 +59,10 @@
                 android:layout_height="match_parent"
                 android:layout_weight="2"
                 android:gravity="center|left"
-                android:hint="@string/monitor_hint_program"/>
+                android:text="@string/monitor_hint_program" />
         </LinearLayout>
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1px"
-            android:background="@color/tv_press_color"/>
+        <View style="@style/Line_Match" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -81,7 +75,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="@string/monitor_data"/>
+                android:text="@string/monitor_data" />
 
             <EditText
                 android:id="@+id/edit_first"
@@ -91,7 +85,7 @@
                 android:background="@drawable/bg_edt_login"
                 android:gravity="center|left"
                 android:hint="@string/monitor_hint_data"
-                android:inputType="number"/>
+                android:inputType="number|numberDecimal" />
 
             <TextView
                 android:id="@+id/tv_first_unit"
@@ -99,7 +93,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="0.5"
                 android:gravity="center"
-                tools:text="mmHg"/>
+                tools:text="mmHg" />
         </LinearLayout>
 
         <LinearLayout
@@ -107,14 +101,14 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/input_height_48"
             android:gravity="center_vertical"
-            android:visibility="gone"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:visibility="gone">
 
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:gravity="center"/>
+                android:gravity="center" />
 
             <EditText
                 android:id="@+id/edit_second"
@@ -124,7 +118,7 @@
                 android:background="@drawable/bg_edt_login"
                 android:gravity="center|left"
                 android:hint="@string/monitor_hint_data"
-                android:inputType="number"/>
+                android:inputType="number|numberDecimal" />
 
             <TextView
                 android:id="@+id/tv_second_unit"
@@ -132,7 +126,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="0.5"
                 android:gravity="center"
-                android:text="mmHg"/>
+                android:text="mmHg" />
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>

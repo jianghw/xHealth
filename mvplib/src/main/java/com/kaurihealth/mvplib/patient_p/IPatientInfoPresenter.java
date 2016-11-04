@@ -15,4 +15,7 @@ public interface IPatientInfoPresenter<V> extends IMvpPresenter<V> {
      * @param endDate
      */
     void startCountdown(Date endDate);
+
+
+    void closeCountDown();
 }

@@ -9,7 +9,6 @@ import javax.inject.Inject;
 import rx.Subscriber;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action0;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
@@ -38,32 +37,29 @@ public class SelectTitlePresenter<V> implements ISelectTitlePresenter<V> {
         //调用repository
         Subscription subscription = mRepository.updateDoctor(myself)
                 .subscribeOn(Schedulers.io())
-                .doOnSubscribe(new Action0() {
-                    @Override
-                    public void call() {
-                        mActivity.dataInteractionDialog();   //提示: 正在加载中....
-                    }
+                .doOnSubscribe(() -> {
+                    mActivity.dataInteractionDialog();   //提示: 正在加载中....
                 })
                 .subscribeOn(AndroidSchedulers.mainThread())   //只可以在主线程运行
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Subscriber<DoctorDisplayBean>() {
                     @Override
                     public void onCompleted() {
-                        mActivity.dismissInteractionDialog();
+                        mActivity.showToast("保存成功!");
+                        mActivity.switchPageUI("");
                     }
 
                     @Override
                     public void onError(Throwable e) {
-                        mActivity.displayError(e);  //SweetAlertDialog  的错误提示
+                        mActivity.displayErrorDialog(e.getMessage());
                     }
 
                     @Override
                     public void onNext(DoctorDisplayBean myself) {
+                        mActivity.dismissInteractionDialog();
                         LocalData.getLocalData().setMyself(myself);
-                        mActivity.showToast("保存成功!");
                     }
                 });
-
         mSubscriptions.add(subscription);
     }
 

@@ -9,11 +9,12 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.example.commonlibrary.widget.util.DialogFactory;
+
 import com.kaurihealth.kaurihealth.R;
 import com.kaurihealth.kaurihealth.mine.Interface.IControlHealthyRecordDialog;
 import com.kaurihealth.kaurihealth.mine.Interface.IHealthyRecordSelect;
-import com.youyou.zllibrary.util.SysUtil;
+import com.kaurihealth.utilslib.dialog.DialogUtils;
+import com.kaurihealth.utilslib.SysUtil;
 
 import java.util.Arrays;
 import java.util.Iterator;
@@ -47,7 +48,7 @@ public class HealthyRecordDialog implements IControlHealthyRecordDialog<String> 
         resources = activity.getResources();
         view = LayoutInflater.from(activity.getApplicationContext()).inflate(R.layout.healthyrecordselects, null);
         ButterKnife.bind(this, view);
-        dialog = DialogFactory.createDialog(view, activity, R.style.Dialog_Date);
+        dialog = DialogUtils.createDialogNew(view, activity, R.style.Dialog_Date);
         init();
     }
 
@@ -141,7 +142,7 @@ public class HealthyRecordDialog implements IControlHealthyRecordDialog<String> 
     private View createLine() {
         TextView tvLine = new TextView(activity.getApplicationContext());
         tvLine.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, SysUtil.dp2px(1, activity.getApplicationContext())));
-        tvLine.setBackgroundColor(resources.getColor(R.color.gray));
+        tvLine.setBackgroundColor(resources.getColor(R.color.color_gray));
         return tvLine;
     }
 }

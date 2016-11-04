@@ -8,7 +8,6 @@ import com.kaurihealth.mvplib.base_p.IMvpView;
  * Created by Nick on 30/08/2016.
  */
 public interface IEnterPracticeFieldView extends IMvpView {
-    void displayError(Throwable e);
-
     DoctorDisplayBean getDoctorDisplayBean();
 }
+

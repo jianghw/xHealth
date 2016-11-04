@@ -6,7 +6,6 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -50,11 +49,21 @@ public class UiTableBottom extends LinearLayout implements View.OnClickListener 
         invalidate();
     }
 
+    public void setTipOfNumber(int position, int number) {
+        for (int j = 0; j < itemHashMap.size(); j++) {
+            if (j == position) {
+                itemHashMap.get(j).tipView.setText(number + "");
+                itemHashMap.get(j).tipView.setVisibility(number > 0 ? View.VISIBLE : View.INVISIBLE);
+            }
+        }
+        invalidate();
+    }
+
     /**
      * UITab 改变监听器
      */
     private void init(HashMap<Integer, Integer[]> hashMap) {
-        colorClick = getResources().getColor(R.color.color_green);
+        colorClick = getResources().getColor(R.color.color_theme_green);
         colorUnClick = getResources().getColor(R.color.color_gray);
         /**拿控件的高度*/
         int tableBottomHeight = ViewGroup.LayoutParams.MATCH_PARENT;
@@ -107,7 +116,7 @@ public class UiTableBottom extends LinearLayout implements View.OnClickListener 
         tableItem.parent = LayoutInflater.from(context).inflate(R.layout.ui_table_bottom, null);
         tableItem.iconView = (UiItemImg) tableItem.parent.findViewById(R.id.img_ui_item);
         tableItem.labelView = (TextView) tableItem.parent.findViewById(R.id.tv_ui_item);
-        tableItem.tipView = (ImageView) tableItem.parent.findViewById(R.id.iv_ui_item);
+        tableItem.tipView = (TextView) tableItem.parent.findViewById(R.id.iv_ui_item);
         tableItem.parent.setTag(i);
         tableItem.parent.setOnClickListener(this);
         return tableItem;
@@ -117,23 +126,7 @@ public class UiTableBottom extends LinearLayout implements View.OnClickListener 
         View parent; //父控件
         UiItemImg iconView; //图片
         TextView labelView; //标签
-        ImageView tipView; //红点
-    }
-
-    public void setTipVisibility(int i) {
-        for (int j = 0; j < itemHashMap.size(); j++) {
-            if (j == i) {
-                itemHashMap.get(j).tipView.setVisibility(VISIBLE);
-            }
-        }
-    }
-
-    public void setTipGone(int i) {
-        for (int j = 0; j < itemHashMap.size(); j++) {
-            if (j == i) {
-                itemHashMap.get(j).tipView.setVisibility(GONE);
-            }
-        }
+        TextView tipView; //红点
     }
 
     /**

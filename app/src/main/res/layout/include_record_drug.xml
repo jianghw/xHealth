@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:orientation="vertical">
+
+    <LinearLayout style="@style/Lay_Horizontal">
+
+        <TextView
+            style="@style/BodyText_Title"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:gravity="right"
+            android:singleLine="true"
+            android:text="目前应用药物:"/>
+
+        <TextView
+            android:id="@+id/tv_drug_f"
+            style="@style/Record_BodyText"
+            android:layout_width="0dp"
+            android:layout_weight="2"
+            android:text="患者系统病例记录已阅"/>
+
+        <com.rey.material.widget.CheckBox
+            android:id="@+id/cb_drug_f"
+            style="@style/Material.Drawable.CheckBox"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:gravity="center"/>
+    </LinearLayout>
+
+    <LinearLayout style="@style/Lay_Horizontal">
+
+        <TextView
+            style="@style/BodyText_Title"
+            android:layout_width="0dp"
+            android:layout_weight="1"/>
+
+        <TextView
+            android:id="@+id/tv_drug_s"
+            style="@style/Record_BodyText"
+            android:layout_width="0dp"
+            android:layout_weight="2"
+            android:text="患者系统病例记录已更新"/>
+
+        <com.rey.material.widget.CheckBox
+            android:id="@+id/cb_drug_s"
+            style="@style/Material.Drawable.CheckBox"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:gravity="center"/>
+    </LinearLayout>
+
+</merge>

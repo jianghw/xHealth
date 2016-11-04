@@ -1,5 +1,7 @@
 package com.kaurihealth.datalib.request_bean.bean;
 
+import com.kaurihealth.datalib.response_bean.DoctorInformationDisplayBean;
+
 import java.io.Serializable;
 
 /**

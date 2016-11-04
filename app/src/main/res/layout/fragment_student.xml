@@ -2,7 +2,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.kaurihealth.kaurihealth.clinical.fragment.StudentFragment">
+    android:background="@color/color_bg_gray"
+    tools:context="com.kaurihealth.kaurihealth.clinical_v.activity.DynamicActivity">
 
 
     <TextView
@@ -16,8 +17,7 @@
         android:id="@+id/swipe_refresh"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingBottom="10dp"
-        android:background="#FFF2F2F2"
+        android:background="@color/color_bg_gray"
         >
 
         <ListView

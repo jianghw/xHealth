@@ -12,8 +12,7 @@
         android:layout_alignParentBottom="true"
         android:background="@color/color_white"/>
 
-
-    <RadioGroup
+   <!-- <RadioGroup
         android:id="@+id/rg_bottom"
         android:layout_width="match_parent"
         android:layout_height="@dimen/main_bottom_height"
@@ -28,7 +27,7 @@
             android:id="@+id/rbtn_home_main"
             style="@style/Home_RadioButton"
             android:background="@null"
-            android:drawableTop="@drawable/select_home"
+
             android:text="@string/main_rb_home"
             android:textSize="@dimen/main_rb_textSize"/>
 
@@ -44,7 +43,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@null"
-                android:drawableTop="@drawable/select_message"
+
                 android:text="@string/main_rb_message"
                 android:textSize="@dimen/main_rb_textSize"/>
 
@@ -61,7 +60,7 @@
             android:id="@+id/rbtn_friend_main"
             style="@style/Home_RadioButton"
             android:background="@null"
-            android:drawableTop="@drawable/select_patient"
+
             android:text="@string/main_rb_friend"
             android:textSize="@dimen/main_rb_textSize"/>
 
@@ -69,7 +68,7 @@
             android:id="@+id/rbtn_clinical_main"
             style="@style/Home_RadioButton"
             android:background="@null"
-            android:drawableTop="@drawable/select_clinical"
+
             android:text="@string/main_rb_clinical"
             android:textSize="@dimen/main_rb_textSize"/>
 
@@ -77,16 +76,14 @@
             android:id="@+id/rbtn_mine_main"
             style="@style/Home_RadioButton"
             android:background="@null"
-            android:drawableTop="@drawable/select_mine"
             android:text="@string/main_rb_mine"
             android:textSize="@dimen/main_rb_textSize"/>
-
-    </RadioGroup>
+    </RadioGroup>-->
 
     <TextView
         android:id="@+id/tv_line"
         android:layout_width="match_parent"
-        android:layout_height="0.1dp"
+        android:layout_height="1px"
         android:layout_above="@id/ui_bottom"
         android:background="@color/main_bg_line"/>
 

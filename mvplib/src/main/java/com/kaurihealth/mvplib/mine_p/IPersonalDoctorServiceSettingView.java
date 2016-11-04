@@ -1,7 +1,7 @@
 package com.kaurihealth.mvplib.mine_p;
 
 import com.kaurihealth.datalib.request_bean.bean.NewPriceBean;
-import com.kaurihealth.datalib.request_bean.bean.PriceDisplayBean;
+import com.kaurihealth.datalib.response_bean.PriceDisplayBean;
 import com.kaurihealth.mvplib.base_p.IMvpView;
 
 /**

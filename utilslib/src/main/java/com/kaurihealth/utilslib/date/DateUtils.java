@@ -1,7 +1,5 @@
 package com.kaurihealth.utilslib.date;
 
-import com.kaurihealth.utilslib.log.LogUtils;
-
 import org.joda.time.DateTime;
 import org.joda.time.Years;
 
@@ -40,7 +38,7 @@ public class DateUtils {
         return format.format(date);
     }
 
-    public static String getDateText(Date date) {
+    private static String getDateText(Date date) {
         if (date == null) return null;
         return GetDateText(date, "yyyy-MM-dd'T'HH:mm:ssZ");
     }
@@ -58,6 +56,32 @@ public class DateUtils {
         return Years.yearsBetween(start, end).getYears();
     }
 
+    /**
+     * 返回年龄
+     *
+     * @param date
+     * @return
+     */
+    public static int calculateAge(Date date) {
+        if (date == null) return 0;
+        Calendar calendarBefore = Calendar.getInstance();
+        calendarBefore.setTime(date);
+        Calendar calendarCur = Calendar.getInstance();
+        if (calendarBefore.get(Calendar.YEAR) == calendarCur.get(Calendar.YEAR)) return 0;
+
+        if (calendarBefore.get(Calendar.MONTH) < calendarCur.get(Calendar.MONTH)) {
+            return calendarCur.get(Calendar.YEAR) - calendarBefore.get(Calendar.YEAR);
+        } else if (calendarBefore.get(Calendar.MONTH) > calendarCur.get(Calendar.MONTH)) {
+            return calendarCur.get(Calendar.YEAR) - calendarBefore.get(Calendar.YEAR) - 1;
+        } else {
+            if (calendarCur.get(Calendar.DAY_OF_MONTH) >= calendarBefore.get(Calendar.DAY_OF_MONTH)) {
+                return calendarCur.get(Calendar.YEAR) - calendarBefore.get(Calendar.YEAR);
+            } else {
+                return calendarCur.get(Calendar.YEAR) - calendarBefore.get(Calendar.YEAR) - 1;
+            }
+        }
+    }
+
     public static boolean isActive(boolean isActive, Date endDate) {
         boolean timeTag;
         if (endDate == null) {
@@ -68,7 +92,7 @@ public class DateUtils {
         return timeTag && isActive;
     }
 
-    public static Date curDate() {
+    private static Date curDate() {
         return new Date();
     }
 
@@ -85,7 +109,6 @@ public class DateUtils {
     public static Date getDateConversion(String date) {
         String now = getDateText(curDate());
         String time = now.split("T")[1];
-        LogUtils.d(time);
 
         StringBuilder sb = new StringBuilder();
         sb.append(date);

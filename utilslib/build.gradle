@@ -17,6 +17,24 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    lintOptions {
+        disable 'InvalidPackage'
+    }
+    packagingOptions {
+        exclude 'META-INF/DEPENDENCIES.txt'
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/NOTICE.txt'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/DEPENDENCIES'
+        exclude 'META-INF/notice.txt'
+        exclude 'META-INF/license.txt'
+        exclude 'META-INF/dependencies.txt'
+        exclude 'META-INF/LGPL2.1'
+        exclude 'META-INF/maven/com.squareup.picasso/picasso/pom.properties'
+        exclude 'META-INF/maven/com.squareup.picasso/picasso/pom.xml'
+        exclude 'META-INF/services/javax.annotation.processing.Processor'
+    }
 }
 
 dependencies {
@@ -24,7 +42,7 @@ dependencies {
     testCompile "junit:junit:$rootProject.ext.junitVersion"
     compile "com.android.support:appcompat-v7:$rootProject.supportLibraryVersion"
     //retrofit2网络请求
-    compile 'com.squareup.retrofit2:retrofit:2.0.0'
+    compile 'com.squareup.retrofit2:retrofit:2.0.2'
     compile 'com.squareup.retrofit2:adapter-rxjava:2.0.0'
     compile 'com.squareup.retrofit2:converter-gson:2.0.0'
     compile 'com.squareup.okhttp3:logging-interceptor:3.2.0'
@@ -37,7 +55,8 @@ dependencies {
     compile 'joda-time:joda-time:2.9.3'
     //logger debug用
     compile 'com.orhanobut:logger:1.15'
-    compile files('libs/butterknife-7.0.1.jar')
+    //butterknife
+    compile 'com.jakewharton:butterknife:7.0.1'
     // Dagger dependencies
     apt "com.google.dagger:dagger-compiler:$rootProject.daggerVersion"
     provided 'org.glassfish:javax.annotation:10.0-b28'
@@ -54,4 +73,14 @@ dependencies {
     compile 'com.github.PhilJay:MPAndroidChart:v3.0.0-beta1'
     //Android Swipe Layout
     compile files('libs/AndroidSwipeLayout-v1.1.8.jar')
+    //https://github.com/rey5137/material  控件动画库  选择框
+    compile 'com.github.rey5137:material:1.2.4'
+    //MultiImageSelector 图片选择器 含有picasso:2.4.0
+    compile 'com.github.lovetuzitong:MultiImageSelector:1.2'
+    //自定义控件
+    compile 'com.veinhorn.scrollgalleryview:library:1.0.5'
+    //eventbus
+    compile 'org.greenrobot:eventbus:3.0.0'
+    //jianghw utils
+    compile 'com.android.support:design:23.+'
 }

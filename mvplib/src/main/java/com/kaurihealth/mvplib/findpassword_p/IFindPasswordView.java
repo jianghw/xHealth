@@ -21,9 +21,6 @@ public interface IFindPasswordView extends IMvpView {
 
     void showPhoneNumberErrorMessage();
 
-    //提示验证码错误信息
-    void showVerificationCodeError(Throwable throwable);
-
     void switchToActivity(ResponseDisplayBean responseDisplayBean);
 
 }

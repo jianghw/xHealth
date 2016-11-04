@@ -2,14 +2,15 @@ package com.kaurihealth.datalib.response_bean;
 
 import android.text.TextUtils;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  * Created by jianghw on 2016/8/23.
  * <p/>
- * 描述：
+ * 描述：医患关系
  */
-public class DoctorPatientRelationshipBean {
+public class DoctorPatientRelationshipBean implements Serializable{
 
     /**
      * doctorPatientId : 3649
@@ -27,15 +28,15 @@ public class DoctorPatientRelationshipBean {
      * comment :
      * relationshipReason : 门诊
      */
-
-    private int doctorPatientId;
-    private int doctorId;
-    private int patientId;
-    private boolean isActive;
-    private boolean isWaitingForPatientConfirm;
-    private boolean isPatientConfirmed;
-    private String relationship;
-    private DoctorDisplayBean doctor;
+    private int doctorPatientId;   //医患关系ID
+    private int doctorId; //医生ID
+    private int patientId;   //患者ID
+    private boolean isActive; //0：代表还在服务期间（进行中） 1：代表服务已经结束
+    private boolean isWaitingForPatientConfirm;     //是否等待患者确认结束关系
+    private boolean isPatientConfirmed;   //患者是否确认结束关系
+    private String relationship;  //关系（0：普通，1：专属，2：转诊，3：协作）
+    private DoctorDisplayBean doctor; //医生的参数
+    public int type;
     /**
      * patientId : 44428
      * nationalIdentity : null
@@ -64,12 +65,41 @@ public class DoctorPatientRelationshipBean {
      * allergyDetail : null
      */
 
-    private PatientDisplayBean patient;
-    private Date requestDate;
-    private Date startDate;
-    private Date endDate;
-    private String comment;
-    private String relationshipReason;
+    private PatientDisplayBean patient;  //患者的参数
+    private Date requestDate; //请求时间
+    private Date startDate; //开始时间
+    private Date endDate; //结束时间
+    private String comment; //请求原因、备注
+    private String relationshipReason; //医患关系发起的原因
+
+
+    public String getReferralDoctor() {
+        return referralDoctor;
+    }
+
+    public void setReferralDoctor(String referralDoctor) {
+        this.referralDoctor = referralDoctor;
+    }
+
+    public Date getReferralDate() {
+        return referralDate;
+    }
+
+    public void setReferralDate(Date referralDate) {
+        this.referralDate = referralDate;
+    }
+
+    public String getReferralReason() {
+        return referralReason;
+    }
+
+    public void setReferralReason(String referralReason) {
+        this.referralReason = referralReason;
+    }
+
+    private String referralDoctor;//转诊人
+    private Date referralDate;//转诊时间
+    private String referralReason;//转诊原因
 
     public int getDoctorPatientId() {
         return doctorPatientId;
@@ -183,7 +213,9 @@ public class DoctorPatientRelationshipBean {
         if (TextUtils.isEmpty(this.relationshipReason)) return "暂无";
         if (relationshipReason.equalsIgnoreCase("门诊")) {
             return "门诊患者";
-        } else {
+        } else if(relationshipReason.equalsIgnoreCase("转诊")){
+            return relationshipReason + "患者服务";
+        }else{
             return relationshipReason + "服务";
         }
     }

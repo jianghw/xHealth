@@ -7,5 +7,5 @@ import com.kaurihealth.mvplib.base_p.IMvpPresenter;
  */
 public interface IBlankDoctorPresenter<V> extends IMvpPresenter<V> {
 
-
+    void RemoveDoctorRelationship();
 }

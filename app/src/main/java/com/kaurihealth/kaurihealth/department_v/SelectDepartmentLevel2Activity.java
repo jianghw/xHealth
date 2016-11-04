@@ -6,29 +6,42 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-import com.example.commonlibrary.widget.util.LoadingUtil;
-import com.kaurihealth.datalib.request_bean.bean.DepartmentDisplayWrapBean;
+import com.kaurihealth.datalib.local.LocalData;
+import com.kaurihealth.datalib.response_bean.DepartmentDisplayBean;
+import com.kaurihealth.datalib.response_bean.DoctorDisplayBean;
+import com.kaurihealth.kaurihealth.MyApplication;
 import com.kaurihealth.kaurihealth.R;
 import com.kaurihealth.kaurihealth.base_v.BaseActivity;
-import com.kaurihealth.kaurihealth.patientwithdoctor.activity.DepartmentLevel1Activity;
-import com.kaurihealth.kaurihealth.patientwithdoctor.adapter.DepartmentLevel2Adapter;
+import com.kaurihealth.kaurihealth.adapter.DepartmentLevel2Adapter;
+import com.kaurihealth.mvplib.department_p.ISelectDepartmentLevel2View;
+import com.kaurihealth.mvplib.department_p.SelectDepartmentLevel2Presenter;
+import com.kaurihealth.utilslib.constant.Global;
 
-import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.inject.Inject;
 
 import butterknife.Bind;
 
 
 /**
- * 我的Button 里面的设置   created by Nick
+ * 我的-->个人信息-->科室   created by Nick
  */
-public class SelectDepartmentLevel2Activity extends BaseActivity {
+public class SelectDepartmentLevel2Activity extends BaseActivity implements ISelectDepartmentLevel2View {
+    @Inject
+    SelectDepartmentLevel2Presenter<ISelectDepartmentLevel2View> mPresenter;
+
     public static String DepartmentLevel2ActivityKey = "DepartmentLevel2ActivityKey";
     @Bind(R.id.lv_content)
     ListView lvContent;
-    private Bundle bundle;
-    private DepartmentDisplayWrapBean bean;
-    private LoadingUtil loadingUtil;
 
+    private List<DepartmentDisplayBean> level2DepartmentList = new ArrayList<>();
+    private DepartmentLevel2Adapter level2Adapter;
+
+    private DepartmentDisplayBean selectedDepartment;
+    private int departmentId;
+    private String bundleString;
 
     @Override
     protected int getActivityLayoutID() {
@@ -36,63 +49,104 @@ public class SelectDepartmentLevel2Activity extends BaseActivity {
     }
 
     @Override
-    protected void initPresenterAndData(Bundle savedInstanceState) {
-
+    protected void initPresenterAndView(Bundle savedInstanceState) {
+        MyApplication.getApp().getComponent().inject(this);
+        mPresenter.setPresenter(this);
     }
 
     @Override
-    protected void initDelayedView() {
-        initBackBtn(R.id.iv_back);
-        loadingUtil = LoadingUtil.getInstance(SelectDepartmentLevel2Activity.this);
-        setBack(R.id.iv_back);
-        bundle = getBundle();
-        bean = (DepartmentDisplayWrapBean) bundle.getSerializable(DepartmentLevel1Activity.Level1ToLevel2Key);
-        DepartmentLevel2Adapter adapter = new DepartmentLevel2Adapter(getApplicationContext(), bean.level2);
-        lvContent.setAdapter(adapter);
+    protected void initDelayedData() {
+        initNewBackBtn(getString(R.string.department_two));
+
+        Bundle bundle = getBundle();
+        DepartmentDisplayBean departmentDisplayBean = (DepartmentDisplayBean) bundle.getSerializable(Global.Jump.SelectDepartmentLevel2Activity);
+        departmentId = departmentDisplayBean.getDepartmentId();
+        bundleString = getBundle().getString(Global.Environment.BUNDLE);
+
+        //第二次网络请求,刷新出二级科室
+        getLevel2Departments();
+
+        level2Adapter = new DepartmentLevel2Adapter(getApplicationContext(), level2DepartmentList);
+        lvContent.setAdapter(level2Adapter);
         lvContent.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                bundle.putSerializable(DepartmentLevel2ActivityKey, bean.level2.get(position));
-                Intent intent = getIntent();
-                intent.putExtras(bundle);
-                setResult(RESULT_OK, intent);
-                loadingUtil.show();
-                loadingUtil.dismiss("修改成功", new LoadingUtil.Success() {
-                    @Override
-                    public void dismiss() {
-                        finishCur();
-                    }
-                });
+                selectedDepartment = level2DepartmentList.get(position);
+                //更新科室信息 -->mobileUpdateDoctorBean 初始化
+                if (bundleString.equals(Global.Environment.CHOICE)) {
+                    returnBundle();
+                } else {
+                    mPresenter.upDateDoctor();
+                }
             }
         });
-
     }
 
-
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-    }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        mPresenter.unSubscribe();
+    }
+
+    @Override
+    public void switchPageUI(String className) {
+        finishCur();
+    }
+
+    //刷新二级科室的ListView数据
+    @Override
+    public void refreshListView(List<DepartmentDisplayBean> list) {
+        level2DepartmentList.clear();
+        level2DepartmentList.addAll(list);
+        level2Adapter.notifyDataSetChanged();
+    }
+
+    //错误提示信息
+    @Override
+    public void displayError(Throwable e) {
+        displayErrorDialog(e.getMessage());
+    }
+
+    //得到用户点击的parentDepartmentId
+    @Override
+    public int getParentDepartmentId() {
+        return departmentId;
+    }
+
+    //在Presenter的OnNext()服务器成功的情况下才能回传Bundle. 在Presenter的OnError()下给用户提示错误
+    @Override
+    public void returnBundle() {
+        Intent intent = getIntent();
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(DepartmentLevel2ActivityKey, selectedDepartment);
+        intent.putExtras(bundle);
+        setResult(RESULT_OK, intent);
+        finishCur();
+    }
+
+    /**
+     * 更新doctorDisplayBean的科室
+     *
+     * @return
+     */
+    @Override
+    public DoctorDisplayBean getDoctorDisplayBean() {
+        DoctorDisplayBean bean = (DoctorDisplayBean) LocalData.getLocalData().getMyself().clone();
+        if (bean.getDoctorInformations() != null) {
+            bean.getDoctorInformations().setDepartmentId(selectedDepartment.getDepartmentId());
+            if (bean.getDoctorInformations().getDepartment() != null) {
+                bean.getDoctorInformations().getDepartment().setDepartmentId(selectedDepartment.getDepartmentId());
+            } else {
+                bean.getDoctorInformations().setDepartment(selectedDepartment);
+            }
+        }
+        return bean;
+    }
+
+    //去远程请求数据
+    public void getLevel2Departments() {
+        mPresenter.onSubscribe();
     }
 
 }

@@ -15,4 +15,6 @@ public interface IAddMonitorIndexView extends IMvpView {
     List<NewLongtermMonitoringBean> getNewLongtermMonitoringBean();
 
     int getPatientID();
+
+    void addDataSucceed();
 }

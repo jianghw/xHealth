@@ -20,6 +20,7 @@ import java.lang.reflect.Field;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 import biz.kasual.materialnumberpicker.MaterialNumberPicker;
 
@@ -32,13 +33,13 @@ public class SelectDateDialog {
      * 默认值
      */
     //默认40岁
-    private int ageDefault = 40;
+    private int ageDefault = 0;
     //默认1月份
     private int monthDefault = 0;
     //默认1号
     private int dayDefault = 0;
     //默认显示的年的个数
-    private int yearAmountDefault = 117;
+    private int yearAmountDefault = 100;
 
     private String[] monthStr = new String[12];
     private String[] dayOne = new String[28];
@@ -46,7 +47,7 @@ public class SelectDateDialog {
     private String[] dayThree = new String[30];
     private String[] dayFour = new String[31];
     private String[] years;
-    private Activity activity;
+
     private DialogListener mOnClickDialogListener;
     private Dialog dateDialog;
     private Context context;
@@ -55,16 +56,14 @@ public class SelectDateDialog {
     private String format;
 
     public SelectDateDialog(Activity activity, DialogListener onClickDialogListener) {
-        this.activity = activity;
         this.context = activity.getApplicationContext();
         this.mOnClickDialogListener = onClickDialogListener;
-        init();
+        init(activity);
     }
 
     public SelectDateDialog(Activity activity) {
-        this.activity = activity;
         this.context = activity.getApplicationContext();
-        init();
+        init(activity);
     }
 
     public void setOnClickDialogListener(DialogListener onClickDialogListener) {
@@ -80,31 +79,37 @@ public class SelectDateDialog {
         return dateDialog;
     }
 
-    private void init() {
+    private void init(Activity activity) {
         initDate(monthStr, "月");
         initDate(dayOne, "日");
         initDate(dayTwo, "日");
         initDate(dayThree, "日");
         initDate(dayFour, "日");
         years = getYears();
+        Calendar cal = Calendar.getInstance();
+        monthDefault = cal.get(Calendar.MONTH);
+        dayDefault  = cal.get(Calendar.DAY_OF_MONTH)-1;
+
         setDateDialog(activity);
     }
 
     private void setDateDialog(Activity activity) {
         View view = LayoutInflater.from(activity.getApplicationContext()).inflate(R.layout.dialog_date_birth, null);
-        final MaterialNumberPicker year = (MaterialNumberPicker) view.findViewById(R.id.numberpicker_year);
+        final MaterialNumberPicker yearView = (MaterialNumberPicker) view.findViewById(R.id.numberpicker_year);
         monthPicker = (MaterialNumberPicker) view.findViewById(R.id.numberpicker_month);
         final MaterialNumberPicker day = (MaterialNumberPicker) view.findViewById(R.id.numberpicker_day);
-        TextView tv_complete = (TextView) view.findViewById(R.id.tv_complete);
-        setNumberPickerDividerColor(year, context);
+
+        setNumberPickerDividerColor(yearView, context);
         setNumberPickerDividerColor(monthPicker, context);
         setNumberPickerDividerColor(day, context);
         setNumberPickerDividerColor((NumberPicker) view.findViewById(R.id.numberpicker_year2), context);
         setNumberPickerDividerColor((NumberPicker) view.findViewById(R.id.numberpicker_year1), context);
+
+        TextView tv_complete = (TextView) view.findViewById(R.id.tv_complete);
         tv_complete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int yearSelected = getSelectedYear(year.getValue());
+                int yearSelected = getSelectedYear(yearView.getValue());
                 int monthSelected = Integer.valueOf(getSelectedMonth());
                 int daySelected = day.getValue() + 1;
                 if (SelectDateDialog.this.mOnClickDialogListener != null) {
@@ -121,7 +126,7 @@ public class SelectDateDialog {
                     DateBean dateBean = new DateBean();
                     Date time = instance.getTime();
                     dateBean.date = time;
-                    SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+                    SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.SIMPLIFIED_CHINESE);
                     dateBean.dateStr = format.format(time);
                     if (!(TextUtils.isEmpty(SelectDateDialog.this.format))) {
                         SimpleDateFormat formatShow = new SimpleDateFormat(SelectDateDialog.this.format);
@@ -142,28 +147,30 @@ public class SelectDateDialog {
         dialog.setContentView(view);
         dateDialog=dialog;
 
-        setNumberPicker(year, years);
+        setNumberPicker(yearView, years);
         //设置默认40岁
-        year.setValue(years.length - ageDefault + 1);
+        yearView.setValue(-1);
         setNumberPicker(monthPicker, monthStr);
+
         //设置默认第一个月
-        monthPicker.setValue(0);
+        monthPicker.setValue(monthDefault);
         //设置默认第一个月的数据
         setNumberPicker(day, dayFour);
         //设置默认第一个月的第一天
-        day.setValue(0);
-        year.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
+        day.setValue(dayDefault);
+
+        yearView.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
             @Override
             public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
                 if (monthPicker.getValue() == 1) {
-                    setNumberPicker(day, getDayStrOfMonth(getSelectedYear(year.getValue()), Integer.valueOf(getSelectedMonth())));
+                    setNumberPicker(day, getDayStrOfMonth(getSelectedYear(yearView.getValue()), Integer.valueOf(getSelectedMonth())));
                 }
             }
         });
         monthPicker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
             @Override
             public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
-                String[] daysOfMonth = getDayStrOfMonth(getSelectedYear(year.getValue()), Integer.valueOf(getSelectedMonth()));
+                String[] daysOfMonth = getDayStrOfMonth(getSelectedYear(yearView.getValue()), Integer.valueOf(getSelectedMonth()));
                 setNumberPicker(day, daysOfMonth);
             }
         });
@@ -190,10 +197,6 @@ public class SelectDateDialog {
 
     /**
      * 根据年，月  返回当前月份的天数
-     *
-     * @param year
-     * @param month
-     * @return
      */
     private int getDayOfMonth(int year, int month) {
         switch (month) {
@@ -228,17 +231,11 @@ public class SelectDateDialog {
      * @return boolean
      */
     private boolean isLeapYear(int year) {
-        if ((year / 100 == 0 && year / 400 == 0) || (year / 100 != 0 && year / 4 == 0)) {
-            return true;
-        } else {
-            return false;
-        }
+        return (year / 100 == 0 && year / 400 == 0) || (year / 100 != 0 && year / 4 == 0);
     }
 
     /**
      * 根据在numberpicker中序号，返回选中的年
-     *
-     * @return
      */
     private int getSelectedYear(int index) {
         Calendar calendar = Calendar.getInstance();
@@ -249,8 +246,6 @@ public class SelectDateDialog {
 
     /**
      * 获取选中月份
-     *
-     * @return
      */
     private String getSelectedMonth() {
         String monthTemp = monthStr[monthPicker.getValue()];
@@ -292,14 +287,10 @@ public class SelectDateDialog {
 
     /**
      * 设置numberPicker 的分割线高度好字体颜色
-     *
-     * @param numberPicker
-     * @param context
      */
     public static void setNumberPickerDividerColor(NumberPicker numberPicker, Context context) {
         NumberPicker picker = numberPicker;
         Field[] pickerFields = NumberPicker.class.getDeclaredFields();
-
         for (Field pf : pickerFields) {
             if (pf.getName().equals("mSelectionDividerHeight")) {
                 pf.setAccessible(true);

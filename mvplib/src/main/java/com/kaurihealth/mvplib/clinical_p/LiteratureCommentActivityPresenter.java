@@ -71,6 +71,6 @@ public class LiteratureCommentActivityPresenter<V> implements ILiteratureCommnet
 
     @Override
     public void unSubscribe() {
-
+    mSubscriptions.clear();
     }
 }

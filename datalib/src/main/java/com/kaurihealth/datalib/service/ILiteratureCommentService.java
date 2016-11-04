@@ -52,6 +52,9 @@ public interface ILiteratureCommentService {
     @DELETE("api/LiteratureComment/DeleteLiteratureComment")
     Call<ResponseDisplayBean> DeleteLiteratureComment(@Query("literatureCommentId") int literatureCommentId);
 
+    @DELETE("api/LiteratureComment/DeleteLiteratureComment")
+    Observable<ResponseDisplayBean> DeleteLiteratureComment_new(@Query("literatureCommentId") int literatureCommentId);
+
     /**
      * 修改临床支持评论
      *

@@ -3,119 +3,76 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#eaeeef"
-    android:orientation="vertical"
-    tools:context="com.kaurihealth.kaurihealth.mine.activity.WithdrawCashActivity">
+    android:background="@color/color_bg_gray"
+    android:orientation="vertical">
+
+    <include
+        android:id="@+id/in_title"
+        layout="@layout/include_action_bar" />
 
     <RelativeLayout
-        android:id="@+id/rlay_top"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/toptitle_height"
-        android:background="@color/kaurihealth_header_background">
-
-        <ImageView
-            android:id="@+id/iv_back"
-            style="@style/toptitleback" />
-
-        <TextView
-            style="@style/toptitletv"
-            android:text="提现信息" />
-
-        <TextView
-            android:id="@+id/tv_operate"
-            style="@style/toptitleedit"
-            android:text="确定" />
-
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:id="@+id/rlay2"
-        style="@style/withdraw_rlay">
+        style="@style/Bg_Lay_Press"
+        android:layout_marginTop="@dimen/margin_16">
 
         <TextView
             android:id="@+id/tv1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:text="提现通道"
-            android:textSize="15sp"
-            android:textColor="#1c1c1c"
-             />
+            style="@style/Doctor_TitleText"
+            android:text="提现通道" />
 
         <TextView
-            android:id="@+id/tvBankCard"
+            android:id="@+id/tv_bankCard"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_alignParentLeft="true"
-            android:layout_marginLeft="@dimen/withdraw_cash_marginleft"
+            android:layout_marginTop="@dimen/padding_6"
+            android:layout_marginBottom="6dp"
+            android:paddingBottom="5dp"
+            android:paddingTop="5dp"
+            android:textSize="@dimen/textSize_16"
+            android:background="@drawable/bg_edt_login"
+            android:textColorHint="@color/color_label_gray"
+            android:layout_marginLeft="@dimen/margin_16"
+            android:layout_marginRight="@dimen/margin_16"
+            android:layout_toRightOf="@+id/tv1"
+            android:gravity="left|center_vertical"
             android:hint="选择提现通道"
-            android:paddingBottom="8dp"
-            android:paddingLeft="6dp"
-            android:paddingTop="8dp"
-            android:textColor="@color/kaurihealth_header_background"
-            android:textColorHint="@color/apptextts"
-            android:textSize="14sp" />
+            android:textColor="@color/color_enable_green" />
 
+        <ImageView style="@style/Image_Arrow_Right" />
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:src="@mipmap/torightarrow" />
     </RelativeLayout>
 
-    <TextView style="@style/line_personinfo" />
+    <TextView style="@style/Line_Gap" />
 
     <RelativeLayout
-        android:id="@+id/rlay3"
-        style="@style/withdraw_rlay"
-        android:layout_below="@id/rlay2"
-        android:layout_marginTop="0.2dp">
+        style="@style/Bg_Lay_Press">
 
         <TextView
             android:id="@+id/tv2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:text="身份证号"
-            android:textSize="15sp"
-            android:textColor="#1c1c1c" />
+            style="@style/Doctor_TitleText"
+            android:text="身份证号" />
 
         <EditText
-            android:id="@+id/edtIdentityCard"
-            style="@style/withdrawcash_edt"
-            android:textSize="14sp"
-            android:hint="提现需填写个人真实身份证号"
-            android:layout_centerVertical="true"
-            android:textColorHint="@color/apptextts"
-            android:textColor="#666666"/>
-
-        <ImageView
-            android:id="@+id/ivDelete"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:visibility="gone"
-            android:layout_alignRight="@id/edtIdentityCard"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="8dp"
-            android:src="@mipmap/ic_login_delete" />
-
+            android:id="@+id/edt_identityCard"
+            style="@style/EditText_Frame_extra"
+            android:layout_width="match_parent"
+            android:layout_marginLeft="@dimen/margin_16"
+            android:layout_marginRight="@dimen/margin_16"
+            android:layout_toRightOf="@+id/tv2"
+            android:hint="提现需填写个人真实身份证号" />
+        <ImageView style="@style/Image_Arrow_Right"
+            android:visibility="invisible"/>
     </RelativeLayout>
-
 
     <LinearLayout
         android:id="@+id/lay3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/rlay3"
-        android:layout_marginLeft="18dp"
+        android:layout_marginLeft="@dimen/margin_16"
         android:layout_marginTop="10dp"
         android:orientation="horizontal">
 
         <TextView
-            android:id="@+id/tv1HintWithdrawCash"
+
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="您最多可支取"
@@ -125,10 +82,10 @@
         <TextView
             android:id="@+id/tvContentHintWithdrawCash"
             android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginLeft="3dp"
             android:layout_marginRight="3dp"
-            android:layout_height="wrap_content"
-            android:text="1000.00"
+            tools:text="1000.00"
             android:textColor="#FFFF8913"
             android:textSize="14sp" />
 
@@ -142,45 +99,37 @@
     </LinearLayout>
 
     <RelativeLayout
-        android:id="@+id/rlay4"
-        style="@style/withdraw_rlay"
-        android:layout_below="@id/lay3"
-        android:layout_marginTop="10dp">
-
+        style="@style/Bg_Lay_Press"
+        android:layout_marginTop="@dimen/margin_16">
         <TextView
             android:id="@+id/tv5"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:text="金额"
-            android:textSize="15sp"
-            android:textColor="#1c1c1c" />
+            style="@style/Doctor_TitleText"
+            android:text="金&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;额" />
 
         <EditText
-            android:id="@+id/edtMoney"
-            style="@style/withdrawcash_edt"
-            android:textSize="14sp"
-            android:layout_centerVertical="true"
-            android:inputType="numberDecimal"
-            android:textColor="#666666"
-            />
+            android:id="@+id/edt_money"
+            style="@style/EditText_Frame_extra"
+            android:layout_toRightOf="@+id/tv5"
+            android:layout_marginLeft="@dimen/margin_16"
+            android:layout_marginRight="@dimen/margin_16"
+            android:layout_width="match_parent"
+            android:inputType="numberDecimal" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignRight="@id/edtMoney"
+            android:layout_alignRight="@id/edt_money"
             android:layout_centerVertical="true"
             android:layout_marginRight="10dp"
             android:text="元"
             android:textColor="@color/app_tv_color"
-            android:textSize="@dimen/normaltext" />
+            android:textSize="@dimen/textSize_14" />
     </RelativeLayout>
 
     <TextView
         android:id="@+id/tv6"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/rlay4"
         android:layout_marginLeft="20dp"
         android:layout_marginTop="15dp"
         android:text="提现说明:"
@@ -190,26 +139,24 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@id/tv6"
-        android:layout_below="@id/tv6"
         android:layout_marginLeft="20dp"
-        android:textColor="#999999"
         android:layout_marginTop="8dp"
         android:text="我们会在5个工作日内办理"
+        android:textColor="#999999"
         android:textSize="@dimen/normaltext" />
+
     <View
         android:layout_width="wrap_content"
-        android:layout_height="2dp"/>
+        android:layout_height="2dp" />
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@id/tv6"
-        android:layout_below="@id/tv6"
         android:layout_marginLeft="20dp"
         android:layout_marginTop="2dp"
-        android:textColor="#999999"
         android:text="如有疑问请联系：sales@kaurihealth.com"
+        android:textColor="#999999"
         android:textSize="@dimen/normaltext" />
-
 
 </LinearLayout>

@@ -1,0 +1,135 @@
+package com.kaurihealth.mvplib.patient_p;
+
+import com.kaurihealth.datalib.repository.IDataSource;
+import com.kaurihealth.datalib.request_bean.bean.HealthConditionDisplayBean;
+import com.kaurihealth.datalib.response_bean.ResponseDisplayBean;
+
+import java.util.List;
+
+import javax.inject.Inject;
+
+import rx.Subscriber;
+import rx.Subscription;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
+import rx.subscriptions.CompositeSubscription;
+
+/**
+ * Created by mip on 1/09/2016.
+ */
+public class HealthConditionPresenter<V> implements IHealthConditionPresenter<V> {
+
+    private final IDataSource mRepository;
+    private CompositeSubscription mSubscriptions;
+    private IHealthConditionView mActivity;
+
+    @Inject
+    HealthConditionPresenter(IDataSource repository) {
+        mRepository = repository;
+        mSubscriptions = new CompositeSubscription();
+    }
+
+    @Override
+    public void setPresenter(V view) {
+        mActivity = (IHealthConditionView) view;
+    }
+
+    /**
+     * 通过患者ID查询健康状况信息 医生患者的token都可以用
+     */
+    @Override
+    public void onSubscribe() {
+        int patientId = mActivity.getCurrentPatientId();
+        Subscription subscription = mRepository.LoadHealthConditionByPatientId(patientId)
+                .subscribeOn(Schedulers.io())
+                .doOnSubscribe(() -> mActivity.dataInteractionDialog())
+                .subscribeOn(AndroidSchedulers.mainThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<List<HealthConditionDisplayBean>>() {
+                    @Override
+                    public void onCompleted() {
+                        mActivity.dismissInteractionDialog();
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        mActivity.dismissInteractionDialog();
+                    }
+
+                    @Override
+                    public void onNext(List<HealthConditionDisplayBean> healthConditionDisplayBeen) {
+                        mActivity.getHealthCondition(healthConditionDisplayBeen);
+                        //mActivity.showToast("保存成功");
+                    }
+                });
+        mSubscriptions.add(subscription);
+    }
+
+    /**
+     * 更新的健康记录
+     */
+    @Override
+    public void updataHealthRecord() {
+        HealthConditionDisplayBean[] healthConditionDisplayBeen = mActivity.getCurrentUpdataArray();
+        Subscription subscription = mRepository.UpdateHealthConditions(healthConditionDisplayBeen)
+                .subscribeOn(Schedulers.io())
+//                .doOnSubscribe(() -> mActivity.dataInteractionDialog())
+//                .subscribeOn(AndroidSchedulers.mainThread())        //只可以在主线程运行
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<HealthConditionDisplayBean>() {
+                    @Override
+                    public void onCompleted() {
+//                    mActivity.dismissInteractionDialog();
+                        mActivity.showToast("保存成功");
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+//                        mActivity.dismissInteractionDialog();
+                    }
+
+                    @Override
+                    public void onNext(HealthConditionDisplayBean healthConditionDisplayBean) {
+                        mActivity.getRequestReponse();    //删除健康记录
+
+
+                    }
+                });
+        mSubscriptions.add(subscription);
+
+    }
+
+    @Override
+    public void deleteHealthRecord() {
+        Integer[] deleteArray = mActivity.getCurrentDeleteArray();
+        Subscription subscription = mRepository.DeleteHealthConditions(deleteArray)
+                .subscribeOn(Schedulers.io())
+//                .doOnSubscribe(() -> mActivity.dataInteractionDialog())
+//                .subscribeOn(AndroidSchedulers.mainThread())        //只可以在主线程运行
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<ResponseDisplayBean>() {
+                    @Override
+                    public void onCompleted() {
+//                        mActivity.dismissInteractionDialog();
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+//                        mActivity.dismissInteractionDialog();
+                    }
+
+                    @Override
+                    public void onNext(ResponseDisplayBean responseDisplayBean) {
+                        mActivity.getRequestReponse();
+
+                    }
+                });
+        mSubscriptions.add(subscription);
+    }
+
+    @Override
+    public void unSubscribe() {
+        mSubscriptions.clear();
+        mActivity = null;
+    }
+}

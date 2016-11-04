@@ -1,16 +1,22 @@
 package com.kaurihealth.kaurihealth.welcome_v;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.view.KeyEvent;
 
+import com.avos.avoscloud.im.v2.AVIMClient;
+import com.avos.avoscloud.im.v2.AVIMException;
+import com.avos.avoscloud.im.v2.callback.AVIMClientCallback;
+import com.kaurihealth.chatlib.LCChatKit;
+import com.kaurihealth.datalib.response_bean.TokenBean;
+import com.kaurihealth.datalib.response_bean.UserBean;
 import com.kaurihealth.kaurihealth.MyApplication;
 import com.kaurihealth.kaurihealth.R;
 import com.kaurihealth.kaurihealth.base_v.BaseActivity;
 import com.kaurihealth.kaurihealth.login_v.LoginActivity;
+import com.kaurihealth.kaurihealth.main_v.MainActivity;
+import com.kaurihealth.kaurihealth.register_v.RegisterPersonInfoActivity;
 import com.kaurihealth.mvplib.welcome_p.IWelcomeView;
 import com.kaurihealth.mvplib.welcome_p.WelcomePresenter;
+import com.kaurihealth.utilslib.constant.Global;
 
 import javax.inject.Inject;
 
@@ -29,73 +35,74 @@ public class WelcomeActivity extends BaseActivity implements IWelcomeView {
     }
 
     @Override
-    protected void initPresenterAndData(Bundle savedInstanceState) {
+    protected void initPresenterAndView(Bundle savedInstanceState) {
         MyApplication.getApp().getComponent().inject(this);
         mPresenter.setPresenter(this);
+    }
 
+    @Override
+    protected void initDelayedData() {
         whetherAutomaticLogin();
     }
 
     /**
      * 是否自动登陆
+     * 根据本地数据做依据
      */
     private void whetherAutomaticLogin() {
-        //TODO FIX
-        Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                Intent intent = new Intent(WelcomeActivity.this, LoginActivity.class);
-                startActivity(intent);
-                finish();
-            }
-        }, 3000);
+        mPresenter.onSubscribe();
     }
 
-    @Override
-    protected void initDelayedView() {
-
-    }
-
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        return keyCode == KeyEvent.KEYCODE_BACK || super.onKeyDown(keyCode, event);
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-    }
+    /**
+     * 禁止回退
+     */
+//    @Override
+//    public boolean onKeyDown(int keyCode, KeyEvent event) {
+//        return keyCode == KeyEvent.KEYCODE_BACK || super.onKeyDown(keyCode, event);
+//    }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-
+        mPresenter.unSubscribe();
     }
 
     /**
      * ----------------------------继承基础mvpView方法-----------------------------------
-     *
-     * @param className*/
-
+     */
     @Override
     public void switchPageUI(String className) {
-
+        switch (className) {
+            case Global.Jump.LoginActivity:
+                skipTo(LoginActivity.class);
+                break;
+            case Global.Jump.MainActivity:
+                skipTo(MainActivity.class);
+                break;
+            case Global.Jump.RegisterPersonInfoActivity:
+                skipTo(RegisterPersonInfoActivity.class);
+                break;
+            default:
+                break;
+        }
+        finish();
     }
 
+    @Override
+    public void completeRegister() {
+        switchPageUI(Global.Jump.RegisterPersonInfoActivity);
+    }
+
+    @Override
+    public void initChatKitOpen(TokenBean bean) {
+        UserBean userBean = bean.getUser();
+        if (userBean != null) {
+            LCChatKit.getInstance().open(userBean.getKauriHealthId(), new AVIMClientCallback() {
+                @Override
+                public void done(AVIMClient avimClient, AVIMException e) {
+                  switchPageUI(Global.Jump.MainActivity);
+                }
+            });
+        }
+    }
 }

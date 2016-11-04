@@ -40,7 +40,7 @@ public class Data {
                     if (Data.this.healthySmallIteamBean == null) {
                         Data.this.healthySmallIteamBean = new HealthConditionDisplayBean(0, Data.this.patientId, type, res[position], Data.this.category);
                     } else {
-                        Data.this.healthySmallIteamBean.detail=res[position];
+                        Data.this.healthySmallIteamBean.detail = res[position];
                     }
                 }
             });

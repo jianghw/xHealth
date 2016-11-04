@@ -1,1 +1,1 @@
-include ':app', ':zllibrary', ':chatlibrary', ':commonlibrary', ':mvplib', ':datalib', ':utilslib'
+include ':app', ':mvplib', ':datalib', ':utilslib', ':chatlib'

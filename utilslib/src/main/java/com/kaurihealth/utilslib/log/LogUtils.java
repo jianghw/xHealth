@@ -1,12 +1,14 @@
 package com.kaurihealth.utilslib.log;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.kaurihealth.utilslib.constant.Global;
 import com.orhanobut.logger.LogLevel;
 import com.orhanobut.logger.Logger;
 
 /**
  * Created by jianghw on 2016/8/11.
- * <p>
+ * <p/>
  * 描述：log工具类简单封装
  */
 public class LogUtils {
@@ -49,6 +51,13 @@ public class LogUtils {
 
     public static void json(String msg) {
         Logger.json(msg);
+    }
+
+    public static void jsonDate(Object src) {
+        Gson gson = new GsonBuilder()
+                .setDateFormat("yyyy-MM-dd'T'HH:mm:ssZ")
+                .create();
+        Logger.json(gson.toJson(src));
     }
 
 }

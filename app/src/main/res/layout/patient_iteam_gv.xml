@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               xmlns:app="http://schemas.android.com/apk/res-auto"
+              xmlns:tools="http://schemas.android.com/tools"
               android:layout_width="match_parent"
               android:layout_height="match_parent">
 
@@ -8,20 +9,17 @@
         android:id="@+id/action_bar_activity_content"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="5dp"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
-        android:layout_marginTop="5dp"
+        android:layout_margin="@dimen/padding_6"
         android:background="@drawable/bgiteam_patient"
         android:orientation="vertical">
 
         <com.kaurihealth.utilslib.widget.CircleImageView
             android:id="@+id/civ_photo"
-            android:layout_width="70dp"
-            android:layout_height="70dp"
+            android:layout_width="@dimen/margin_60"
+            android:layout_height="@dimen/margin_60"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="20dp"
-            android:src="@mipmap/ic_login_head_default"
+            android:layout_marginTop="@dimen/margin_20"
+            android:src="@mipmap/ic_circle_head_green"
             app:civ_border_color="#4FD3C1"
             app:civ_border_overlay="true"
             app:civ_border_width="0.1dp"/>
@@ -30,7 +28,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="8dp">
+            android:layout_marginTop="@dimen/padding_8">
 
             <ImageView
                 android:id="@+id/patient_item_news_tips"
@@ -46,9 +44,9 @@
                 android:layout_gravity="center_horizontal"
                 android:ellipsize="end"
                 android:singleLine="true"
-                android:text="李丽萍"
-                android:textColor="#000000"
-                android:textSize="18dp"/>
+                android:textColor="@color/color_title_back"
+                android:textSize="@dimen/textSize_18"
+                tools:text="李丽萍"/>
         </RelativeLayout>
 
         <TextView
@@ -56,10 +54,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="8dp"
-            android:text="专属患者"
-            android:textColor="#ff9800"
-            android:textSize="15dp"/>
+            android:layout_marginTop="@dimen/padding_8"
+            android:textColor="@color/color_gold"
+            android:singleLine="true"
+            android:ellipsize="end"
+            android:textSize="@dimen/textSize_16"
+            tools:text="专属患者"/>
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -72,18 +72,18 @@
                 android:id="@+id/tv_gender"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="性别:  女"
-                android:textColor="@color/texthomeiteam"
-                android:textSize="14dp"/>
+                android:textColor="@color/color_body_back"
+                android:textSize="@dimen/textSize_14"
+                tools:text="性别:  女"/>
 
             <TextView
                 android:id="@+id/tv_age"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
-                android:text="年龄:  36"
-                android:textColor="@color/texthomeiteam"
-                android:textSize="14dp"/>
+                android:textColor="@color/color_body_back"
+                android:textSize="@dimen/textSize_14"
+                tools:text="年龄:  36"/>
         </LinearLayout>
 
         <Button
@@ -91,13 +91,13 @@
             android:layout_width="80dp"
             android:layout_height="30dp"
             android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="20dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginBottom="@dimen/margin_20"
+            android:layout_marginTop="@dimen/margin_10"
             android:background="@drawable/bg_patientiteam"
             android:gravity="center_horizontal|center_vertical"
             android:singleLine="true"
             android:text="留言"
-            android:textColor="@android:color/white"
-            android:textSize="15dp"/>
+            android:textColor="@color/color_white"
+            android:textSize="@dimen/textSize_16"/>
     </LinearLayout>
 </LinearLayout>

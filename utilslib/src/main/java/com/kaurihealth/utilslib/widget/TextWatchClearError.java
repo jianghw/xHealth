@@ -4,19 +4,19 @@ package com.kaurihealth.utilslib.widget;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 /**
  * Created by 张磊 on 2016/7/7.
  * 介绍：
  */
 public class TextWatchClearError implements TextWatcher {
-    private EditText mEditText;
+    private TextView mEditText;
     private ImageView mImageView;
 
 
-    public TextWatchClearError(EditText editText, ImageView imageView) {
+    public TextWatchClearError(TextView editText, ImageView imageView) {
         mEditText = editText;
         mImageView = imageView;
 
@@ -39,7 +39,7 @@ public class TextWatchClearError implements TextWatcher {
 
     @Override
     public void afterTextChanged(Editable s) {
-//        if (s.length() >= 1) {
+//        if (s.length()>=1) {
 //            if (editText instanceof TextInputEditText) {
 //                ViewParent parent = editText.getParent();
 //                if (parent instanceof TextInputLayout) {

@@ -11,14 +11,13 @@ import javax.inject.Inject;
 import rx.Subscriber;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action0;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
 /**
  * Created by jianghw on 2016/8/5.
  * <p/>
- * 描述：登录逻辑
+ * 描述：添加监测指标
  */
 public class AddMonitorIndexPresenter<V> implements IAddMonitorIndexPresenter<V> {
 
@@ -46,11 +45,8 @@ public class AddMonitorIndexPresenter<V> implements IAddMonitorIndexPresenter<V>
 
         Subscription subscription = mRepository.insertLongtermMonitorings(beans)
                 .subscribeOn(Schedulers.io())
-                .doOnSubscribe(new Action0() {
-                    @Override
-                    public void call() {
-                        mActivity.dataInteractionDialog(); //正在加载中...
-                    }
+                .doOnSubscribe(() -> {
+                    mActivity.dataInteractionDialog(); //正在加载中...
                 })
                 .subscribeOn(AndroidSchedulers.mainThread())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -68,10 +64,11 @@ public class AddMonitorIndexPresenter<V> implements IAddMonitorIndexPresenter<V>
                     public void onNext(ResponseDisplayBean bean) {
                         if (bean.isIsSucess()) {
                             mActivity.showToast("添加成功");
+                            mActivity.dismissInteractionDialog();
+                            mActivity.addDataSucceed();
                         } else {
-                            mActivity.showToast(bean.getMessage());
+                            mActivity.displayErrorDialog(bean.getMessage());
                         }
-                        mActivity.dismissInteractionDialog();
                     }
                 });
         mSubscriptions.add(subscription);

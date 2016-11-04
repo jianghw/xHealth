@@ -18,9 +18,6 @@ public interface ILoginService {
     @POST("api/Login")
     Observable<TokenBean> Login(@Body LoginBean loginBean);
 
-    @POST("api/Login/LoginTest")
-    Observable<TokenBean> LoginTest(@Body LoginBean loginBean);
-
     @POST("api/Login/Refresh")
     Call<TokenBean> Refresh(@Body RefreshBean refreshBean);
 }

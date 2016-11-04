@@ -3,6 +3,8 @@ package com.kaurihealth.datalib.service;
 
 import com.kaurihealth.datalib.request_bean.bean.PatientRequestDecisionBean;
 import com.kaurihealth.datalib.request_bean.bean.PatientRequestDisplayBean;
+import com.kaurihealth.datalib.request_bean.bean.PatientRequestReferralDoctorDisplayBean;
+import com.kaurihealth.datalib.request_bean.bean.PatientRequestReferralPatientDisplayBean;
 import com.kaurihealth.datalib.response_bean.ResponseDisplayBean;
 
 import java.util.List;
@@ -11,6 +13,7 @@ import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
+import rx.Observable;
 
 /**
  * Created by Nick on 22/04/2016.
@@ -19,14 +22,32 @@ public interface IPatientRequestService {
 
     //通过医生查询患者的请求
     @GET("api/PatientRequest/LoadPatientRequestsByDoctor")
-    Call<List<PatientRequestDisplayBean>> LoadPatientRequestsByDoctor();
+    Call<List<PatientRequestDisplayBean>> LoadPatientRequestsByDoctor_out();
 
     //接受患者的请求
     @POST("api/PatientRequest/AcceptPatientRequest")
     Call<ResponseDisplayBean> AcceptPatientRequest(@Body PatientRequestDecisionBean patientRequestDecisionBean);
 
+    @POST("api/PatientRequest/AcceptPatientRequest")
+    Observable<ResponseDisplayBean> AcceptPatientRequest_new(@Body PatientRequestDecisionBean patientRequestDecisionBean);
+
     //拒绝患者的请求
     @POST("api/PatientRequest/RejectPatientRequest")
     Call<ResponseDisplayBean> RejectPatientRequest(@Body PatientRequestDecisionBean patientRequestDecisionBean);
+
+    @POST("api/PatientRequest/RejectPatientRequest")
+    Observable<ResponseDisplayBean> RejectPatientRequest_new(@Body PatientRequestDecisionBean patientRequestDecisionBean);
+
+    //通过医生查询患者的请求
+    @GET("api/PatientRequest/LoadPatientRequestsByDoctor")
+    Observable<List<PatientRequestDisplayBean>> LoadPatientRequestsByDoctor();
+
+    //向多个医生转诊患者
+    @POST("api/PatientRequest/InsertPatientRequestReferralByDoctorList")
+    Observable<ResponseDisplayBean> InsertPatientRequestReferralByDoctorList(@Body PatientRequestReferralDoctorDisplayBean bean);
+
+    //向一个医生转诊多个患者
+    @POST("api/PatientRequest/InsertPatientRequestReferralByPatientList")
+    Observable<ResponseDisplayBean> InsertPatientRequestReferralByPatientList(@Body PatientRequestReferralPatientDisplayBean bean);
 
 }

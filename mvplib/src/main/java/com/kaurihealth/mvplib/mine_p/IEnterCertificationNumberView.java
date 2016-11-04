@@ -1,6 +1,7 @@
 package com.kaurihealth.mvplib.mine_p;
 
-import com.example.commonlibrary.widget.util.LoadingUtil;
+
+import com.kaurihealth.datalib.response_bean.DoctorDisplayBean;
 import com.kaurihealth.mvplib.base_p.IMvpView;
 
 /**
@@ -8,4 +9,5 @@ import com.kaurihealth.mvplib.base_p.IMvpView;
  */
 public interface IEnterCertificationNumberView extends IMvpView {
 
+    DoctorDisplayBean getDoctorDisplayBean();
 }

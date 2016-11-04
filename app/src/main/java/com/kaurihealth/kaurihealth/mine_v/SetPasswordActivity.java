@@ -18,6 +18,7 @@ import com.mobsandgeeks.saripaar.annotation.ConfirmPassword;
 import com.mobsandgeeks.saripaar.annotation.Length;
 import com.mobsandgeeks.saripaar.annotation.NotEmpty;
 import com.mobsandgeeks.saripaar.annotation.Password;
+import com.mobsandgeeks.saripaar.annotation.Pattern;
 
 import java.util.List;
 
@@ -32,23 +33,24 @@ import butterknife.OnClick;
  * 描述: 我的--> 设置--> 修改密码
  */
 public class SetPasswordActivity extends BaseActivity  implements ISetPasswordView,Validator.ValidationListener {
+    @Inject
+    SetPasswordPresenter<ISetPasswordView> mSetPasswordPresenter;
+
     //原密码
     @NotEmpty(message = "原密码不能为空")
     @Bind(R.id.edtOriginalPassWord)
     EditText edtOriginalPassWord;
 
     //新密码
-    @Password(message = "为了保证您的账户安全，密码长度须为6到20位")
+    @Pattern(regex ="^[^\\u4e00-\\u9fa5]{0,}$",messageResId = R.string.register_pw_password)   //里面不能包含中文正则
+    @Password(messageResId = R.string.register_pw_password)
     @Length(max = 20, message = "为了保证您的账户安全，密码长度须为6到20位")
     @Bind(R.id.edtNewPassword)
     EditText edtNewPassword;
-
     //确认密码
     @ConfirmPassword(message = "密码不一致")
     @Bind(R.id.edtConfirmPassword)
     EditText edtConfirmPassword;
-    @Inject
-    SetPasswordPresenter<ISetPasswordView> mSetPasswordPresenter;
     private Validator validator;
 
     //BaseActivity
@@ -59,14 +61,14 @@ public class SetPasswordActivity extends BaseActivity  implements ISetPasswordVi
 
     //BaseActivity
     @Override
-    protected void initPresenterAndData(Bundle savedInstanceState) {
+    protected void initPresenterAndView(Bundle savedInstanceState) {
         MyApplication.getApp().getComponent().inject(this);
         mSetPasswordPresenter.setPresenter(this);
     }
 
     //BaseActivity
     @Override
-    protected void initDelayedView() {
+    protected void initDelayedData() {
         initBackBtn(R.id.iv_back);  //回退键
         validator = new Validator(this);
         validator.setValidationListener(this);
@@ -76,8 +78,7 @@ public class SetPasswordActivity extends BaseActivity  implements ISetPasswordVi
     @Override
     public void switchPageUI(String className) {
         //我的-->设置--> 修改密码  修改密码之后返回设置界面
-        skipTo(SettingActivity.class);
-
+        finishCur();
     }
 
     @OnClick(R.id.btn_Submit)
@@ -106,7 +107,7 @@ public class SetPasswordActivity extends BaseActivity  implements ISetPasswordVi
     //得到修改密码的bean类
     @Override
     public NewPasswordDisplayBean getNewPasswordDisplayBean() {
-        //用户民
+        //用户名
         String userName = LocalData.getLocalData().getTokenBean().getUser().getUserName();
         // 旧密码
         String existPassword = edtOriginalPassWord.getText().toString().trim();
@@ -115,4 +116,31 @@ public class SetPasswordActivity extends BaseActivity  implements ISetPasswordVi
         NewPasswordDisplayBean newPasswordDisplayBean = new NewPasswordBeanBuilder().Build(userName, newPassword, existPassword);
         return newPasswordDisplayBean;
     }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mSetPasswordPresenter.unSubscribe();
+    }
+
 }

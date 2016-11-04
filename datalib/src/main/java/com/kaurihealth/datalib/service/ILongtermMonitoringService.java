@@ -13,35 +13,29 @@ import retrofit2.http.POST;
 import retrofit2.http.Query;
 import rx.Observable;
 
-/**
- * Created by Nick on 28/04/2016.
- */
 public interface ILongtermMonitoringService {
 
     /**
      * 通过患者ID查询长期监测 医生和患者的token都可以用
-     *
-     * @param patientId
-     * @return
      */
     @GET("api/LongtermMonitoring/LoadLongtermMonitoringByPatientId")
-    Observable<List<LongTermMonitoringDisplayBean>> longTermMonitoringDisplay(@Query("patientId") int patientId);
+    Observable<List<LongTermMonitoringDisplayBean>> loadLongtermMonitoringByPatientId(@Query("patientId") int patientId);
 
     /**
      * 插入长期监测集合
-     *
-     * @param bean
-     * @return
      */
     @POST("api/LongtermMonitoring/InsertLongtermMonitorings")
     Observable<ResponseDisplayBean> insertLongtermMonitorings(@Body List<NewLongtermMonitoringBean> bean);
 
     /**
      * 更新多个长期监测 医生和患者的token都可以用
-     *
-     * @param bean
-     * @return
      */
     @POST("api/LongtermMonitoring/UpdateLongtermMonitorings")
     Observable<List<LongTermMonitoringDisplayBean>> updateLongtermMonitorings(@Body List<LongTermMonitoringDisplayBean> bean);
+
+    /**
+     * 删除多个长期监测
+     */
+    @POST("api/LongtermMonitoring/DeleteLongtermMonitorings")
+    Observable<ResponseDisplayBean> deleteLongtermMonitorings(@Body List<Integer> bean);
 }

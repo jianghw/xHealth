@@ -10,4 +10,5 @@ import com.kaurihealth.mvplib.base_p.IMvpPresenter;
 public interface IPatientPresenter<V> extends IMvpPresenter<V> {
 
     void loadingRemoteData(boolean isDirty);
+    void loadContactListByDoctorId();
 }

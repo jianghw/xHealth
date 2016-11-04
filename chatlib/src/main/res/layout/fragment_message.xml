@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/color_bg_gray">
+
+    <RelativeLayout
+        android:id="@+id/rl_lay"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_alignParentTop="true"
+        android:background="#50d2c2">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="消息"
+            android:textColor="#ffffff"
+            android:textSize="18sp"/>
+    </RelativeLayout>
+
+    <com.kaurihealth.utilslib.widget.ScrollChildSwipeRefreshLayout
+        android:id="@+id/swipe_refresh"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/rl_lay">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:id="@+id/rl_patient"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:background="@drawable/bg_white_press">
+
+                <ImageView
+                    android:id="@+id/iv_head_patient"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="16dp"
+                    android:src="@mipmap/ic_home_doctor"/>
+
+                <TextView
+                    android:id="@+id/tv_name_patient"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignTop="@+id/iv_head_patient"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
+                    android:layout_toLeftOf="@+id/tv_time_patient"
+                    android:layout_toRightOf="@+id/iv_head_patient"
+                    android:ellipsize="end"
+                    android:gravity="left"
+                    android:singleLine="true"
+                    android:text="患者对话"
+                    android:textColor="#3e403f"
+                    android:textSize="16sp"/>
+
+                <TextView
+                    android:id="@+id/tv_time_patient"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignTop="@+id/tv_name_patient"
+                    android:layout_marginRight="16dp"
+                    android:singleLine="true"
+                    android:textColor="#808080"
+                    android:textSize="14sp"
+                    tools:text="09-28 03:33"/>
+
+                <ImageView
+                    android:id="@+id/img_unread_patient"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignRight="@+id/tv_time_patient"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/bg_read_badge"/>
+
+                <TextView
+                    android:id="@+id/tv_message_patient"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignLeft="@+id/tv_name_patient"
+                    android:layout_alignRight="@+id/tv_name_patient"
+                    android:layout_below="@+id/tv_name_patient"
+                    android:layout_marginTop="8dp"
+                    android:ellipsize="end"
+                    android:gravity="left"
+                    android:singleLine="true"
+                    android:textColor="#808080"
+                    android:textSize="14sp"
+                    tools:text="小姐哦骄傲金佛蚀刻机手撕鸡发顺丰都是打算打算打算"/>
+            </RelativeLayout>
+
+            <TextView style="@style/Line"/>
+
+            <RelativeLayout
+                android:id="@+id/rl_doctor"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:background="@drawable/bg_white_press">
+
+                <ImageView
+                    android:id="@+id/iv_head_doctor"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="16dp"
+                    android:src="@mipmap/ic_home_doctor"/>
+
+                <TextView
+                    android:id="@+id/tv_name_doctor"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignTop="@+id/iv_head_doctor"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
+                    android:layout_toLeftOf="@+id/tv_time_doctor"
+                    android:layout_toRightOf="@+id/iv_head_doctor"
+                    android:ellipsize="end"
+                    android:gravity="left"
+                    android:singleLine="true"
+                    android:text="医生对话"
+                    android:textColor="#3e403f"
+                    android:textSize="16sp"/>
+
+                <TextView
+                    android:id="@+id/tv_time_doctor"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignTop="@+id/tv_name_doctor"
+                    android:layout_marginRight="16dp"
+                    android:singleLine="true"
+                    android:textColor="#808080"
+                    android:textSize="14sp"
+                    tools:text="09-28 03:33"/>
+
+                <ImageView
+                    android:id="@+id/img_unread_doctor"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignRight="@+id/tv_time_doctor"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/bg_read_badge"/>
+
+                <TextView
+                    android:id="@+id/tv_message_doctor"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignLeft="@+id/tv_name_doctor"
+                    android:layout_alignRight="@+id/tv_name_doctor"
+                    android:layout_below="@+id/tv_name_doctor"
+                    android:layout_marginTop="8dp"
+                    android:ellipsize="end"
+                    android:gravity="left"
+                    android:singleLine="true"
+                    android:textColor="#808080"
+                    android:textSize="14sp"
+                    tools:text="小姐哦骄傲金佛蚀刻机手撕鸡发顺丰都是打算打算打算"/>
+            </RelativeLayout>
+
+        </LinearLayout>
+    </com.kaurihealth.utilslib.widget.ScrollChildSwipeRefreshLayout>
+</RelativeLayout>

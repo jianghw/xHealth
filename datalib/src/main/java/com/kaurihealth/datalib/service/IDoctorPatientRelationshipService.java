@@ -1,5 +1,6 @@
 package com.kaurihealth.datalib.service;
 
+
 import com.kaurihealth.datalib.response_bean.DoctorPatientRelationshipBean;
 import com.kaurihealth.datalib.response_bean.ResponseDisplayBean;
 
@@ -19,12 +20,13 @@ import rx.Observable;
 public interface IDoctorPatientRelationshipService {
 
     @GET("api/DoctorPatientRelationship/LoadDoctorPatientRelationshipForDoctor")
-    Call<List<com.kaurihealth.datalib.request_bean.bean.DoctorPatientRelationshipBean>> LoadDoctorPatientRelationshipForDoctor();
+    Call<List<DoctorPatientRelationshipBean>> LoadDoctorPatientRelationshipForDoctor();
+
+    @GET("api/DoctorPatientRelationship/LoadDoctorPatientRelationshipForDoctor")
+    Observable<List<DoctorPatientRelationshipBean>> LoadDoctorPatientRelationshipForDoctor_New();
 
     /**
      * 为现医生查询所有医患关系
-     *
-     * @return
      */
     @GET("api/DoctorPatientRelationship/LoadDoctorPatientRelationshipForDoctor")
     Observable<List<DoctorPatientRelationshipBean>> loadDoctorPatientRelationshipForDoctor();
@@ -50,6 +52,9 @@ public interface IDoctorPatientRelationshipService {
     @POST("api/DoctorPatientRelationship/RequestEndDoctorPatientRelationship")
     Call<ResponseDisplayBean> RequestEndDoctorPatientRelationship(@Body int doctorPatientReplationshipId);
 
+    @POST("api/DoctorPatientRelationship/RequestEndDoctorPatientRelationship")
+    Observable<ResponseDisplayBean> RequestEndDoctorPatientRelationship_new(@Body int doctorPatientReplationshipId);
+
     /**
      * 使用患者id查询医患关系
      *
@@ -58,5 +63,15 @@ public interface IDoctorPatientRelationshipService {
      */
     @GET("api/DoctorPatientRelationship/LoadDoctorPatientRelationshipForPatientId")
     Call<List<com.kaurihealth.datalib.request_bean.bean.DoctorPatientRelationshipBean>> LoadDoctorPatientRelationshipForPatientId(@Query("patientId") int patientId);
+
+    @GET("api/DoctorPatientRelationship/LoadDoctorPatientRelationshipForPatientId")
+    Observable<List<DoctorPatientRelationshipBean>> LoadDoctorPatientRelationshipForPatientId_new(@Query("patientId") int patientId);
+
+
+    /**
+     * 使用患者id查询医疗团队，查询者必须为医生
+     */
+    @GET("api/DoctorPatientRelationship/LoadDoctorTeamForPatient")
+    Observable<List<DoctorPatientRelationshipBean>> LoadDoctorTeamForPatient(@Query("patientId")  int patientId);
 
 }

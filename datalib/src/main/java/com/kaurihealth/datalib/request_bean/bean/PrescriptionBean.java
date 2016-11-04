@@ -1,12 +1,10 @@
 package com.kaurihealth.datalib.request_bean.bean;
 
+import java.util.Date;
 import java.util.List;
 
 /**
- * 版权:    张磊
- * 作者:    张磊
- * 描述：
- * 修订日期:
+ * 处方图像
  */
 public class PrescriptionBean {
 
@@ -32,7 +30,7 @@ public class PrescriptionBean {
     private int prescriptionId;
     private int patientId;
     private String type;
-    private String date;
+    private Date date;
     private String prescriptionDetail;
     private int duration;
     private String doctor;
@@ -70,7 +68,7 @@ public class PrescriptionBean {
         this.type = type;
     }
 
-    public void setDate(String date) {
+    public void setDate(Date date) {
         this.date = date;
     }
 
@@ -134,7 +132,7 @@ public class PrescriptionBean {
         return type;
     }
 
-    public String getDate() {
+    public Date getDate() {
         return date;
     }
 
@@ -195,6 +193,15 @@ public class PrescriptionBean {
         private String comment;
         private Object displayName;
         private boolean isDeleted;
+
+//        public PrescriptionDocumentsEntity(String documentUrl, String fileName, String displayName, String documentFormat, String comment, int prescriptionId) {
+//            this.documentUrl = documentUrl;
+//            this.fileName = fileName;
+//            this.displayName = displayName;
+//            this.documentFormat = documentFormat;
+//            this.comment = comment;
+//            this.prescriptionId = prescriptionId;
+//        }
 
         public void setPrescriptionDocumentId(int prescriptionDocumentId) {
             this.prescriptionDocumentId = prescriptionDocumentId;

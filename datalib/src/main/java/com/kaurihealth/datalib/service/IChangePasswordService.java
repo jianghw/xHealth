@@ -2,7 +2,7 @@ package com.kaurihealth.datalib.service;
 
 
 import com.kaurihealth.datalib.request_bean.bean.NewPasswordDisplayBean;
-import com.kaurihealth.datalib.request_bean.bean.RequestResetPasswordDisplayDto;
+import com.kaurihealth.datalib.request_bean.bean.RequestResetPasswordDisplayBean;
 import com.kaurihealth.datalib.request_bean.bean.ResetPasswordDisplayBean;
 import com.kaurihealth.datalib.response_bean.ResponseDisplayBean;
 
@@ -28,7 +28,7 @@ public interface IChangePasswordService {
 
     //申请重置密码（旧）
     @POST("api/ChangePassword/RequestResetUserPassword")
-    Call<ResponseDisplayBean> RequestResetUserPassword_out(@Body RequestResetPasswordDisplayDto requestResetPasswordDisplayDto);
+    Call<ResponseDisplayBean> RequestResetUserPassword_out(@Body RequestResetPasswordDisplayBean requestResetPasswordDisplayBean);
 
     //重置用户密码(旧)
     @POST("api/ChangePassword/ResetUserPassword")
@@ -36,7 +36,7 @@ public interface IChangePasswordService {
 
     //申请重置密码
     @POST("api/ChangePassword/RequestResetUserPassword")
-    Observable<ResponseDisplayBean> RequestResetUserPassword(@Body RequestResetPasswordDisplayDto requestResetPasswordDisplayDto);
+    Observable<ResponseDisplayBean> RequestResetUserPassword(@Body RequestResetPasswordDisplayBean requestResetPasswordDisplayBean);
 
     //重置用户密码
     @POST("api/ChangePassword/ResetUserPassword")

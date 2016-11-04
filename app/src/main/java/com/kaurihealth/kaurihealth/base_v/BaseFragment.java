@@ -12,19 +12,19 @@ import android.widget.Toast;
 
 import com.kaurihealth.kaurihealth.R;
 import com.kaurihealth.utilslib.dialog.DialogUtils;
-import com.youyou.zllibrary.AnimUtil.TranslationAnim;
+import com.kaurihealth.utilslib.TranslationAnim;
+
+import org.greenrobot.eventbus.EventBus;
 
 import butterknife.ButterKnife;
 
 /**
  * Created by jianghw on 2016/8/5.
- * <p/>
+ * <p>
  * 描述：的基础父类
  */
 public abstract class BaseFragment extends LazyFragment {
-
-
-    protected BaseActivity mActivity;
+    protected BaseActivity  mActivity;
 
     @Override
     public void onAttach(Activity activity) {
@@ -38,8 +38,8 @@ public abstract class BaseFragment extends LazyFragment {
         View view = inflater.inflate(getFragmentLayoutID(), container, false);
         ButterKnife.bind(this, view);
 
-        initPresenterAndData();
-        initDelayedView();
+        initPresenterAndView(savedInstanceState);
+        initDelayedData();//最后将数据刷到view层
 
         isPrepared = true;
         loadingData();
@@ -57,9 +57,9 @@ public abstract class BaseFragment extends LazyFragment {
         lazyLoadingData();
     }
 
-    protected abstract void initPresenterAndData();
+    protected abstract void initPresenterAndView(Bundle savedInstanceState);
 
-    protected abstract void initDelayedView();
+    protected abstract void initDelayedData();
 
     protected abstract void lazyLoadingData();
 
@@ -70,20 +70,12 @@ public abstract class BaseFragment extends LazyFragment {
     }
 
     /**
-     * 刷新数据
-     *
-     * @param flag
+     * 是否刷新数据
      */
-    public void loadingIndicator(final boolean flag) {
+    public void loadingIndicator(boolean flag) {
         if (getView() == null) return;
-        final SwipeRefreshLayout swipeRefreshLayout =
-                (SwipeRefreshLayout) getView().findViewById(R.id.swipe_refresh);
-        swipeRefreshLayout.post(new Runnable() {
-            @Override
-            public void run() {
-                swipeRefreshLayout.setRefreshing(flag);
-            }
-        });
+        SwipeRefreshLayout swipeRefreshLayout = (SwipeRefreshLayout) getView().findViewById(R.id.swipe_refresh);
+        swipeRefreshLayout.post(() -> swipeRefreshLayout.setRefreshing(flag));
     }
 
     public void dataInteractionDialog() {
@@ -105,6 +97,10 @@ public abstract class BaseFragment extends LazyFragment {
         TranslationAnim.zlStartActivity(mActivity, className, null);
     }
 
+    protected void skipToBundle(Class<? extends Activity> className, Bundle bundle) {
+        TranslationAnim.zlStartActivity(mActivity, className, bundle);
+    }
+
     protected void skipToForResult(Class<? extends Activity> className, Bundle bundle, int requestCode) {
         TranslationAnim.zlStartActivityForResult(mActivity, className, bundle, requestCode);
     }
@@ -115,5 +111,17 @@ public abstract class BaseFragment extends LazyFragment {
     public void showToast(CharSequence message) {
         if (TextUtils.isEmpty(message)) return;
         Toast.makeText(mActivity.getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+    }
+
+    /**
+     * 移除指定的粘性订阅事件
+     *
+     * @param eventType class的字节码，例如：String.class
+     */
+    protected static <T> void removeStickyEvent(Class<T> eventType) {
+        T stickyEvent = EventBus.getDefault().getStickyEvent(eventType);
+        if (stickyEvent != null) {
+            EventBus.getDefault().removeStickyEvent((T) stickyEvent);
+        }
     }
 }

@@ -3,27 +3,25 @@ package com.kaurihealth.kaurihealth;
 import android.app.Application;
 import android.support.multidex.MultiDex;
 
-import com.example.chatlibrary.chat.ChatInjection;
+import com.avos.avoscloud.AVOSCloud;
+import com.kaurihealth.chatlib.LCChatKit;
+import com.kaurihealth.chatlib.cache.LeanchatUserProvider;
+import com.kaurihealth.chatlib.utils.LCIMConstants;
 import com.kaurihealth.kaurihealth.dagger.component.DaggerRepositoryComponent;
 import com.kaurihealth.kaurihealth.dagger.component.RepositoryComponent;
 import com.kaurihealth.kaurihealth.dagger.module.ApplicationModule;
 import com.kaurihealth.kaurihealth.dagger.module.RepositoryModule;
+import com.kaurihealth.kaurihealth.welcome_v.WelcomeActivity;
 import com.kaurihealth.utilslib.SharedUtils;
-import com.kaurihealth.utilslib.bugtag.ApiMode;
 import com.kaurihealth.utilslib.bugtag.BugTagUtils;
-import com.kaurihealth.utilslib.bugtag.EnvironmentConfig;
 import com.kaurihealth.utilslib.constant.Global;
 import com.kaurihealth.utilslib.log.LogUtils;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.squareup.leakcanary.LeakCanary;
-import com.youyou.zllibrary.httputil.HttpUtilNewOne;
+
+import butterknife.ButterKnife;
 
 
 /**
- * 版权:    张磊
- * 作者:    张磊
- * 描述：
  * 修订日期:
  */
 public class MyApplication extends Application {
@@ -34,24 +32,13 @@ public class MyApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        //分dex
+
         MultiDex.install(this);
-
+//环境
+        initEnvironmentMode();
+//图片加载
         initImageLoad();
-
-        setEnvironmentMode();
-
-        ChatInjection.init(getApplicationContext(), BuildConfig.Environment);
-
-        HttpUtilNewOne.init(getApplicationContext());
-
-        BugTagUtils.start(this, BuildConfig.Environment);
-
-        CrashHandler crashHandler = CrashHandler.getInstance();
-        crashHandler.init(getApplicationContext());
-
-        LogUtils.initLogUtils(BuildConfig.Environment);
-
+//dagger
         mRepositoryComponent = DaggerRepositoryComponent.builder()
                 .applicationModule(new ApplicationModule(getApplicationContext()))
                 .repositoryModule(new RepositoryModule())
@@ -69,28 +56,41 @@ public class MyApplication extends Application {
 
 
     private void initImageLoad() {
-        ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(this).build();
-        ImageLoader imageLoader = ImageLoader.getInstance();
-        imageLoader.init(config);
+
     }
 
-    private void setEnvironmentMode() {
+    private void initEnvironmentMode() {
+//聊天
+        LCChatKit.getInstance().setProfileProvider(new LeanchatUserProvider());
+//bug
+        BugTagUtils.start(this, BuildConfig.Environment);
+//log
+        LogUtils.initLogUtils(BuildConfig.Environment);
+
         switch (BuildConfig.Environment) {
             case Global.Environment.DEVELOP:
-                EnvironmentConfig.CurVersion = ApiMode.Develop;
+                LCChatKit.getInstance().initKey(getApplicationContext(), LCIMConstants.APP_ID_DEBUG, LCIMConstants.APP_KEY_DEBUG, WelcomeActivity.class);
+                AVOSCloud.setDebugLogEnabled(true);
                 SharedUtils.setString(this, Global.Environment.ENVIRONMENT, Global.Environment.DEVELOP);
-                //LeakCanary
+//LeakCanary
                 LeakCanary.install(this);
+//ButterKnife
+                ButterKnife.setDebug(true);
                 break;
             case Global.Environment.TEST:
-                EnvironmentConfig.CurVersion = ApiMode.Test;
+                LCChatKit.getInstance().initKey(getApplicationContext(), LCIMConstants.APP_ID_DEBUG, LCIMConstants.APP_KEY_DEBUG, WelcomeActivity.class);
+                AVOSCloud.setDebugLogEnabled(true);
                 SharedUtils.setString(this, Global.Environment.ENVIRONMENT, Global.Environment.TEST);
                 break;
             case Global.Environment.PREVIEW:
-                EnvironmentConfig.CurVersion = ApiMode.Preview;
+                LCChatKit.getInstance().initKey(getApplicationContext(), LCIMConstants.APP_ID_PREVIEW, LCIMConstants.APP_KEY_PREVIEW, WelcomeActivity.class);
+                AVOSCloud.setDebugLogEnabled(false);
                 SharedUtils.setString(this, Global.Environment.ENVIRONMENT, Global.Environment.PREVIEW);
+                CrashHandler.getInstance().init(getApplicationContext());
                 break;
             default:
+                LCChatKit.getInstance().initKey(getApplicationContext(), LCIMConstants.APP_ID_PREVIEW, LCIMConstants.APP_KEY_PREVIEW, WelcomeActivity.class);
+                AVOSCloud.setDebugLogEnabled(false);
                 SharedUtils.setString(this, Global.Environment.ENVIRONMENT, Global.Environment.PREVIEW);
                 break;
         }

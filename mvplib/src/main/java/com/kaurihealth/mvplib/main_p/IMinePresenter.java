@@ -6,4 +6,8 @@ import com.kaurihealth.mvplib.base_p.IMvpPresenter;
  * Created by Nick on 23/08/2016.
  */
 public interface IMinePresenter<V> extends IMvpPresenter<V> {
+
+    void loadDoctorDetail(boolean isDirty);
+
+    void gaussianBlur(String bitmap);
 }

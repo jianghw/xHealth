@@ -1,16 +1,16 @@
 package com.kaurihealth.mvplib.main_p;
 
-import com.avos.avoscloud.im.v2.AVIMConversation;
 import com.kaurihealth.datalib.repository.IDataSource;
+import com.kaurihealth.datalib.response_bean.ContactUserDisplayBean;
 
 import java.util.List;
 
 import javax.inject.Inject;
 
-import rx.Subscriber;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action0;
+import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
@@ -47,36 +47,31 @@ public class MessagePresenter<V> implements IMessagePresenter<V> {
         if (isDirty) {//刷新
             mRepository.manuallyRefresh();
         }
-
-        Subscription subscription = mRepository.chatAllConversations()
+        Subscription subscription = mRepository.loadContactListByDoctorId()
                 .subscribeOn(Schedulers.io())
-                .doOnSubscribe(new Action0() {
-                    @Override
-                    public void call() {
-                        //加载中...
-                        mFragment.loadingIndicator(true);
-                    }
-                })
+                .doOnSubscribe(() -> mFragment.loadingIndicator(true))
                 .subscribeOn(AndroidSchedulers.mainThread())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Subscriber<List<AVIMConversation>>() {
-                    @Override
-                    public void onCompleted() {
-                        mFragment.loadingIndicator(false);
-                        mFirstLoad = false;
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        mFragment.loadingIndicator(false);
-                        mFragment.AllConversationsError(e.getMessage());
-                    }
-
-                    @Override
-                    public void onNext(List<AVIMConversation> list) {
-                        mFragment.AllConversationsSuccess(list);
-                    }
-                });
+                .subscribe(
+                        new Action1<List<ContactUserDisplayBean>>() {
+                            @Override
+                            public void call(List<ContactUserDisplayBean> beanList) {
+                                mFragment.loadContactListByDoctorIdSucceed();
+                            }
+                        },
+                        new Action1<Throwable>() {
+                            @Override
+                            public void call(Throwable throwable) {
+                                mFragment.loadingIndicator(false);
+                                mFragment.showToast(throwable.getMessage());
+                            }
+                        },
+                        new Action0() {
+                            @Override
+                            public void call() {
+                                mFragment.loadingIndicator(false);
+                            }
+                        });
         mSubscriptions.add(subscription);
     }
 

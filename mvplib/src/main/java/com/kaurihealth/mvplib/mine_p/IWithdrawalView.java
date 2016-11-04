@@ -1,7 +1,7 @@
 package com.kaurihealth.mvplib.mine_p;
 
 import com.kaurihealth.datalib.request_bean.bean.NewCashOutBean;
-import com.kaurihealth.datalib.request_bean.bean.UserCashOutAccountDisplayBean;
+import com.kaurihealth.datalib.response_bean.UserCashOutAccountDisplayBean;
 import com.kaurihealth.mvplib.base_p.IMvpView;
 
 import java.util.List;
@@ -12,7 +12,7 @@ import java.util.List;
 public interface IWithdrawalView extends IMvpView {
     NewCashOutBean getNewCashOutBean();
     //Activciy 上获得handler 对象
-    void  getHandlerInstance();
+    void startNewCashSucceed();
 
-    void  createAccountDialog(List<UserCashOutAccountDisplayBean> list) throws  Exception;
+    void  createAccountDialog(List<UserCashOutAccountDisplayBean> list, String[] strings);
 }

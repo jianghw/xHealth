@@ -31,6 +31,9 @@ public interface ILiteratureReplyService {
     @GET("api/LiteratureReply/LoadLiteratureReplyByLiteratureCommentId")
     Call<List<LiteratureReplyDisplayBean>> LoadLiteratureReplyByLiteratureCommentId(@Query("literatureCommentId") int literatureCommentId);
 
+    @GET("api/LiteratureReply/LoadLiteratureReplyByLiteratureCommentId")
+    Observable<List<LiteratureReplyDisplayBean>> LoadLiteratureReplyByLiteratureCommentId_new(@Query("literatureCommentId") int literatureCommentId);
+
     /**
      * 插入新的回复
      *

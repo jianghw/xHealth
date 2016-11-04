@@ -4,7 +4,7 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:orientation="vertical"
-              tools:context=".patient_v.GraphDataFragment">
+              tools:context=".patient_v.long_monitoring.GraphDataFragment">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -23,7 +23,7 @@
                 android:layout_height="match_parent"
                 android:layout_marginLeft="@dimen/margin_16"
                 android:gravity="center"
-                tools:text="体重"/>
+                android:text="请先选择监测项目"/>
 
             <ImageView
                 android:layout_width="wrap_content"

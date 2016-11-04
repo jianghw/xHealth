@@ -19,11 +19,8 @@ import java.util.regex.Pattern;
  */
 public class BroadcastFactory {
 
-
     /**
      * 获取短信接收者
-     *
-     * @param tvChange
      */
     public static BroadcastReceiver getSmsReceiver(final TextView tvChange) {
         BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {

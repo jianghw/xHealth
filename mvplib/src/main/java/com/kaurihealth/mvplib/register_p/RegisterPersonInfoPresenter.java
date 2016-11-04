@@ -1,23 +1,26 @@
 package com.kaurihealth.mvplib.register_p;
 
+import com.kaurihealth.datalib.local.LocalData;
 import com.kaurihealth.datalib.repository.Repository;
 import com.kaurihealth.datalib.request_bean.bean.DoctorUserBean;
-import com.kaurihealth.datalib.request_bean.builder.DoctorUserBeanBuilder;
+import com.kaurihealth.datalib.response_bean.ContactUserDisplayBean;
+import com.kaurihealth.datalib.response_bean.DoctorDisplayBean;
 import com.kaurihealth.datalib.response_bean.ResponseDisplayBean;
-import com.kaurihealth.utilslib.constant.Global;
+import com.kaurihealth.datalib.response_bean.TokenBean;
 import com.kaurihealth.utilslib.log.LogUtils;
+
+import java.util.List;
 
 import javax.inject.Inject;
 
 import rx.Observer;
+import rx.Subscriber;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
-/**
- * Created by mip on 2016/8/11.
- */
 public class RegisterPersonInfoPresenter<V> implements IRegisterPersonInfoPresenter<V> {
 
     private Repository mRepository;
@@ -30,7 +33,6 @@ public class RegisterPersonInfoPresenter<V> implements IRegisterPersonInfoPresen
         mRepository = repository;
     }
 
-
     @Override
     public void setPresenter(V view) {
         mActivity = (IRegisterPersonInfoView) view;
@@ -38,44 +40,122 @@ public class RegisterPersonInfoPresenter<V> implements IRegisterPersonInfoPresen
 
     @Override
     public void onSubscribe() {
-        DoctorUserBean doctorUserBean = getDoctorUserBean();
+        DoctorUserBean doctorUserBean = mActivity.getDoctorUserBean();
 
-        Subscription subscribe = mRepository.UpdateDoctorUserInformation(doctorUserBean)
+        Subscription subscribe = mRepository.updateDoctorUserInformation(doctorUserBean)
                 .subscribeOn(Schedulers.io())
+                .doOnSubscribe(() -> mActivity.dataInteractionDialog())
+                .subscribeOn(AndroidSchedulers.mainThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<ResponseDisplayBean>() {
                     @Override
                     public void onCompleted() {
-                        mActivity.switchPageUI(Global.Jump.MainActivity);
+                        mActivity.dismissInteractionDialog();
                     }
 
                     @Override
                     public void onError(Throwable e) {
-                        LogUtils.e(e.getMessage());
-                        mActivity.showToast("保存失败,请联系管理员");
+                        mActivity.displayErrorDialog("保存失败,请联系管理员" + e.getMessage());
                     }
 
                     @Override
-                    public void onNext(ResponseDisplayBean responseDisplayBean) {
-                        if (responseDisplayBean.isIsSucess()) {
-                            mActivity.showToast("保存成功");
-                            mActivity.connectLeanCloud("");
+                    public void onNext(ResponseDisplayBean bean) {
+                        if (bean.isIsSucess()) {
+                            modifiedRegisterPercentage();
+                            mActivity.connectLeanCloud();
+                            loadContactListByDoctorId();
+                            loadDoctorDetail();
+                        } else {
+                            mActivity.showToast(bean.getMessage());
                         }
                     }
                 });
         mSubscriptions.add(subscribe);
     }
 
-    private DoctorUserBean getDoctorUserBean() {
-        String firstName = mActivity.getFirstName();
-        String lastName = mActivity.getLastName();
-        String gender = mActivity.getGender();
-        String dayOfBirth = mActivity.getBirthday();
-        return new DoctorUserBeanBuilder().Build(firstName, lastName, gender, dayOfBirth);
+    private void modifiedRegisterPercentage() {
+        Subscription subscribe = mRepository.persistentData(
+                rx.Observable.create(new rx.Observable.OnSubscribe<TokenBean>() {
+                    @Override
+                    public void call(Subscriber<? super TokenBean> subscriber) {
+                        try {
+                            TokenBean token = LocalData.getLocalData().getTokenBean();
+                            token.getUser().setRegistPercentage(30);
+                            subscriber.onNext(token);
+                            subscriber.onCompleted();
+                        } catch (Exception e) {
+                            subscriber.onError(e);
+                        }
+                    }
+                }))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Action1<TokenBean>() {
+                               @Override
+                               public void call(TokenBean tokenBean) {
+                                   LocalData.getLocalData().setTokenBean(tokenBean);
+                               }
+                           },
+                        new Action1<Throwable>() {
+                            @Override
+                            public void call(Throwable throwable) {
+                                LogUtils.e(throwable.getMessage());
+                            }
+                        });
+        mSubscriptions.add(subscribe);
+    }
+
+    /**
+     * 关系列表
+     */
+    @Override
+    public void loadContactListByDoctorId() {
+        Subscription subscription = mRepository.loadContactListByDoctorId()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        new Action1<List<ContactUserDisplayBean>>() {
+                            @Override
+                            public void call(List<ContactUserDisplayBean> beanList) {
+
+                            }
+                        },
+                        new Action1<Throwable>() {
+                            @Override
+                            public void call(Throwable throwable) {
+                                mActivity.showToast(throwable.getMessage());
+                            }
+                        });
+        mSubscriptions.add(subscription);
+    }
+
+    /**
+     * 医生详情
+     */
+    @Override
+    public void loadDoctorDetail() {
+        Subscription subscription = mRepository.loadDoctorDetail()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        new Action1<DoctorDisplayBean>() {
+                            @Override
+                            public void call(DoctorDisplayBean doctorDisplayBean) {
+                                LocalData.getLocalData().setMyself(doctorDisplayBean);
+                            }
+                        },
+                        new Action1<Throwable>() {
+                            @Override
+                            public void call(Throwable throwable) {
+                                mActivity.showToast(throwable.getMessage());
+                            }
+                        });
+        mSubscriptions.add(subscription);
     }
 
     @Override
     public void unSubscribe() {
-
+        mSubscriptions.clear();
+        mActivity = null;
     }
 }

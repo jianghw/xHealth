@@ -1,5 +1,7 @@
 package com.kaurihealth.datalib.request_bean.bean;
 
+import com.kaurihealth.datalib.response_bean.DepartmentDisplayBean;
+
 import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;

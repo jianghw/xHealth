@@ -1,14 +1,13 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="com.kaurihealth.kaurihealth.clinical.fragment.ClinicalFragment">
+    android:layout_height="match_parent">
 
     <RelativeLayout
         android:id="@+id/lay_title_medicalhistory"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/toptitle_height"
-        android:background="@color/kaurihealth_header_background">
+        android:layout_height="@dimen/input_height_48"
+        android:background="@color/color_enable_green">
 
         <TextView
             style="@style/toptitletv"
@@ -76,6 +75,6 @@
         android:id="@+id/vp_content_main"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/bgroup_top_medicalhistory"></android.support.v4.view.ViewPager>
+        android:layout_below="@id/bgroup_top_medicalhistory"/>
 
 </RelativeLayout>

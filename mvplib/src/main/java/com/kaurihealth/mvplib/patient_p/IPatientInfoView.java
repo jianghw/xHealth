@@ -6,7 +6,7 @@ import com.kaurihealth.utilslib.date.RemainTimeBean;
 
 /**
  * Created by jianghw on 2016/8/5.
- * <p/>
+ * <p>
  * 描述：
  */
 public interface IPatientInfoView extends IMvpView {
@@ -18,11 +18,13 @@ public interface IPatientInfoView extends IMvpView {
     void showCountdown(RemainTimeBean bean);
 
     /**
-     * @return mDoctorPatientRelationshipBean
+     * @return PatientId
      */
-    DoctorPatientRelationshipBean getDoctorPatientRelationshipBean();
+    int getPatientId();
 
-    void setFloatingActionButton(boolean active);
+    void setFloatingActionButton(boolean active,boolean b);
+
+    DoctorPatientRelationshipBean getShipBean();
 
     /**
      * 更新数据
@@ -30,4 +32,9 @@ public interface IPatientInfoView extends IMvpView {
      * @param bean
      */
     void updateBeanData(DoctorPatientRelationshipBean bean);
+
+    int getDoctorPatientId();
+
+
+    void visitSuccessful();
 }

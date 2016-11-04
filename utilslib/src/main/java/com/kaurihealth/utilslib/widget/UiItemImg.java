@@ -69,7 +69,6 @@ public class UiItemImg extends ImageView {
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
-
         int with = unClickBitmap.getWidth();
         int height = unClickBitmap.getHeight();
         rect = new Rect(0, 0, with, height);

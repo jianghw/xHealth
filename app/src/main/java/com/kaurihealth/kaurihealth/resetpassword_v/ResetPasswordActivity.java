@@ -18,6 +18,7 @@ import com.mobsandgeeks.saripaar.Validator;
 import com.mobsandgeeks.saripaar.annotation.ConfirmPassword;
 import com.mobsandgeeks.saripaar.annotation.Length;
 import com.mobsandgeeks.saripaar.annotation.Password;
+import com.mobsandgeeks.saripaar.annotation.Pattern;
 
 import java.util.List;
 
@@ -30,30 +31,30 @@ import butterknife.OnClick;
  * Created by Garnet_Wu on 2016/8/18.
  * 说明： 重置密码 ：忘记密码下一界面
  */
-public class ResetPasswordActivity extends BaseActivity implements IResetPasswordView ,Validator.ValidationListener {
+public class ResetPasswordActivity extends BaseActivity implements IResetPasswordView, Validator.ValidationListener {
+    @Inject
+    ResetpasswordPresenter<IResetPasswordView> mResetpasswordPresenter;
+
     //新密码
-    @Password(message = "为了保证您的账户安全，密码长度须为6到20位")
+    //新密码
+    @Pattern(regex = "^[^\\u4e00-\\u9fa5]{0,}$", messageResId = R.string.register_pw_password)
+    //里面不能包含中文正则
+    @Password(messageResId = R.string.register_pw_password)
     @Length(max = 20, message = "为了保证您的账户安全，密码长度须为6到20位")
     @Bind(R.id.edt_password)
     EditText edtPassword;
-
-    @Bind(R.id.tv_errorpassword)
-    TextView tvErrorpassword;
 
     //确认密码
     @ConfirmPassword(message = "两次密码不一致")
     @Bind(R.id.edt_confirmpassword)
     EditText edtConfirmpassword;
 
-    @Bind(R.id.tv_errorconfirmpassword)
-    TextView tvErrorconfirmpassword;
-    @Inject
-    ResetpasswordPresenter<IResetPasswordView> mResetpasswordPresenter ;
+    @Bind(R.id.tv_more)
+    TextView tvMore;
+
     private Validator validator;
     private Bundle bundle;
 
-
-    //BaseActivity 获取xml
     @Override
     protected int getActivityLayoutID() {
         return R.layout.activity_resetpassword;
@@ -61,37 +62,41 @@ public class ResetPasswordActivity extends BaseActivity implements IResetPasswor
 
     //BaseActivity  初始化presenter指挥家和数据
     @Override
-    protected void initPresenterAndData(Bundle savedInstanceState) {
+    protected void initPresenterAndView(Bundle savedInstanceState) {
         MyApplication.getApp().getComponent().inject(this);
         mResetpasswordPresenter.setPresenter(this);
         //拿上个页面的bundle
         bundle = getIntent().getExtras();
-
     }
 
     //BaseActivity
     @Override
-    protected void initDelayedView() {   //初始化表单校验器
+    protected void initDelayedData() {   //初始化表单校验器
+        initNewBackBtn(getString(R.string.set_password));
+        tvMore.setText(getString(R.string.title_complete));
+
         validator = new Validator(this);
         validator.setValidationListener(this);
-
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mResetpasswordPresenter.unSubscribe();
+    }
 
     //"完成"按钮
-    @OnClick(R.id.tv_submit)
+    @OnClick(R.id.tv_more)
     public void tv_submit() {
         //请求表单验证
         validator.validate();
     }
 
-
     //Validator 表单验证通过
     @Override
     public void onValidationSucceeded() {
         //presenter 点击“完成”按钮
-        mResetpasswordPresenter.clickFinishButton();
-
+        mResetpasswordPresenter.onSubscribe();
     }
 
     //Validator 表单验证失败
@@ -101,8 +106,6 @@ public class ResetPasswordActivity extends BaseActivity implements IResetPasswor
         String message = ValidatorUtils.validationErrorMessage(getApplicationContext(), errors);
         displayErrorDialog(message);
     }
-
-
 
     @Override
     public ResetPasswordDisplayBean getResetPasswordDisplayBean() {
@@ -116,11 +119,6 @@ public class ResetPasswordActivity extends BaseActivity implements IResetPasswor
     public void switchPageUI(String className) {
         //重置密码,重新返回登录界面
         skipTo(LoginActivity.class);
-
     }
 
-    @OnClick( R.id.iv_back)
-    public void onClick() {
-            finish();
-    }
 }

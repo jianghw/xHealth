@@ -10,13 +10,12 @@ import javax.inject.Inject;
 import rx.Subscriber;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action0;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
 /**
  * Created by jianghw on 2016/8/5.
- * <p/>
+ * <p>
  * 描述：登录逻辑
  */
 public class CompileProgramPresenter<V> implements ICompileProgramPresenter<V> {
@@ -44,11 +43,8 @@ public class CompileProgramPresenter<V> implements ICompileProgramPresenter<V> {
         List<LongTermMonitoringDisplayBean> list = mActivity.getNewLongtermMonitoringBean();
         Subscription subscription = mRepository.updateLongtermMonitorings(list)
                 .subscribeOn(Schedulers.io())
-                .doOnSubscribe(new Action0() {
-                    @Override
-                    public void call() {
-                        mActivity.dataInteractionDialog(); //正在加载中...
-                    }
+                .doOnSubscribe(() -> {
+                    mActivity.dataInteractionDialog(); //正在加载中...
                 })
                 .subscribeOn(AndroidSchedulers.mainThread())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -66,7 +62,7 @@ public class CompileProgramPresenter<V> implements ICompileProgramPresenter<V> {
                     public void onNext(List<LongTermMonitoringDisplayBean> bean) {
                         mActivity.showToast("更新成功");
                         mActivity.dismissInteractionDialog();
-
+                        mActivity.onCompileSucceed();
                     }
                 });
         mSubscriptions.add(subscription);

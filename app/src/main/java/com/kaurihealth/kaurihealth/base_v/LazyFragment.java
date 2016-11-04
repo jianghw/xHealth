@@ -36,9 +36,10 @@ public abstract class LazyFragment extends Fragment {
         }
     }
 
+
     protected abstract void loadingData();
 
     private void unVisible() {
-
+//TODO
     }
 }

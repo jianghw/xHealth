@@ -2,8 +2,7 @@ package com.kaurihealth.mvplib.search_p;
 
 import com.kaurihealth.datalib.repository.IDataSource;
 import com.kaurihealth.datalib.request_bean.bean.InitialiseSearchRequestBean;
-import com.kaurihealth.datalib.request_bean.bean.SearchDoctorDisplayBean;
-import com.kaurihealth.datalib.request_bean.bean.SearchResultBean;
+import com.kaurihealth.datalib.response_bean.SearchResultBean;
 import com.kaurihealth.datalib.response_bean.PatientDisplayBean;
 
 import java.util.List;
