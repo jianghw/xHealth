@@ -112,6 +112,7 @@
 
 
     <RelativeLayout
+        android:id="@+id/dfdf"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -119,16 +120,56 @@
             android:id="@+id/container"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-
             >
 
-            <WebView
+            <!--<WebView-->
+                <!--android:id="@+id/webView"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="match_parent"-->
+                <!--android:descendantFocusability="beforeDescendants">-->
+
+            <!--</WebView>-->
+
+
+
+            <!--<com.kaurihealth.kaurihealth.clinical_v.CustomLinearLayout-->
+                <!--android:id="@+id/custom_linear_layout"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:orientation="vertical" >-->
+
+                <!--<TextView-->
+                    <!--android:id="@+id/toobar"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:background="@android:color/holo_green_light"-->
+                    <!--android:padding="8dp"-->
+                    <!--android:text="Toolbar" />-->
+
+                <!--<com.kaurihealth.kaurihealth.util.ScrollWebView-->
+                    <!--android:id="@+id/webView"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="match_parent"-->
+                    <!--android:descendantFocusability="beforeDescendants">-->
+
+                <!--</com.kaurihealth.kaurihealth.util.ScrollWebView>-->
+            <!--</com.kaurihealth.kaurihealth.clinical_v.CustomLinearLayout>-->
+
+
+
+
+
+            <com.kaurihealth.kaurihealth.util.ScrollWebView
                 android:id="@+id/webView"
+                android:scrollbars="none"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:descendantFocusability="beforeDescendants">
 
-            </WebView>
+            </com.kaurihealth.kaurihealth.util.ScrollWebView>
+
+
+
 
             <!--<com.kaurihealth.kaurihealth.clinical_v.CustomLinearLayout-->
                 <!--android:id="@+id/custom_linear_layout"-->
@@ -287,14 +328,11 @@
                 <com.kaurihealth.kaurihealth.clinical_v.Utils.MyListView
                     android:id="@+id/lvContent"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:divider="#FFFFFF"
                     android:background="#FFFFFF">
-
                 </com.kaurihealth.kaurihealth.clinical_v.Utils.MyListView>
             <!--</com.kaurihealth.kaurihealth.clinical_v.CustomLinearLayout>-->
         </com.kaurihealth.kaurihealth.clinical_v.PairScrollView>
     </RelativeLayout>
-
-
 </LinearLayout>

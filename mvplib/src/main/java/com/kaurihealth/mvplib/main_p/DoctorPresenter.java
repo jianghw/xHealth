@@ -1,10 +1,6 @@
 package com.kaurihealth.mvplib.main_p;
 
-import android.support.annotation.NonNull;
-
 import com.kaurihealth.datalib.repository.IDataSource;
-import com.kaurihealth.datalib.response_bean.ContactUserDisplayBean;
-import com.kaurihealth.datalib.response_bean.DoctorPatientRelationshipBean;
 import com.kaurihealth.datalib.response_bean.DoctorRelationshipBean;
 import com.kaurihealth.utilslib.log.LogUtils;
 
@@ -48,44 +44,21 @@ public class DoctorPresenter<V> implements IPatientPresenter<V> {
         if (mFirstLoad) loadingRemoteData(false);
     }
 
-    /**
-     * 关系列表
-     */
-    @Override
-    public void loadContactListByDoctorId() {
-        Subscription subscription = mRepository.loadContactListByDoctorId()
-                .subscribeOn(Schedulers.io())
-                .doOnSubscribe(() -> mFragment.loadingIndicator(true))
-                .subscribeOn(AndroidSchedulers.mainThread())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                        new Action1<List<ContactUserDisplayBean>>() {
-                            @Override
-                            public void call(List<ContactUserDisplayBean> beanList) {
-                                updateDataByDirty();
-                            }
-                        },
-                        new Action1<Throwable>() {
-                            @Override
-                            public void call(Throwable throwable) {
-                                mFragment.loadingIndicator(false);
-                                mFragment.showToast(throwable.getMessage());
-                            }
-                        });
-        mSubscriptions.add(subscription);
-    }
-
     @Override
     public void loadingRemoteData(boolean isDirty) {
         if (isDirty) {//刷新
             mRepository.manuallyRefresh();  //手动刷新
         }
-        loadContactListByDoctorId();
+        loadDoctorPatientRelationshipForDoctor();
     }
 
-    private void updateDataByDirty() {
+    @Override
+    public void loadDoctorPatientRelationshipForDoctor() {
+        //查询所有用户医生关系的病例（包含拒绝的） 医生使用的token
         Subscription subscription = mRepository.loadAllDoctorRelationships()
                 .subscribeOn(Schedulers.io())
+                .doOnSubscribe(() -> mFragment.loadingIndicator(true))
+                .subscribeOn(AndroidSchedulers.mainThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Subscriber<List<DoctorRelationshipBean>>() {
                     @Override
@@ -102,6 +75,7 @@ public class DoctorPresenter<V> implements IPatientPresenter<V> {
 
                     @Override
                     public void onNext(List<DoctorRelationshipBean> beanList) {
+                        //将同意和自己成为协作医生的doctor过滤出来
                         priorityDataArrangement(beanList);
                     }
                 });
@@ -145,17 +119,10 @@ public class DoctorPresenter<V> implements IPatientPresenter<V> {
         mSubscriptions.add(subscription);
     }
 
-    @NonNull
-    private String getStringKeyToMap(DoctorPatientRelationshipBean bean) {
-        int mPatientID = bean.getPatientId();
-        String mShipReason = bean.getRelationshipReason();
-        return mPatientID + mShipReason;
-    }
-
     @Override
     public void unSubscribe() {
+        if (mFragment != null) mFragment.loadingIndicator(false);
         mSubscriptions.clear();
-        mFragment.loadingIndicator(false);
         mFragment = null;
     }
 }

@@ -144,6 +144,32 @@ public class SearchPatientFragmentPresenter<V> implements IMvpPresenter<V> {
     @Override
     public void unSubscribe() {
         mSubscriptions.clear();
+        if (mFragment != null) mFragment.dismissInteractionDialog();
         mFragment = null;
+    }
+
+    public void insertNewRelationshipByDoctor(int mPatientId) {
+        Subscription subscription = mRepository.insertNewRelationshipByDoctor(mPatientId)
+                .subscribeOn(Schedulers.io())
+                .doOnSubscribe(() -> mFragment.dataInteractionDialog())
+                .subscribeOn(AndroidSchedulers.mainThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<DoctorPatientRelationshipBean>() {
+                    @Override
+                    public void onCompleted() {
+                        mFragment.dismissInteractionDialog();
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        mFragment.displayErrorDialog(e.getMessage());
+                    }
+
+                    @Override
+                    public void onNext(DoctorPatientRelationshipBean bean) {
+                        mFragment.insertPatientSucceed(bean);
+                    }
+                });
+        mSubscriptions.add(subscription);
     }
 }

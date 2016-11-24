@@ -3,7 +3,6 @@ package com.kaurihealth.mvplib.main_p;
 import android.support.annotation.NonNull;
 
 import com.kaurihealth.datalib.repository.IDataSource;
-import com.kaurihealth.datalib.response_bean.ContactUserDisplayBean;
 import com.kaurihealth.datalib.response_bean.DoctorPatientRelationshipBean;
 import com.kaurihealth.utilslib.date.DateUtils;
 import com.kaurihealth.utilslib.log.LogUtils;
@@ -32,7 +31,7 @@ public class PatientPresenter<V> implements IPatientPresenter<V> {
     private final IDataSource mRepository;
     private final CompositeSubscription mSubscriptions;
     private IPatientView mFragment;
-    private boolean mFirstLoad = true;
+    private boolean mFirstLoad = true;   //第一次进入界面自动加载 并且缓存, 之后需要手动加载数据
 
     @Inject
     PatientPresenter(IDataSource repository) {
@@ -58,61 +57,38 @@ public class PatientPresenter<V> implements IPatientPresenter<V> {
         if (isDirty) {//刷新
             mRepository.manuallyRefresh();
         }
-        loadContactListByDoctorId();
-    }
-
-    /**
-     * 关系列表
-     */
-    @Override
-    public void loadContactListByDoctorId() {
-        Subscription subscription = mRepository.loadContactListByDoctorId()
-                .subscribeOn(Schedulers.io())
-                .doOnSubscribe(() -> mFragment.loadingIndicator(true))
-                .subscribeOn(AndroidSchedulers.mainThread())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                        new Action1<List<ContactUserDisplayBean>>() {
-                            @Override
-                            public void call(List<ContactUserDisplayBean> beanList) {
-                                updateDataByDirty();
-                            }
-                        },
-                        new Action1<Throwable>() {
-                            @Override
-                            public void call(Throwable throwable) {
-                                mFragment.loadingIndicator(false);
-                                mFragment.showToast(throwable.getMessage());
-                            }
-                        });
-        mSubscriptions.add(subscription);
+        loadDoctorPatientRelationshipForDoctor();
     }
 
     /**
      * 当前医生的患者
      */
-    private void updateDataByDirty() {
+    @Override
+    public void loadDoctorPatientRelationshipForDoctor() {
         Subscription subscription = mRepository.loadDoctorPatientRelationshipForDoctor()
                 .subscribeOn(Schedulers.io())
+                .doOnSubscribe(() -> mFragment.loadingIndicator(true))
+                .subscribeOn(AndroidSchedulers.mainThread())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Subscriber<List<DoctorPatientRelationshipBean>>() {
-                    @Override
-                    public void onCompleted() {
-                        mFragment.loadingIndicator(false);
-                        mFirstLoad = false;
-                    }
+                .subscribe(
+                        new Subscriber<List<DoctorPatientRelationshipBean>>() {
+                            @Override
+                            public void onCompleted() {
+                                mFragment.loadingIndicator(false);
+                                mFirstLoad = false;
+                            }
 
-                    @Override
-                    public void onError(Throwable e) {
-                        mFragment.loadingIndicator(false);
-                        mFragment.showToast(e.getMessage());
-                    }
+                            @Override
+                            public void onError(Throwable e) {
+                                mFragment.loadingIndicator(false);
+                                mFragment.showToast(e.getMessage());
+                            }
 
-                    @Override
-                    public void onNext(List<DoctorPatientRelationshipBean> list) {
-                        priorityDataArrangement(list);
-                    }
-                });
+                            @Override
+                            public void onNext(List<DoctorPatientRelationshipBean> list) {
+                                priorityDataArrangement(list);
+                            }
+                        });
         mSubscriptions.add(subscription);
     }
 
@@ -142,24 +118,25 @@ public class PatientPresenter<V> implements IPatientPresenter<V> {
                     }
                 })
                 .toList()
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Subscriber<List<DoctorPatientRelationshipBean>>() {
-                    @Override
-                    public void onCompleted() {
-                        if (!arrayList.isEmpty()) arrayList.clear();
-                    }
+                .observeOn(AndroidSchedulers.mainThread())  //切换到主线程
+                .subscribe(
+                        new Subscriber<List<DoctorPatientRelationshipBean>>() {
+                            @Override
+                            public void onCompleted() {
+                                if (!arrayList.isEmpty()) arrayList.clear();
+                            }
 
-                    @Override
-                    public void onError(Throwable e) {
-                        mFragment.showToast(e.getMessage());
-                        LogUtils.e(e.getMessage());
-                    }
+                            @Override
+                            public void onError(Throwable e) {
+                                mFragment.showToast(e.getMessage());
+                                LogUtils.e(e.getMessage());
+                            }
 
-                    @Override
-                    public void onNext(List<DoctorPatientRelationshipBean> list) {
-                        listFilteringActiveProcessing(list);
-                    }
-                });
+                            @Override
+                            public void onNext(List<DoctorPatientRelationshipBean> list) {
+                                listFilteringActiveProcessing(list);
+                            }
+                        });
         mSubscriptions.add(subscription);
     }
 
@@ -170,6 +147,12 @@ public class PatientPresenter<V> implements IPatientPresenter<V> {
         if (list == null) return;
         Subscription subscription = Observable.from(list)
                 .subscribeOn(Schedulers.computation())
+                .filter(new Func1<DoctorPatientRelationshipBean, Boolean>() {
+                    @Override
+                    public Boolean call(DoctorPatientRelationshipBean bean) {
+                        return bean != null;
+                    }
+                })
                 .filter(new Func1<DoctorPatientRelationshipBean, Boolean>() {
                     @Override
                     public Boolean call(DoctorPatientRelationshipBean doctorPatientRelationshipBean) {
@@ -189,7 +172,6 @@ public class PatientPresenter<V> implements IPatientPresenter<V> {
                             @Override
                             public void call(Throwable throwable) {
                                 mFragment.showToast(throwable.getMessage());
-                                LogUtils.e(throwable.getMessage());
                             }
                         });
         mSubscriptions.add(subscription);
@@ -207,6 +189,12 @@ public class PatientPresenter<V> implements IPatientPresenter<V> {
         List<Integer> arrayList = new ArrayList<>();
         Subscription subscription = Observable.from(list)
                 .subscribeOn(Schedulers.computation())
+                .filter(new Func1<DoctorPatientRelationshipBean, Boolean>() {
+                    @Override
+                    public Boolean call(DoctorPatientRelationshipBean bean) {
+                        return bean != null;
+                    }
+                })
                 .filter(new Func1<DoctorPatientRelationshipBean, Boolean>() {
                     @Override
                     public Boolean call(DoctorPatientRelationshipBean patientRelationshipBean) {
@@ -247,7 +235,6 @@ public class PatientPresenter<V> implements IPatientPresenter<V> {
                             @Override
                             public void call(Throwable throwable) {
                                 mFragment.showToast(throwable.getMessage());
-                                LogUtils.e(throwable.getMessage());
                             }
                         },
                         new Action0() {

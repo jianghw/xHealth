@@ -7,4 +7,5 @@ import com.kaurihealth.mvplib.base_p.IMvpPresenter;
  */
 
 public interface IReferralPatientRequestPresenter<V> extends IMvpPresenter<V> {
+    void loadReferralDetail(boolean b);
 }

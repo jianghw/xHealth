@@ -41,6 +41,7 @@
         <!--注册个人信息-->
         <activity
             android:name=".register_v.RegisterPersonInfoActivity"
+            android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
         <!-- 登录 -->
         <activity
@@ -68,7 +69,15 @@
 
         <!--医生、患者消息-->
         <activity
-            android:name=".main_v.ConversationItemActivity"
+            android:name=".conversation_v.ConversationItemActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".conversation_v.ConversationGroupItemActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".conversation_v.AddGroupChatActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
 
@@ -100,6 +109,7 @@
         <!--患者信息-->
         <activity
             android:name=".patient_v.PatientInfoActivity"
+            android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
         <!--医生信息-->
         <activity
@@ -118,21 +128,37 @@
         <activity
             android:name=".register_v.AgreementActivity"
             android:screenOrientation="portrait"/>
+        <!--复诊-->
+        <activity
+            android:name=".patient_v.subsequent_visit.VisitRecordActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".patient_v.subsequent_visit.AddVisitRecordActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"/>
+        <!--系统消息提醒-->
+        <activity
+            android:name=".conversation_v.SystemMessageActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".conversation_v.SystemMessageSettingActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"/>
 
         <activity
-            android:name=".patient_v.HospitalNameActivity"
+            android:name=".hospital_v.HospitalNameActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"/>
         <activity
             android:name=".mine_v.ServiceAgreementActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"/>
-        <activity
-            android:name=".mine_v.SetupprotocolActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"/>
+
         <activity
             android:name=".mine_v.FeedbackActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"/>
         <activity
-            android:name=".patient_v.PrescriptionImageActivity"
+            android:name=".patient_v.prescription.PrescriptionImageActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"/>
 
         <activity
@@ -168,16 +194,14 @@
             android:name=".patient_v.health_condition.HealthConditionActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"/>
         <activity
-            android:name=".patient_v.DoctorTeamActivity"
+            android:name=".patient_v.doctor_team.DoctorTeamActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".patient_v.prescription.PrescriptionActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"/>
         <activity
-            android:name=".patient_v.PrescriptionActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"/>
-        <activity
-            android:name=".patient_v.FamilyMembersActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"/>
-        <activity
-            android:name=".open_an_account_v.OpenAnAccountActivity"
+            android:name=".open_account_v.OpenAnAccountActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"/>
         <activity
             android:name=".mine_v.SettingActivity"
@@ -232,7 +256,7 @@
             android:name=".mine_v.account.AddBankCardActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"/>
         <activity
-            android:name=".main_v.PatientRequestActivity"
+            android:name=".home_v.request.PatientRequestActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"/>
         <!--搜索页面-->
         <activity
@@ -241,31 +265,31 @@
             android:screenOrientation="portrait"/>
         <!--请求留言-->
         <activity
-            android:name=".home_v.VerificationActivity"
+            android:name=".search_v.VerificationActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".home_v.DoctorRequestActivity"
+            android:name=".home_v.request.DoctorRequestActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"/>
         <activity
-            android:name=".home_v.FriendRequestsActivity"
+            android:name=".home_v.request.FriendRequestsActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"/>
         <!--专业特长-->
         <activity
-            android:name=".home_v.DoctorPracticeFieldActivity"
+            android:name=".home_v.request.DoctorPracticeFieldActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden"/>
         <activity
-            android:name=".home_v.DoctorRequestInfoActivity"
+            android:name=".home_v.request.DoctorRequestInfoActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"/>
         <activity
-            android:name=".home_v.PatientRequestInfoActivity"
+            android:name=".home_v.request.PatientRequestInfoActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"/>
         <activity
             android:name=".home_v.referral.RejectReasonActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"/>
         <activity
-            android:name=".home_v.AcceptReasonActivity"
+            android:name=".home_v.referral.AcceptReasonActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"/>
         <activity
             android:name=".patient_v.medical_records.AddCommonMedicalRecordActivity"
@@ -278,7 +302,7 @@
             android:configChanges="orientation|keyboardHidden|screenSize"/>
         <!--学习与工作经历-->
         <activity
-            android:name=".home_v.DoctorStudyExprienceActivity"
+            android:name=".home_v.request.DoctorStudyExprienceActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden"/>
         <!-- 门诊记录电子存档-->
@@ -306,7 +330,7 @@
             android:name=".patient_v.medical_records.DischargeRecordActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"/>
         <!-- 自定义推送（若使用该功能，需添加以下声明）START -->
-        <receiver android:name=".CustomReceiver">
+        <receiver android:name=".CustomReceiver" android:exported="false">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED"/>
                 <action android:name="android.intent.action.USER_PRESENT"/>
@@ -320,20 +344,72 @@
             android:name=".home_v.referral.ReferralPatientRequestActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"/>
         <activity
-            android:name=".patient_v.referrals_patient.ReferralDoctorActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"/>
+            android:name=".referrals_v.ReferralDoctorActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"/>
         <activity
-            android:name=".patient_v.referrals_patient.ReferralReasonActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"/>
+            android:name=".referrals_v.ReferralReasonActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".home_v.referral.ReferralPatientInfoActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"/>
         <activity
-            android:name=".patient_v.referrals_patient.ReferralPatientActivity"
+            android:name=".referrals_v.ReferralPatientActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"/>
         <activity
             android:name=".mine_v.SetupprotocolActivityNew"
             android:configChanges="orientation|keyboardHidden|screenSize"/>
+        <activity
+            android:name=".patient_v.medical_records_only_read.CommonMedicalRecordToReadAcitivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"/>
+        <activity
+            android:name=".patient_v.medical_records_only_read.LobTestOnlyReadActivtiy"
+            android:configChanges="orientation|keyboardHidden|screenSize"/>
+        <activity
+            android:name=".patient_v.medical_records_only_read.OutpatientElectronicOnlyReadActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"/>
+        <activity
+            android:name=".patient_v.medical_records_only_read.OutPatientPicturesOnlyReadActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"/>
+        <activity
+            android:name=".patient_v.medical_records_only_read.RemoteMedicalConsultationOnlyReadActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"/>
+        <activity
+            android:name=".patient_v.medical_records_only_read.NetWorkMedicalConsultationOnlyReadActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"/>
+        <activity
+            android:name=".patient_v.medical_records_only_read.AdmissionRecordOnlyReadActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"/>
+        <activity
+            android:name=".patient_v.medical_records_only_read.TreatMentRelatedRecordsOnlyreadActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"/>
+        <activity
+            android:name=".patient_v.medical_records_only_read.DischargeRecordOnlyReadActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"/>
+
+        <!--患者信息-> 家庭成员-->
+        <activity
+            android:name=".patient_v.family_members.FamilyMembersActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"/>
+        <!--患者信息 -> 家庭成员 -> 添加家庭成员-->
+        <activity
+            android:name=".patient_v.family_members.AddFamilyMemberActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"/>
+        <activity
+            android:name=".patient_v.medical_records_only_read.PresriptionOnlyReadActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"/>
+
+        <activity
+            android:name=".conversation_v.GroupConversationDetailsActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="com.kaurihealth.chatlib.conversation_item_detail_action_group"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </activity>
+
     </application>
 
 </manifest>

@@ -17,11 +17,13 @@
             android:layout_alignParentTop="true"
             android:background="@color/color_bg_gray"
             android:childDivider="#dfdfdd"
+            android:scrollbars="none"
             android:dividerHeight="0.5dp" />
     </com.kaurihealth.utilslib.widget.ScrollChildSwipeRefreshLayout>
 
     <TextView
         android:id="@+id/tv_note"
+        android:visibility="gone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"

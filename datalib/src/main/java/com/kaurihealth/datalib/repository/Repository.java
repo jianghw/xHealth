@@ -21,6 +21,7 @@ import com.kaurihealth.datalib.request_bean.bean.MobileUpdateDoctorBean;
 import com.kaurihealth.datalib.request_bean.bean.NewCashOutAccountBean;
 import com.kaurihealth.datalib.request_bean.bean.NewCashOutBean;
 import com.kaurihealth.datalib.request_bean.bean.NewDoctorRelationshipBean;
+import com.kaurihealth.datalib.request_bean.bean.NewFamilyMemberBean;
 import com.kaurihealth.datalib.request_bean.bean.NewLabTestPatientRecordDisplayBean;
 import com.kaurihealth.datalib.request_bean.bean.NewLiteratureCommentDisplayBean;
 import com.kaurihealth.datalib.request_bean.bean.NewLiteratureReplyDisplayBean;
@@ -31,6 +32,7 @@ import com.kaurihealth.datalib.request_bean.bean.NewPathologyPatientRecordDispla
 import com.kaurihealth.datalib.request_bean.bean.NewPatientRecordDisplayBean;
 import com.kaurihealth.datalib.request_bean.bean.NewPrescriptionBean;
 import com.kaurihealth.datalib.request_bean.bean.NewPriceBean;
+import com.kaurihealth.datalib.request_bean.bean.NewReferralMessageAlertBean;
 import com.kaurihealth.datalib.request_bean.bean.NewRegistByDoctorBean;
 import com.kaurihealth.datalib.request_bean.bean.NewRegisterBean;
 import com.kaurihealth.datalib.request_bean.bean.NewSupplementaryTestPatientRecordDisplayBean;
@@ -41,7 +43,6 @@ import com.kaurihealth.datalib.request_bean.bean.PatientRequestReferralPatientDi
 import com.kaurihealth.datalib.request_bean.bean.PrescriptionBean;
 import com.kaurihealth.datalib.request_bean.bean.RequestResetPasswordDisplayBean;
 import com.kaurihealth.datalib.request_bean.bean.ResetPasswordDisplayBean;
-import com.kaurihealth.datalib.response_bean.SearchResultBean;
 import com.kaurihealth.datalib.response_bean.ContactUserDisplayBean;
 import com.kaurihealth.datalib.response_bean.DepartmentDisplayBean;
 import com.kaurihealth.datalib.response_bean.DoctorCooperationBean;
@@ -50,16 +51,21 @@ import com.kaurihealth.datalib.response_bean.DoctorInformationDisplayBean;
 import com.kaurihealth.datalib.response_bean.DoctorPatientRelationshipBean;
 import com.kaurihealth.datalib.response_bean.DoctorRelationshipBean;
 import com.kaurihealth.datalib.response_bean.DocumentDisplayBean;
+import com.kaurihealth.datalib.response_bean.FamilyMemberBean;
 import com.kaurihealth.datalib.response_bean.InitiateVerificationResponse;
 import com.kaurihealth.datalib.response_bean.LongTermMonitoringDisplayBean;
+import com.kaurihealth.datalib.response_bean.NotifyIsReadDisplayBean;
 import com.kaurihealth.datalib.response_bean.PatientDisplayBean;
 import com.kaurihealth.datalib.response_bean.PatientRecordDisplayBean;
 import com.kaurihealth.datalib.response_bean.PriceDisplayBean;
+import com.kaurihealth.datalib.response_bean.ReferralMessageAlertDisplayBean;
 import com.kaurihealth.datalib.response_bean.RegisterResponse;
 import com.kaurihealth.datalib.response_bean.ResponseDisplayBean;
+import com.kaurihealth.datalib.response_bean.SearchResultBean;
 import com.kaurihealth.datalib.response_bean.SoftwareInfo;
 import com.kaurihealth.datalib.response_bean.TokenBean;
 import com.kaurihealth.datalib.response_bean.UserCashOutAccountDisplayBean;
+import com.kaurihealth.datalib.response_bean.UserNotifyDisplayBean;
 import com.kaurihealth.utilslib.bugtag.BugTagUtils;
 import com.kaurihealth.utilslib.log.LogUtils;
 
@@ -704,9 +710,8 @@ public class Repository implements IDataSource {
     }
 
     @Override
-    public Observable<List<DoctorPatientRelationshipBean>> LoadDoctorPatientRelationshipForDoctor
-            () {
-        return mRemoteData.LoadDoctorPatientRelationshipForDoctor();
+    public Observable<List<DoctorPatientRelationshipBean>> LoadDoctorPatientRelationshipForDoctor() {
+        return mRemoteData.loadDoctorPatientRelationshipForDoctor();
     }
 
     //查询所有用户医生关系的病例（包含拒绝的） 医生使用的token
@@ -824,11 +829,13 @@ public class Repository implements IDataSource {
     public Observable<ResponseDisplayBean> removeDoctorRelationship(int id) {
         return mRemoteData.removeDoctorRelationship(id);
     }
+
     //通过医生查询转诊状态为等待的请求
     @Override
     public Observable<List<PatientRequestDisplayBean>> LoadReferralsPatientRequestByDoctorId() {
         return mRemoteData.LoadReferralsPatientRequestByDoctorId();
     }
+
     //向多个医生转诊医生
     @Override
     public Observable<ResponseDisplayBean> InsertPatientRequestReferralByDoctorList(PatientRequestReferralDoctorDisplayBean bean) {
@@ -847,11 +854,72 @@ public class Repository implements IDataSource {
         return mRemoteData.LoadDoctorTeamForPatient(patientId);
     }
 
+    //根据医患关系ID加载复诊提醒信息
+    @Override
+    public Observable<List<ReferralMessageAlertDisplayBean>> loadReferralMessageAlert(int id) {
+        return mRemoteData.loadReferralMessageAlert(id);
+    }
+
+    //插入新的复诊提醒信息
+    @Override
+    public Observable<ReferralMessageAlertDisplayBean> insertReferralMessageAlert(NewReferralMessageAlertBean bean) {
+        return mRemoteData.insertReferralMessageAlert(bean);
+    }
+
+    //删除复诊提醒信息
+    @Override
+    public Observable<ReferralMessageAlertDisplayBean> deleteReferralMessageAlert(int id) {
+        return mRemoteData.deleteReferralMessageAlert(id);
+    }
+
 
     //根据患者id查询医患关系
     @Override
     public Observable<List<DoctorPatientRelationshipBean>> LoadDoctorPatientRelationshipForPatientId(int patientId) {
         return mRemoteData.LoadDoctorPatientRelationshipForPatientId(patientId);
+    }
+
+    //患者信息 -> 家庭成员 --> 添加家庭成员
+
+    @Override
+    public Observable<ResponseDisplayBean> addFamilyMemberByDoctor(NewFamilyMemberBean newFamilyMemberBean) {
+        return mRemoteData.addFamilyMemberByDoctor(newFamilyMemberBean);
+    }
+
+    //患者信息 -> 家庭成员(列表信息)
+    @Override
+    public Observable<List<FamilyMemberBean>> loadAllFamilyMembers(int patientId) {
+        return mRemoteData.loadAllFamilyMembers(patientId);
+    }
+
+    //插入推送设备 医生使用的token
+    @Override
+    public Observable<ResponseDisplayBean> insertNewPushNotificationDevice(String IdentityToken) {
+        return mRemoteData.insertNewPushNotificationDevice(IdentityToken);
+    }
+
+    //查询该用户的所有系统消息
+    @Override
+    public Observable<List<UserNotifyDisplayBean>> loadUserAllNotify() {
+        return mRemoteData.loadUserAllNotify();
+    }
+
+    //App和Web端 判断小红点是否显示时触发
+    @Override
+    public Observable<NotifyIsReadDisplayBean> isReadNotify() {
+        return mRemoteData.isReadNotify();
+    }
+
+    //更新 已读 未读
+    @Override
+    public Observable<ResponseDisplayBean> updateUserNotifyIsRead(List<Integer> list) {
+        return mRemoteData.updateUserNotifyIsRead(list);
+    }
+
+    //Web端和app 点击 “全部忽略”时触发
+    @Override
+    public Observable<ResponseDisplayBean> updateUserNotify() {
+        return mRemoteData.updateUserNotify();
     }
 
 

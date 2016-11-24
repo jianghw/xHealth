@@ -11,7 +11,8 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:scrollbars="none">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -23,9 +24,10 @@
             <View style="@style/Line_Gap"/>
             <!--类型，项目-->
             <include layout="@layout/include_record_project"/>
-
+            <View style="@style/Line_Gap"/>
             <!-- 就诊时间-->
             <include layout="@layout/include_record_clinical_time"/>
+            <View style="@style/Line_Gap"/>
             <!--科室-->
             <include layout="@layout/include_record_department"/>
             <View style="@style/Line_Gap"/>

@@ -56,7 +56,7 @@ public class SearchActivityPresenter<V> implements ISearchActivityPresenter<V> {
         InitialiseSearchRequestBean currentSearchRequestBean = mActivity.getCurrentSearchRequestBean();
         Subscription subscription = mRepository.KeywordSearch(currentSearchRequestBean)
                 .subscribeOn(Schedulers.io())
-                .doOnSubscribe(() -> mActivity.dataInteractionDialog())
+                .doOnSubscribe(() -> mActivity.dataInteractionDialog())  //正在加载中...
                 .subscribeOn(AndroidSchedulers.mainThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(

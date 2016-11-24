@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_margin="@dimen/padding_6"
-        android:background="@drawable/bgiteam_patient"
+        android:background="@drawable/bg_item_patient"
         android:orientation="vertical">
 
         <com.kaurihealth.utilslib.widget.CircleImageView
@@ -93,7 +93,7 @@
             android:layout_gravity="center_horizontal"
             android:layout_marginBottom="@dimen/margin_20"
             android:layout_marginTop="@dimen/margin_10"
-            android:background="@drawable/bg_patientiteam"
+            android:background="@drawable/bg_patientitem"
             android:gravity="center_horizontal|center_vertical"
             android:singleLine="true"
             android:text="留言"

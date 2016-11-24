@@ -2,10 +2,6 @@ package com.kaurihealth.kaurihealth.clinical_v.Fragment;
 
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.kaurihealth.datalib.request_bean.bean.MedicalLiteratureDisPlayBean;
@@ -32,6 +28,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import butterknife.Bind;
+import de.halfbit.pinnedsection.PinnedSectionListView;
 
 /**
  * Created by mip on 2016/8/24.
@@ -41,7 +38,7 @@ public class DynamicFragment extends BaseFragment implements IDynamicView {
     DynamicPresenter<IDynamicView> mPresenter;
 
     @Bind(R.id.lv_content)
-    ListView mLvContent;
+    PinnedSectionListView mLvContent;
     @Bind(R.id.swipe_refresh)
     ScrollChildSwipeRefreshLayout mSwipeRefresh;
 
@@ -86,24 +83,15 @@ public class DynamicFragment extends BaseFragment implements IDynamicView {
         mSwipeRefresh.setScrollUpChild(mLvContent);
         mSwipeRefresh.setDistanceToTriggerSync(300);
         mSwipeRefresh.setOnRefreshListener(
-                new SwipeRefreshLayout.OnRefreshListener() {
-                    @Override
-                    public void onRefresh() {
-                        mPresenter.loadingRemoteData(true);
-                    }
-                });
+                () -> mPresenter.loadingRemoteData(true));
 
-        mLvContent.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    if (OnClickUtils.onNoDoubleClick()) return;
-                    MedicalLiteratureDisPlayBean medicalLiteratureDisPlayBean = (MedicalLiteratureDisPlayBean) adapter.getItem(position);
-                    mPresenter.LoadMedicalLiteratureById(medicalLiteratureDisPlayBean.medicalLiteratureId);
-
-            }
+        mLvContent.setOnItemClickListener((parent, view, position, id) -> {
+                if (OnClickUtils.onNoDoubleClick()) return;
+                MedicalLiteratureDisPlayBean medicalLiteratureDisPlayBean = (MedicalLiteratureDisPlayBean) adapter.getItem(position);
+                mPresenter.LoadMedicalLiteratureById(medicalLiteratureDisPlayBean.medicalLiteratureId);
         });
-
     }
+
 
     /**
      * 调用p层获取数据
@@ -134,8 +122,6 @@ public class DynamicFragment extends BaseFragment implements IDynamicView {
      */
     @Override
     public void getAllMedicalLitreaturesSuccess(List<MedicalLiteratureDisPlayBean> mMedicalLiteratureDisPlayBeanList) {
-        if (medicalLiteratureDisPlayBeanList == null)
-            throw new IllegalStateException("medicalLiteratureDisPlayBeanList must be not null");
         if (medicalLiteratureDisPlayBeanList.size() > 0) medicalLiteratureDisPlayBeanList.clear();
         medicalLiteratureDisPlayBeanList.addAll(new ClinicalUtil().getListMedicalLiteratureDisPlayBean(mMedicalLiteratureDisPlayBeanList));
         mPresenter.getArrayList();

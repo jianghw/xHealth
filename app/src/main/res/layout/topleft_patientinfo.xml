@@ -18,7 +18,7 @@
             android:text="服务项目：" />
 
         <TextView
-            android:id="@+id/tv_disease_topleft_patientinfo"
+            android:id="@+id/request_type"
             style="@style/normaltext_topleft_patientinfo"
             android:layout_alignParentLeft="true"
             android:layout_marginLeft="70dp"
@@ -28,27 +28,70 @@
         <TextView
             android:id="@+id/tv2_topleft_patientinfo"
             style="@style/normaltext_topleft_patientinfo"
-            android:layout_below="@id/tv_disease_topleft_patientinfo"
+            android:layout_below="@id/request_type"
             android:text="预约时间：" />
 
         <TextView
-            android:id="@+id/tv_tel_patientinfo"
+            android:id="@+id/request_time"
             style="@style/normaltext_topleft_patientinfo"
-            android:layout_alignLeft="@id/tv_disease_topleft_patientinfo"
-            android:layout_below="@id/tv_disease_topleft_patientinfo"
-            android:text="xxxxxxx" />
+            android:layout_alignLeft="@id/request_type"
+            android:layout_below="@id/request_type"
+            android:text="12：54" />
+        <!--当前状态-->
+        <TextView
+            android:id="@+id/tv2_topleft_patientinfo_state"
+            style="@style/normaltext_topleft_patientinfo"
+            android:layout_below="@id/tv2_topleft_patientinfo"
+            android:text="当前状态：" />
 
+        <TextView
+            android:id="@+id/tv_tel_patientinfo_state"
+            style="@style/normaltext_topleft_patientinfo"
+            android:layout_alignLeft="@id/request_type"
+            android:layout_below="@id/tv2_topleft_patientinfo"
+            android:textColor="#FFFF6600"
+            android:text="" />
+<!--联系电话-->
+        <TextView
+            android:id="@+id/tv2_topleft_patientinfo_phone"
+            style="@style/normaltext_topleft_patientinfo"
+            android:layout_below="@id/tv_tel_patientinfo_state"
+            android:text="联系电话：" />
+
+        <TextView
+            android:id="@+id/request_patient_phone"
+            style="@style/normaltext_topleft_patientinfo"
+            android:layout_alignLeft="@id/request_type"
+            android:layout_below="@id/tv_tel_patientinfo_state"
+            android:textColor="#50d2c2"
+            android:text="" />
+
+        <!--联系地址-->
+        <TextView
+            android:id="@+id/tv2_topleft_patientinfo_adress"
+            style="@style/normaltext_topleft_patientinfo"
+            android:layout_below="@id/request_patient_phone"
+            android:text="联系地址：" />
+
+        <TextView
+            android:id="@+id/request_patient_adress"
+            style="@style/normaltext_topleft_patientinfo"
+            android:layout_alignLeft="@id/request_type"
+            android:layout_below="@id/request_patient_phone"
+            android:text="125484" />
+
+<!--预约原因-->
         <TextView
             android:id="@+id/tv4_topleft_patientinfo"
             style="@style/normaltext_topleft_patientinfo"
-            android:layout_below="@id/tv_tel_patientinfo"
+            android:layout_below="@id/request_patient_adress"
             android:text="预约原因：" />
 
         <TextView
-            android:id="@+id/tv_urgencyname_topleft_patientinfo"
+            android:id="@+id/request_reason"
             style="@style/normaltext_topleft_patientinfo"
-            android:layout_alignLeft="@id/tv_disease_topleft_patientinfo"
-            android:layout_below="@id/tv_tel_patientinfo"
+            android:layout_alignLeft="@id/request_type"
+            android:layout_below="@id/request_patient_adress"
             android:text="xxxxxxxxxxxxxxxx " />
 
     </RelativeLayout>

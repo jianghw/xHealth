@@ -4,10 +4,8 @@ import android.support.annotation.NonNull;
 import android.support.v4.util.ArrayMap;
 
 import com.kaurihealth.datalib.repository.IDataSource;
-import com.kaurihealth.datalib.response_bean.ContactUserDisplayBean;
 import com.kaurihealth.datalib.response_bean.DoctorPatientRelationshipBean;
 import com.kaurihealth.utilslib.date.DateUtils;
-import com.kaurihealth.utilslib.log.LogUtils;
 
 import java.util.List;
 
@@ -33,7 +31,7 @@ public class ReferralPatientPresenter<V> implements IReferralPatientPresenter<V>
     private IReferralPatientView mActivity;
 
     @Inject
-    public ReferralPatientPresenter(IDataSource mRepository){
+    public ReferralPatientPresenter(IDataSource mRepository) {
         this.mRepository = mRepository;
         mSubscriptions = new CompositeSubscription();
     }
@@ -45,35 +43,15 @@ public class ReferralPatientPresenter<V> implements IReferralPatientPresenter<V>
 
     @Override
     public void onSubscribe() {
-        Subscription subscription = mRepository.loadContactListByDoctorId()
+        Subscription subscription = mRepository.loadDoctorPatientRelationshipForDoctor()
                 .subscribeOn(Schedulers.io())
                 .doOnSubscribe(new Action0() {
                     @Override
                     public void call() {
-                        mActivity.dataInteractionDialog();
+                        mActivity.loadingIndicator(true);
                     }
                 })
                 .subscribeOn(AndroidSchedulers.mainThread())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                        new Action1<List<ContactUserDisplayBean>>() {
-                            @Override
-                            public void call(List<ContactUserDisplayBean> beanList) {
-                                updateDataByDirty();
-                            }
-                        },
-                        new Action1<Throwable>() {
-                            @Override
-                            public void call(Throwable throwable) {
-                                mActivity.dismissInteractionDialog();
-                            }
-                        });
-        mSubscriptions.add(subscription);
-    }
-
-    private void updateDataByDirty() {
-        Subscription subscription = mRepository.loadDoctorPatientRelationshipForDoctor()
-                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Subscriber<List<DoctorPatientRelationshipBean>>() {
                     @Override
@@ -83,8 +61,8 @@ public class ReferralPatientPresenter<V> implements IReferralPatientPresenter<V>
 
                     @Override
                     public void onError(Throwable e) {
+                        mActivity.loadingIndicator(false);
                         mActivity.showToast(e.getMessage());
-                        mActivity.dismissInteractionDialog();
                     }
 
                     @Override
@@ -130,13 +108,12 @@ public class ReferralPatientPresenter<V> implements IReferralPatientPresenter<V>
                     @Override
                     public void onCompleted() {
                         if (!arrayMap.isEmpty()) arrayMap.clear();
-
                     }
 
                     @Override
-                    public void onError(Throwable e) {
-                        LogUtils.e(e.getMessage());
-                        mActivity.dismissInteractionDialog();
+                    public void onError(Throwable throwable) {
+                        mActivity.showToast(throwable.getMessage());
+                        mActivity.loadingIndicator(false);
                     }
 
                     @Override
@@ -169,14 +146,14 @@ public class ReferralPatientPresenter<V> implements IReferralPatientPresenter<V>
                             @Override
                             public void call(List<DoctorPatientRelationshipBean> doctorPatientRelationshipBeen) {
                                 mActivity.getResultBean(doctorPatientRelationshipBeen);
-                                mActivity.dismissInteractionDialog();
+                                mActivity.loadingIndicator(false);
                             }
                         },
                         new Action1<Throwable>() {
                             @Override
                             public void call(Throwable throwable) {
-                                LogUtils.e(throwable.getMessage());
-                                mActivity.dismissInteractionDialog();
+                                mActivity.showToast(throwable.getMessage());
+                                mActivity.loadingIndicator(false);
                             }
                         });
         mSubscriptions.add(subscription);
@@ -192,5 +169,7 @@ public class ReferralPatientPresenter<V> implements IReferralPatientPresenter<V>
     @Override
     public void unSubscribe() {
         mSubscriptions.clear();
+        if (mActivity != null) mActivity.loadingIndicator(false);
+        mActivity = null;
     }
 }

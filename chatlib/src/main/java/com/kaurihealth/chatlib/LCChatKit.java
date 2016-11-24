@@ -27,7 +27,7 @@ import com.kaurihealth.chatlib.handler.LCIMMessageHandler;
  */
 public final class LCChatKit {
     private LCChatProfileProvider profileProvider;
-    private String currentUserId;
+    private String currentUserId = "";
 
     public static LCChatKit getInstance() {
         return SingletonHolder.INSTANCE;
@@ -50,8 +50,8 @@ public final class LCChatKit {
          * 如果发现当前没有任何注册的普通的 messageHandler，
          * 才会去通知 defaultMessageHandler 在 AVIMMessageManager 中多次注册 defaultMessageHandler ，
          * 只有最后一次调用的才是有效的 通过 registerMessageHandler 注册的 AVIMMessageHandler，则是可以同存的 */
-        AVInstallation.getCurrentInstallation().saveInBackground();
         AVIMClient.setMessageQueryCacheEnable(true);
+        AVInstallation.getCurrentInstallation().saveInBackground();
         /*推送*/
         PushService.setDefaultPushCallback(context, cls);
         /*来从服务端取回未读消息*/
@@ -90,7 +90,7 @@ public final class LCChatKit {
     /**
      * 开启实时聊天
      *
-     * @param userId  #kauriHealthId
+     * @param userId   #kauriHealthId
      * @param callback
      */
     public void open(final String userId, final AVIMClientCallback callback) {

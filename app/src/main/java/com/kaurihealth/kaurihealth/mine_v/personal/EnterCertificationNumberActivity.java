@@ -63,7 +63,6 @@ public class EnterCertificationNumberActivity extends BaseActivity implements IE
         initNewBackBtn(getString(R.string.certification_title_tv_title));
         tvMore.setText(getString(R.string.title_save));
 
-
         String certificationNumber = LocalData.getLocalData().getMyself().getCertificationNumber();
         //获取证书编号
         setEdtCertificationNumber(certificationNumber);

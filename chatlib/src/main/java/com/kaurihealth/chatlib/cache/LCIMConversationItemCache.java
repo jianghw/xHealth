@@ -37,6 +37,7 @@ public class LCIMConversationItemCache {
     }
 
     private static class SingletonHolder {
+
         static final LCIMConversationItemCache INSTANCE = new LCIMConversationItemCache();
     }
 
@@ -72,14 +73,12 @@ public class LCIMConversationItemCache {
                     @Override
                     protected void internalDone0(final List<String> dataList, AVException e) {
                         if (null != dataList) {
-                            int count = 0;
                             for (int i = 0; i < dataList.size(); i++) {
                                 LCIMConversationItem conversationItem = LCIMConversationItem.fromJsonString(dataList.get(i));
                                 conversationItemMap.put(conversationItem.conversationId, conversationItem);
-                                count = count + conversationItem.unreadCount;
                             }
                             //TODO add+
-                            EventBus.getDefault().postSticky(new LCIMOfflineMessageCountChangeEvent(count, 0));
+                            EventBus.getDefault().postSticky(new LCIMOfflineMessageCountChangeEvent());
                         }
                         callback.internalDone(e);
                     }
@@ -110,10 +109,10 @@ public class LCIMConversationItemCache {
     public synchronized void increaseUnreadCount(String convId, int increment) {
         if (!TextUtils.isEmpty(convId) && increment > 0) {
             LCIMConversationItem conversationItem = getConversationItemFromMap(convId);
-            //TODO add+
-            EventBus.getDefault().postSticky(new LCIMOfflineMessageCountChangeEvent(increment, 0));
             conversationItem.unreadCount += increment;
             syncToCache(conversationItem);
+            //TODO add+
+            EventBus.getDefault().post(new LCIMOfflineMessageCountChangeEvent());
         }
     }
 
@@ -121,7 +120,7 @@ public class LCIMConversationItemCache {
      * 存储未读消息数量到内存及数据库
      */
     private void syncToCache(LCIMConversationItem item) {
-        if (null != item) {
+        if (null != item&&conversationItemDBHelper!=null) {
             item.updateTime = System.currentTimeMillis();
             conversationItemMap.put(item.conversationId, item);
             conversationItemDBHelper.insertData(item.conversationId, item.toJsonString());
@@ -140,6 +139,21 @@ public class LCIMConversationItemCache {
     }
 
     /**
+     * 清空未读的消息数量
+     *
+     * @param convid 不能为空
+     */
+    public synchronized void clearUnread(String convid) {
+        if (!TextUtils.isEmpty(convid)) {
+            LCIMConversationItem unreadCountItem = getConversationItemFromMap(convid);
+            unreadCountItem.unreadCount = 0;
+            syncToCache(unreadCountItem);
+            //TODO delete --
+            EventBus.getDefault().post(new LCIMOfflineMessageCountChangeEvent());
+        }
+    }
+
+    /**
      * 删除该 Conversation 未读数量的缓存
      *
      * @param convid 不能为空
@@ -148,22 +162,6 @@ public class LCIMConversationItemCache {
         if (!TextUtils.isEmpty(convid)) {
             conversationItemMap.remove(convid);
             conversationItemDBHelper.deleteData(Arrays.asList(convid));
-        }
-    }
-
-    /**
-     * 清空未读的消息数量
-     *
-     * @param convid 不能为空
-     */
-    public synchronized void clearUnread(String convid) {
-        if (!TextUtils.isEmpty(convid)) {
-            LCIMConversationItem unreadCountItem = getConversationItemFromMap(convid);
-            if (unreadCountItem.unreadCount == 0) return;
-            //TODO delete --
-            EventBus.getDefault().postSticky(new LCIMOfflineMessageCountChangeEvent(0, unreadCountItem.unreadCount));
-            unreadCountItem.unreadCount = 0;
-            syncToCache(unreadCountItem);
         }
     }
 

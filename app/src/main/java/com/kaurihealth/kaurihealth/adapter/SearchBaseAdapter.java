@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.kaurihealth.datalib.local.LocalData;
 import com.kaurihealth.datalib.request_bean.bean.SearchBooleanResultBean;
 import com.kaurihealth.datalib.response_bean.SearchResultBean;
 import com.kaurihealth.kaurihealth.R;
@@ -26,22 +27,24 @@ public class SearchBaseAdapter extends RecyclerView.Adapter<SearchBaseAdapter.Vi
 
     private final Application context;
     private final List<SearchBooleanResultBean> list;
-    private static ItemClickBack mItemClickBack;
+    private final ItemClickBack mItemClickBack;
 
-    public SearchBaseAdapter(FragmentActivity activity, List<SearchBooleanResultBean> dataContainer) {
+
+    public SearchBaseAdapter(FragmentActivity activity, List<SearchBooleanResultBean> dataContainer, ItemClickBack itemClickBack) {
         this.context = activity.getApplication();
         this.list = dataContainer;
+        this.mItemClickBack = itemClickBack;
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.searchcommon_iteam, null);
+        View view = LayoutInflater.from(context).inflate(R.layout.searchcommon_item, null);
         return new ViewHolder(view, context);
     }
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        holder.setIteam(list.get(position));
+        holder.setIteam(list.get(position), mItemClickBack);
     }
 
     @Override
@@ -65,6 +68,7 @@ public class SearchBaseAdapter extends RecyclerView.Adapter<SearchBaseAdapter.Vi
 
         private Context context;
         private String mDoctorID;
+        private ItemClickBack itemClickBack;
 
         public ViewHolder(View itemView, Context context) {
             super(itemView);
@@ -72,7 +76,8 @@ public class SearchBaseAdapter extends RecyclerView.Adapter<SearchBaseAdapter.Vi
             ButterKnife.bind(this, itemView);
         }
 
-        public void setIteam(SearchBooleanResultBean bean) {
+        public void setIteam(SearchBooleanResultBean bean, ItemClickBack itemClickBack) {
+            this.itemClickBack = itemClickBack;
             SearchResultBean.ResultBean.ItemsBean itemBean = bean.getItemsBean();
             mDoctorID = itemBean.getDoctorid();
             if (CheckUtils.checkUrlNotNull(itemBean.getAvatar())) {
@@ -91,6 +96,19 @@ public class SearchBaseAdapter extends RecyclerView.Adapter<SearchBaseAdapter.Vi
         private void setIsFriendState(boolean isFriendState) {
             tvAddFriend.setEnabled(!isFriendState);
             tvAddFriend.setText(isFriendState ? "已添加" : "添加");
+            markDoctor();
+        }
+
+        private void markDoctor() {
+            try {
+                boolean isMe = LocalData.getLocalData().getMyself().getDoctorId() == Integer.valueOf(mDoctorID);
+                if (isMe) {
+                    tvAddFriend.setEnabled(false);
+                    tvAddFriend.setText("本人");
+                }
+            } catch (NumberFormatException e) {
+                e.printStackTrace();
+            }
         }
 
         //添加“按钮”
@@ -98,16 +116,12 @@ public class SearchBaseAdapter extends RecyclerView.Adapter<SearchBaseAdapter.Vi
         public void onClick(View view) {
             switch (view.getId()) {
                 case R.id.tvAddFriend:
-                    mItemClickBack.onItemTextClick(mDoctorID);
+                    itemClickBack.onItemTextClick(mDoctorID);
                     break;
                 default:
                     break;
             }
         }
-    }
-
-    public void setItemClickBack(ItemClickBack itemClickBack) {
-        mItemClickBack = itemClickBack;
     }
 
     public interface ItemClickBack {

@@ -50,6 +50,7 @@ import com.kaurihealth.chatlib.utils.LCIMPathUtils;
 import com.kaurihealth.datalib.local.LocalData;
 import com.kaurihealth.datalib.response_bean.ContactUserDisplayBean;
 import com.kaurihealth.datalib.response_bean.UserBean;
+import com.kaurihealth.utilslib.ColorUtils;
 import com.kaurihealth.utilslib.constant.Global;
 import com.kaurihealth.utilslib.log.LogUtils;
 import com.kaurihealth.utilslib.widget.ScrollChildSwipeRefreshLayout;
@@ -60,6 +61,7 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -91,6 +93,7 @@ public class ConversationActivity extends AppCompatActivity {
 
     // 记录拍照等的文件路径
     protected String localCameraPath;
+    private int Conversation_Type = 0;//1--群聊
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,6 +111,9 @@ public class ConversationActivity extends AppCompatActivity {
         });
         nameTitle = (TextView) findViewById(R.id.tv_title);
         mSwipeRefresh = (ScrollChildSwipeRefreshLayout) findViewById(R.id.swipe_refresh);
+        mSwipeRefresh.setColorSchemeColors(
+                ColorUtils.setSwipeRefreshColors(this)
+        );
         mSwipeRefresh.setDistanceToTriggerSync(Global.Numerical.SWIPE_REFRESH);
 
         recyclerView = (RecyclerView) findViewById(R.id.rv_list);
@@ -163,9 +169,19 @@ public class ConversationActivity extends AppCompatActivity {
         if (null != extras) {
             if (extras.containsKey(LCIMConstants.PEER_ID)) {
                 getConversation(extras.getString(LCIMConstants.PEER_ID));
+            } else if (extras.containsKey(LCIMConstants.PEER_ID_GROUP)) {
+                Conversation_Type = 1;
+                ArrayList<String> kauriHealthId = extras.getStringArrayList(LCIMConstants.PEER_ID_GROUP);
+                getConversation(kauriHealthId);
             } else if (extras.containsKey(LCIMConstants.CONVERSATION_ID)) {
                 String conversationId = extras.getString(LCIMConstants.CONVERSATION_ID);
-                updateConversation(LCChatKit.getInstance().getClient().getConversation(conversationId));
+                AVIMClient client = LCChatKit.getInstance().getClient();
+                updateConversation(client != null ? client.getConversation(conversationId) : null);
+            } else if (extras.containsKey(LCIMConstants.CONVERSATION_ID_GROUP)) {
+                String conversationId = extras.getString(LCIMConstants.CONVERSATION_ID_GROUP);
+                Conversation_Type = 1;
+                AVIMClient client = LCChatKit.getInstance().getClient();
+                updateConversation(client != null ? client.getConversation(conversationId) : null);
             } else {
                 showToast("memberId or conversationId is needed");
                 finish();
@@ -242,35 +258,110 @@ public class ConversationActivity extends AppCompatActivity {
      * isTransient - 是否为 暂态对话
      * isUnique - 是否创建唯一对话，当 isUnique 为 true 时，如果当前已经有相同成员的对话存在则返回该对话，否则会创建新的对话。该值默认为 false。
      */
-    protected void getConversation(final String memberId) {
+    protected void getConversation(String memberId) {
         AVIMClient avimClient = LCChatKit.getInstance().getClient();
         if (avimClient != null) {
             getLCChatKitUser(memberId, avimClient);
         }
     }
 
-    private void getLCChatKitUser(final String memberId, final AVIMClient avimClient) {
+    /**
+     * 群聊
+     *
+     * @param kauriHealthId
+     */
+    protected void getConversation(List<String> kauriHealthId) {
+        AVIMClient avimClient = LCChatKit.getInstance().getClient();
+        if (avimClient != null) {
+            fetchProfiles(kauriHealthId, avimClient);
+        }
+    }
+
+    /**
+     * 对话
+     */
+    private void getLCChatKitUser(String memberId, AVIMClient avimClient) {
+        fetchProfiles(Arrays.asList(memberId), avimClient);
+    }
+
+    private void fetchProfiles(final List<String> memberIdList, final AVIMClient avimClient) {
         LCChatProfileProvider profileProvider = LCChatKit.getInstance().getProfileProvider();
         if (null != profileProvider) {
-            profileProvider.fetchProfiles(Arrays.asList(memberId), new LCChatProfilesCallBack() {
+            profileProvider.fetchProfiles(memberIdList, new LCChatProfilesCallBack() {
                 @Override
                 public void done(List<ContactUserDisplayBean> userList, Exception e) {
-                    LogUtils.jsonDate(userList);
                     if (null != userList && userList.size() > 0) {
-                        LCChatKitUser[] members = new LCChatKitUser[2];
-                        ContactUserDisplayBean contactUserDisplayBean = userList.get(0);
-                        members[0] = new LCChatKitUser(contactUserDisplayBean.getKauriHealthId(), contactUserDisplayBean.getFullName(), contactUserDisplayBean.getAvatar());
-                        LogUtils.jsonDate(userList.get(0));
-                        UserBean userBean = LocalData.getLocalData().getTokenBean().getUser();
-                        members[1] = new LCChatKitUser(userBean.getKauriHealthId(), userBean.getFullName(), userBean.getAvatar());
-                        Map<String, Object> attr = new HashMap<>();
-                        attr.put("members", members);
-                        createConversation(attr, avimClient, memberId);
+                        createMembers(userList, memberIdList, avimClient);
                     }
                 }
             });
         }
     }
+
+    private void createMembers(List<ContactUserDisplayBean> userList, List<String> memberIdList, AVIMClient avimClient) {
+        LCChatKitUser[] members = new LCChatKitUser[memberIdList.size()+1];
+        String[] names = new String[memberIdList.size()];
+        for (int i = 0; i < memberIdList.size(); i++) {
+            ContactUserDisplayBean contactUserDisplayBean = userList.get(i);
+            members[i] = new LCChatKitUser(contactUserDisplayBean.getKauriHealthId(), contactUserDisplayBean.getFullName(), contactUserDisplayBean.getAvatar());
+            names[i] = contactUserDisplayBean.getFullName();
+        }
+
+        UserBean userBean = LocalData.getLocalData().getTokenBean().getUser();
+        members[members.length - 1] = new LCChatKitUser(userBean.getKauriHealthId(), userBean.getFullName(), userBean.getAvatar());
+//        names[0] = userBean.getFullName();
+
+        Map<String, Object> attr = new HashMap<>();
+        attr.put(Global.LeanCloud.ATTR_MEMBERS, members);
+        attr.put(Global.LeanCloud.ATTR_TYPE, Conversation_Type);
+
+        createConversation(attr, avimClient, memberIdList, names);
+    }
+
+    /**
+     * 创建单聊对话
+     */
+    private void createConversation(Map<String, Object> attr, AVIMClient avimClient, List<String> memberId, String[] names) {
+        String name = "";
+        if (names.length > 1) {
+            name = names[0] + "、" + names[1] + "...";
+        } else if (names.length == 1) {
+            name = names[0];
+        }
+        avimClient.createConversation(memberId, name, attr, false, true, new AVIMConversationCreatedCallback() {
+            @Override
+            public void done(AVIMConversation avimConversation, AVIMException e) {
+                if (null != e) {
+                    showToast(e.getMessage());
+                } else {
+                    updateConversation(avimConversation);
+                }
+            }
+        });
+    }
+
+//    private void getLCChatKitUser(final String memberId, final AVIMClient avimClient) {
+//        LCChatProfileProvider profileProvider = LCChatKit.getInstance().getProfileProvider();
+//        if (null != profileProvider) {
+//            profileProvider.fetchProfiles(Arrays.asList(memberId), new LCChatProfilesCallBack() {
+//                @Override
+//                public void done(List<ContactUserDisplayBean> userList, Exception e) {
+//                    LogUtils.jsonDate(userList);
+//                    if (null != userList && userList.size() > 0) {
+//                        LCChatKitUser[] members = new LCChatKitUser[2];
+//                        ContactUserDisplayBean contactUserDisplayBean = userList.get(0);
+//                        members[0] = new LCChatKitUser(contactUserDisplayBean.getKauriHealthId(), contactUserDisplayBean.getFullName(), contactUserDisplayBean.getAvatar());
+//                        LogUtils.jsonDate(userList.get(0));
+//                        UserBean userBean = LocalData.getLocalData().getTokenBean().getUser();
+//                        members[1] = new LCChatKitUser(userBean.getKauriHealthId(), userBean.getFullName(), userBean.getAvatar());
+//                        Map<String, Object> attr = new HashMap<>();
+//                        attr.put("members", members);
+//                        createConversation(attr, avimClient, memberId);
+//                    }
+//                }
+//            });
+//        }
+//    }
 
     /**
      * 创建对话

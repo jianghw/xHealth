@@ -18,4 +18,10 @@ public interface ISearchActivityView extends IMvpView{
      String getEditTextSearch();
 
      InitialiseSearchRequestBean getCurrentSearchRequestBean();
+
+     void setEditTextHint();
+
+     String getEditTextHint();
+
+     void setEditDoctorHint();
 }

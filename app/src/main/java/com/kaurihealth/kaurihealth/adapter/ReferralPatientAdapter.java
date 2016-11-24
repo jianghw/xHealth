@@ -1,6 +1,7 @@
 package com.kaurihealth.kaurihealth.adapter;
 
 import android.content.Context;
+import android.support.v4.util.ArrayMap;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
@@ -15,6 +16,7 @@ import com.kaurihealth.utilslib.date.DateUtils;
 import com.kaurihealth.utilslib.image.ImageUrlUtils;
 import com.kaurihealth.utilslib.widget.CircleImageView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
@@ -26,6 +28,9 @@ import butterknife.ButterKnife;
 
 public class ReferralPatientAdapter extends CommonAdapter<DoctorPatientRelationshipBean> {
     private List<PatientRequestReferralPatientDisplayBean.PatientListReferralBean> referralBeen;
+    private List<Integer> integers = new ArrayList<>();
+    private ArrayMap<Integer, PatientRequestReferralPatientDisplayBean.PatientListReferralBean> map = new ArrayMap<>();
+//    PatientRequestReferralPatientDisplayBean.PatientListReferralBean listReferralBean = new PatientRequestReferralPatientDisplayBean.PatientListReferralBean();
 
     public ReferralPatientAdapter(Context context,
                                   List<DoctorPatientRelationshipBean> list,
@@ -48,6 +53,20 @@ public class ReferralPatientAdapter extends CommonAdapter<DoctorPatientRelations
         return convertView;
     }
 
+    @Override
+    public boolean isItemViewTypePinned(int viewType) {
+        return false;
+    }
+
+    public void myNotifyDataSetChanged() {
+        if (!map.isEmpty()) map.clear();
+        notifyDataSetChanged();
+    }
+
+    public void notifyNoDataChanged() {
+        if (!map.isEmpty()) map.clear();
+    }
+
     class ViewHolder {
 
         @Bind(R.id.civPhoto)
@@ -67,10 +86,9 @@ public class ReferralPatientAdapter extends CommonAdapter<DoctorPatientRelations
             ButterKnife.bind(this, view);
         }
 
-        public void setInfo(DoctorPatientRelationshipBean bean, int position) {
-
-            if (bean.getPatient() != null) {
-                PatientDisplayBean patient = bean.getPatient();
+        public void setInfo(DoctorPatientRelationshipBean relationshipBean, int position) {
+            PatientDisplayBean patient = relationshipBean.getPatient();
+            if (patient != null) {
                 if (CheckUtils.checkUrlNotNull(patient.getAvatar())) {
                     ImageUrlUtils.picassoBySmallUrlCircle(context, patient.getAvatar(), civPhoto);
                 } else {
@@ -78,35 +96,37 @@ public class ReferralPatientAdapter extends CommonAdapter<DoctorPatientRelations
                 }
                 tv_referral_patient_gender.setText(patient.getGender());
                 tv_referral_patient_age.setText(DateUtils.calculateAge(patient.getDateOfBirth()) + "");
-                tv_referral_patient_type.setText(bean.getModifyRelationshipReason());
+                tv_referral_patient_type.setText(relationshipBean.getModifyRelationshipReason());
                 tv_referral_request_name.setText(patient.getFullName());
-                tv_referral_checkbox.setOnCheckedChangeListener((compoundButton, isChecked) -> {
-                    PatientRequestReferralPatientDisplayBean.PatientListReferralBean listReferralBean = null;
-                    if (!isChecked) {
-                        bean.type = 0;
-                    }
-                    if (isChecked) {
-                        bean.type = 1;//表示被点击
-                        listReferralBean =
-                                new PatientRequestReferralPatientDisplayBean.PatientListReferralBean();
-                        listReferralBean.setPatientId(bean.getPatientId());
-                        listReferralBean.setDoctorPatientShipId(bean.getDoctorPatientId());
-
-                        if (!(referralBeen.contains(listReferralBean))) {
-                            referralBeen.add(listReferralBean);
-                        }
-                    } else if (referralBeen.contains(listReferralBean)) {
-                        referralBeen.remove(referralBeen.indexOf(listReferralBean));
-                    }
-                });
                 //防止checkBox混乱的问题
-                if (bean.type == 1) {
+                if (relationshipBean.type == 1) {
                     tv_referral_checkbox.setChecked(true);
                 } else {
                     tv_referral_checkbox.setChecked(false);
                 }
-            }
 
+                tv_referral_checkbox.setOnCheckedChangeListener((compoundButton, isChecked) -> {
+                    if (!isChecked) {
+                        relationshipBean.type = 0;
+                        if (map.containsKey(relationshipBean.getPatientId())) {
+                            referralBeen.remove(map.get(relationshipBean.getPatientId()));
+                            map.remove(relationshipBean.getPatientId());
+                        }
+                    } else {
+                        relationshipBean.type = 1;//表示被点击
+                        PatientRequestReferralPatientDisplayBean.PatientListReferralBean listReferralBean =
+                                new PatientRequestReferralPatientDisplayBean.PatientListReferralBean();
+                        listReferralBean.setPatientId(relationshipBean.getPatientId());
+                        listReferralBean.setDoctorPatientShipId(relationshipBean.getDoctorPatientId());
+                        if (!map.containsKey(relationshipBean.getPatientId())) {
+                            map.put(listReferralBean.getPatientId(), listReferralBean);
+                            referralBeen.add(listReferralBean);
+                        }
+                    }
+                });
+            }
         }
     }
+
+
 }

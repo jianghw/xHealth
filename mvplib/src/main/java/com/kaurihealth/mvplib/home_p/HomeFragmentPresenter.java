@@ -22,7 +22,7 @@ import rx.subscriptions.CompositeSubscription;
 public class HomeFragmentPresenter<V> implements IHomeFragmentPresenter<V> {
     private final IDataSource mRepository;
     private CompositeSubscription mSubscriptions;
-    private IHomeFragmentView mFragment;
+    private IHomeFragment mFragment;
 
     private boolean mFirstLoad_Ships = true;
     private boolean mFirstLoad_Number = true;
@@ -35,7 +35,7 @@ public class HomeFragmentPresenter<V> implements IHomeFragmentPresenter<V> {
 
     @Override
     public void setPresenter(V view) {
-        mFragment = (IHomeFragmentView) view;
+        mFragment = (IHomeFragment) view;
     }
 
     @Override

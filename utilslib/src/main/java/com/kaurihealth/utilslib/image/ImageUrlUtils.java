@@ -100,6 +100,15 @@ public class ImageUrlUtils {
         }
     }
 
+    public static void picassoBySmallUrlCircle(Context context, ImageView target) {
+        Picasso.with(context)
+                .load(R.mipmap.ic_circle_head_green)
+                .resizeDimen(R.dimen.margin_48, R.dimen.margin_48)
+                .centerCrop()
+                .into(target);
+
+    }
+
     /**
      * 60dp
      */

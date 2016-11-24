@@ -13,7 +13,7 @@
 
         <com.kaurihealth.utilslib.widget.CircleImageView
             android:id="@+id/civPhoto"
-            style="@style/common_photo"
+            style="@style/Photo.Nomal.Vertical"
             android:src="@mipmap/ic_circle_head_green" />
 
         <TextView
@@ -27,7 +27,7 @@
 
 
         <LinearLayout
-            android:id="@+id/LY_referral_layout"
+            android:id="@+id/ly_referral_layout"
             style="@style/searchiteam_tv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -59,7 +59,7 @@
         <TextView
             android:id="@+id/tv_referral_patient_type"
             style="@style/searchiteam_tv"
-            android:layout_below="@id/LY_referral_layout"
+            android:layout_below="@id/ly_referral_layout"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="50dp"
             android:layout_marginTop="10dp"
@@ -70,11 +70,10 @@
 
         <CheckBox
             android:id="@+id/tv_referral_checkbox"
+            android:checked="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true" />
-
-
     </RelativeLayout>
 </LinearLayout>

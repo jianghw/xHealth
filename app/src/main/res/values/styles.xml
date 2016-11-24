@@ -26,13 +26,14 @@
         <item name="android:gravity">center</item>
         <item name="android:textSize">@dimen/textSize_16</item>
         <item name="android:textColor">@color/color_title_back</item>
-        <item name="android:layout_marginLeft">10dp</item>
+        <item name="android:layout_marginLeft">5dp</item>
     </style>
     <!--正文字体,内容-->
     <style name="BodyText_Body">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:gravity">center</item>
+        <item name="android:gravity">center|left</item>
+        <item name="android:layout_marginLeft">5dp</item>
         <item name="android:textSize">@dimen/textSize_16</item>
         <item name="android:textColor">@color/color_body_back</item>
     </style>
@@ -68,9 +69,10 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginTop">@dimen/padding_6</item>
         <item name="android:layout_marginBottom">@dimen/padding_6</item>
-        <item name="android:layout_marginLeft">@dimen/padding_6</item>
+        <item name="android:layout_marginLeft">@dimen/margin_10</item>
         <item name="android:paddingBottom">@dimen/padding_8</item>
         <item name="android:paddingTop">@dimen/padding_8</item>
+        <item name="android:paddingLeft">@dimen/padding_4</item>
         <item name="android:textColor">@color/color_body_back</item>
         <item name="android:background">@drawable/bg_edt_login</item>
         <item name="android:textColorHint">@color/color_label_gray</item>
@@ -81,11 +83,12 @@
     <style name="EditText_Frame_extra">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginTop">@dimen/padding_6</item>
+        <item name="android:layout_marginTop">@dimen/padding_4</item>
         <item name="android:layout_marginBottom">@dimen/padding_6</item>
         <item name="android:layout_marginLeft">@dimen/padding_6</item>
         <item name="android:paddingBottom">@dimen/padding_4</item>
-        <item name="android:paddingTop">@dimen/padding_6</item>
+        <!--<item name="android:paddingTop">@dimen/padding_6</item>-->
+        <item name="android:gravity">center_vertical</item>
         <item name="android:textColor">@color/color_body_back</item>
         <item name="android:background">@drawable/bg_edt_login</item>
         <item name="android:textColorHint">@color/color_label_gray</item>
@@ -165,8 +168,8 @@
     <!--添加图片-->
     <style name="Add_Image">
         <item name="android:src">@mipmap/ic_add_img</item>
-        <item name="android:layout_width">@dimen/margin_60</item>
-        <item name="android:layout_height">@dimen/margin_60</item>
+        <item name="android:layout_width">@dimen/margin_48</item>
+        <item name="android:layout_height">@dimen/margin_48</item>
     </style>
     <!--删除图标-->
     <style name="Img_Delete">
@@ -430,7 +433,7 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:background">@null</item>
         <item name="android:layout_alignParentLeft">true</item>
-        <item name="android:layout_marginLeft">75dp</item>
+        <item name="android:layout_marginLeft">79dp</item>
         <item name="android:gravity">bottom|left</item>
         <item name="android:textSize">16sp</item>
     </style>
@@ -486,7 +489,7 @@
         <item name="android:layout_gravity">right</item>
         <item name="android:gravity">bottom</item>
         <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">30dp</item>
+        <item name="android:layout_height">wrap_content</item>
         <item name="android:textColor">@color/app_tv_color</item>
         <item name="android:textSize">16sp</item>
     </style>
@@ -529,7 +532,7 @@
         <item name="android:layout_height">wrap_content</item>
 
         <item name="android:layout_marginBottom">15dp</item>
-        <item name="android:background">@drawable/healthyrecorditeam_bg</item>
+        <item name="android:background">@drawable/healthyrecorditem_bg</item>
         <item name="android:orientation">vertical</item>
     </style>
 
@@ -538,7 +541,7 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginBottom">5dp</item>
-        <item name="android:background">@drawable/healthyrecorditeam_bg</item>
+        <item name="android:background">@drawable/healthyrecorditem_bg</item>
         <item name="android:orientation">vertical</item>
     </style>
 
@@ -660,9 +663,9 @@
 
     <style name="lv_getmoney">
         <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginLeft">10dp</item>
-        <item name="android:layout_marginRight">10dp</item>
+        <item name="android:layout_height">match_parent</item>
+        <!--<item name="android:layout_marginLeft">10dp</item>-->
+        <!--<item name="android:layout_marginRight">10dp</item>-->
         <item name="android:layout_marginTop">10dp</item>
         <item name="android:paddingLeft">9dp</item>
         <item name="android:paddingRight">9dp</item>
@@ -682,10 +685,12 @@
     <style name="money_detail_out">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:paddingLeft">5dp</item>
-        <item name="android:paddingRight">5dp</item>
-        <item name="android:paddingTop">8dp</item>
-        <item name="android:paddingBottom">8dp</item>
+        <item name="android:paddingLeft">10dp</item>
+        <item name="android:paddingRight">10dp</item>
+        <!--<item name="android:paddingTop">8dp</item>-->
+        <!--<item name="android:paddingBottom">8dp</item>-->
+        <item name="android:layout_marginLeft">20dp</item>
+        <item name="android:layout_marginRight">20dp</item>
     </style>
 
     <style name="come_money_tv">
@@ -710,13 +715,20 @@
         <item name="android:textColor">#FFB0B0B0</item>
         <item name="android:textSize">13sp</item>
     </style>
-
-    <style name="common_photo">
-        <item name="civ_border_color">@color/green</item>
+    <!--头像样式-->
+    <style name="Photo">
+        <item name="civ_border_color">@color/color_green</item>
         <item name="civ_border_overlay">true</item>
-        <item name="civ_border_width">1dp</item>
+        <item name="civ_border_width">1px</item>
+        <item name="android:src">@mipmap/ic_circle_head_green</item>
+    </style>
+
+    <style name="Photo.Nomal" parent="Photo">
         <item name="android:layout_width">60dp</item>
         <item name="android:layout_height">60dp</item>
+    </style>
+
+    <style name="Photo.Nomal.Vertical" parent="Photo.Nomal">
         <item name="android:layout_centerVertical">true</item>
     </style>
 
@@ -799,6 +811,51 @@
         <item name="android:footerDividersEnabled">false</item>
         <item name="android:headerDividersEnabled">false</item>
         <item name="android:smoothScrollbar">true</item>
+    </style>
+
+    <!--正文字体 -->
+    <style name="TextContent">
+        <item name="android:textColor">@color/color_body_back</item>
+        <item name="android:textSize">@dimen/textSize_16</item>
+    </style>
+
+    <style name="TextContent.Wrap" parent="TextContent">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="TextContent.Match" parent="TextContent">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <!--添加家庭成员relativeLayout-->
+    <style name="rlay_add_family_member">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/input_height_48</item>
+        <item name="android:paddingBottom">5dp</item>
+        <item name="android:paddingLeft">10dp</item>
+        <item name="android:paddingRight">10dp</item>
+        <item name="android:paddingTop">5dp</item>
+    </style>
+
+    <!--添加家庭成员:姓-->
+    <style name="tv1_add_family_member">
+        <item name="android:layout_width">75dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_centerVertical">true</item>
+        <item name="android:layout_marginLeft">10dp</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/app_tv_color</item>
+    </style>
+
+    <style name="edt1_add_family_member">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_centerVertical">true</item>
+        <item name="android:layout_marginLeft">5dp</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:singleLine">true</item>
     </style>
 
 </resources>

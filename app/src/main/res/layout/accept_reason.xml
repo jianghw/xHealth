@@ -8,15 +8,30 @@
 
     <include layout="@layout/include_action_bar"/>
 
-    <RelativeLayout style="@style/rlay_major_strength">
+    <RelativeLayout style="@style/rlay_major_strength"
+        android:background="@drawable/bg_white"
+        android:layout_margin="@dimen/margin_10"
+        android:layout_height="290dp"
+        >
 
         <EditText
             android:id="@+id/edt_name"
-            style="@style/EditText_Content"
-            android:hint="对患者说些什么..."/>
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:hint="对患者说些什么..."
+            android:maxLength="200"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="20dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:text=""/>
 
         <TextView
             android:text="限200字以内"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginBottom="0dp"
             style="@style/tv_major_strength" />
     </RelativeLayout>
 </LinearLayout>

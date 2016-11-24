@@ -9,6 +9,4 @@ import com.kaurihealth.mvplib.base_p.IMvpPresenter;
  */
 public interface IMessagePresenter<V> extends IMvpPresenter<V> {
 
-    void loadingRemoteData(boolean isDirty);
-
 }

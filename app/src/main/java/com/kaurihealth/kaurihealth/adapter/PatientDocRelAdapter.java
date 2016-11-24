@@ -53,6 +53,11 @@ public class PatientDocRelAdapter extends CommonAdapter<DoctorPatientRelationshi
         return convertView;
     }
 
+    @Override
+    public boolean isItemViewTypePinned(int viewType) {
+        return false;
+    }
+
     class ViewHolder {
         @Bind(R.id.civ_photo)
         CircleImageView civPhoto;
@@ -103,7 +108,6 @@ public class PatientDocRelAdapter extends CommonAdapter<DoctorPatientRelationshi
                 btnConversation.setEnabled(isNotActive);
 
                 ImageUrlUtils.picassoByUrlCircle(context, patientDisplayBean.getAvatar(), civPhoto);
-
             }
 
             //条目内的消息按钮的点击监听
@@ -119,7 +123,7 @@ public class PatientDocRelAdapter extends CommonAdapter<DoctorPatientRelationshi
                 @Override
                 public void onClick(View v) {
                     EventBus.getDefault().post(new PatientJumpEvent(Global.Jump.PatientInfoActivity, "0"));
-                    EventBus.getDefault().postSticky(new PatientInfoShipBeanEvent(doctorPatientRelationshipBean));
+                    EventBus.getDefault().postSticky(new PatientInfoShipBeanEvent(doctorPatientRelationshipBean, 0));
                 }
             });
         }
@@ -129,4 +133,12 @@ public class PatientDocRelAdapter extends CommonAdapter<DoctorPatientRelationshi
         }
 
     }
+
+    //像素过滤矩阵
+    public final static float[] BT_SELECTED = new float[]{
+            0.308f, 0.609f, 0.082f, 0, 0,
+            0.308f, 0.609f, 0.082f, 0, 0,
+            0.308f, 0.609f, 0.082f, 0, 0,
+            0, 0, 0, 1, 0
+    };
 }

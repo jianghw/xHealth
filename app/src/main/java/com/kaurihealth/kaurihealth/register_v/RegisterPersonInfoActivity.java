@@ -17,7 +17,6 @@ import com.kaurihealth.datalib.response_bean.TokenBean;
 import com.kaurihealth.kaurihealth.MyApplication;
 import com.kaurihealth.kaurihealth.R;
 import com.kaurihealth.kaurihealth.base_v.BaseActivity;
-import com.kaurihealth.kaurihealth.login_v.LoginActivity;
 import com.kaurihealth.kaurihealth.main_v.MainActivity;
 import com.kaurihealth.mvplib.register_p.IRegisterPersonInfoView;
 import com.kaurihealth.mvplib.register_p.RegisterPersonInfoPresenter;
@@ -106,7 +105,6 @@ public class RegisterPersonInfoActivity extends BaseActivity
     protected void onDestroy() {
         super.onDestroy();
         mPresenter.unSubscribe();
-        skipTo(LoginActivity.class);
     }
 
     /**

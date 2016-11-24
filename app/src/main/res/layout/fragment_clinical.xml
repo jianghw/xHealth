@@ -75,6 +75,9 @@
         android:id="@+id/vp_content_main"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:scrollbars="none"
+        android:scrollbarThumbVertical="@null"
+
         android:layout_below="@id/bgroup_top_medicalhistory"/>
 
 </RelativeLayout>

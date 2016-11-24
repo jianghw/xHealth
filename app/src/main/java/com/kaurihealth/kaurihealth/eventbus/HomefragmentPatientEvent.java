@@ -6,13 +6,13 @@ package com.kaurihealth.kaurihealth.eventbus;
  */
 public class HomefragmentPatientEvent {
 
-    final String tips;
+    private final int tips;
 
-    public HomefragmentPatientEvent(String tips){
+    public HomefragmentPatientEvent(int tips){
         this.tips = tips;
     }
 
-    public String getTips(){
+    public int getTips(){
         return tips;
     }
 }

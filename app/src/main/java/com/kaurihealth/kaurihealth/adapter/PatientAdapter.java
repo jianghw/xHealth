@@ -40,6 +40,11 @@ public class PatientAdapter extends CommonAdapter<PatientRequestDisplayBean> {
         return convertView;
     }
 
+    @Override
+    public boolean isItemViewTypePinned(int viewType) {
+        return false;
+    }
+
     class ViewHolder {
         @Bind(R.id.iv_photo_homeiteam)
         CircleImageView ivPhotoHomeiteam;

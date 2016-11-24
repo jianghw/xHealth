@@ -128,7 +128,13 @@ public class WithdrawActivity extends BaseActivity implements IWithdrawalView, V
         DoctorDisplayBean myself = LocalData.getLocalData().getMyself();
         double availableCredit = myself.getAvailableCredit();
         setTvCash(String.format("%.2f", availableCredit));
-        setEdtIdentityCard(myself.getNationalIdentity());//身份证
+
+        if (myself.getNationalIdentity() != null){
+            edtIdentityCard.setEnabled(false);//当有身份证号的时候 不可编辑
+            edtMoney.requestFocus();//请求焦点
+            setEdtIdentityCard(myself.getNationalIdentity());//身份证
+        }
+//        setEdtIdentityCard(myself.getNationalIdentity());//身份证
         setSelection(edtIdentityCard);
     }
 

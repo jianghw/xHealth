@@ -32,6 +32,7 @@ import rx.Observable;
 
 /**
  * Created by jianghw on 2016/8/31.
+ * 描述: 患者信息--> 长期监测指标 --> 图/表列
  * <p>
  * 描述：
  */

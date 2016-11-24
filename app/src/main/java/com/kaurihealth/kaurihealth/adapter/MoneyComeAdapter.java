@@ -4,12 +4,12 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bugtags.library.Bugtags;
 import com.kaurihealth.datalib.request_bean.bean.CreditTransactionDisplayBean;
 import com.kaurihealth.kaurihealth.R;
-import com.kaurihealth.kaurihealth.adapter.CommonAdapter;
 import com.kaurihealth.utilslib.date.DateUtils;
 
 import java.util.List;
@@ -24,7 +24,8 @@ import butterknife.ButterKnife;
 public class MoneyComeAdapter extends CommonAdapter<CreditTransactionDisplayBean> {
 
     private ViewHolder viewHolder;
-
+    LinearLayout lay_out;
+    TextView tv_text;
     public MoneyComeAdapter(Context context, List<CreditTransactionDisplayBean> list) {
         super(context, list);
     }
@@ -42,6 +43,11 @@ public class MoneyComeAdapter extends CommonAdapter<CreditTransactionDisplayBean
         return convertView;
     }
 
+    @Override
+    public boolean isItemViewTypePinned(int viewType) {
+        return false;
+    }
+
     static class ViewHolder {
         @Bind(R.id.tvAge)
         TextView tvTitle;
@@ -49,7 +55,6 @@ public class MoneyComeAdapter extends CommonAdapter<CreditTransactionDisplayBean
         TextView tvDate;
         @Bind(R.id.tvMoney)
         TextView tvMoney;
-
         ViewHolder(View view) {
             ButterKnife.bind(this, view);
         }

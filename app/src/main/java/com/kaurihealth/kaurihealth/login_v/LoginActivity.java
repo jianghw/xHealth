@@ -44,9 +44,6 @@ import butterknife.Bind;
 import butterknife.OnClick;
 
 public class LoginActivity extends BaseActivity implements ILoginView, Validator.ValidationListener {
-    /**
-     * 标注，提示这是需要依赖导入的对象
-     */
     @Inject
     LoginPresenter<ILoginView> mLoginPresenter;
 
@@ -157,17 +154,6 @@ public class LoginActivity extends BaseActivity implements ILoginView, Validator
         return mEdtPassword.getText().toString().trim();
     }
 
-    @Override
-    public void setUserName(String name) {
-        mEdtName.setText(name);
-    }
-
-    @Override
-    public void setPassword(String password) {
-        mEdtPassword.setText(password);
-    }
-
-
     public void setImageHead(String url) {
         Picasso.with(this).load(url).fit().into(mPortraitLogin);
     }
@@ -186,8 +172,9 @@ public class LoginActivity extends BaseActivity implements ILoginView, Validator
     //保存用户名到SP中
     @Override
     public void saveUsername() {
-        if (mEdtName != null)
+        if (mEdtName != null) {
             SharedUtils.setString(this, "username", mEdtName.getText().toString().trim());
+        }
     }
 
 

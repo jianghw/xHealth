@@ -1,6 +1,7 @@
 package com.kaurihealth.mvplib.home_p;
 
 import com.kaurihealth.datalib.request_bean.bean.SearchBooleanPatientBean;
+import com.kaurihealth.datalib.response_bean.DoctorPatientRelationshipBean;
 import com.kaurihealth.mvplib.base_p.IMvpView;
 
 import java.util.List;
@@ -15,4 +16,9 @@ public interface ISearchpatientFragmentView extends IMvpView {
 
     //处理数据
     void processingData(List<SearchBooleanPatientBean> list);
+
+    void insertPatientSucceed(DoctorPatientRelationshipBean bean);
+
+    //设置当前Edit的提示内容
+    void setEditTextHintContent();
 }

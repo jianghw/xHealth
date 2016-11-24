@@ -11,9 +11,6 @@ import android.widget.TextView;
 
 import com.kaurihealth.datalib.request_bean.bean.HealthConditionDisplayBean;
 import com.kaurihealth.kaurihealth.R;
-import com.kaurihealth.kaurihealth.patientwithdoctor.util.HealthyRecordInterface;
-import com.kaurihealth.kaurihealth.patientwithdoctor.util.Interface.IHealthyRecordNewActivity;
-import com.kaurihealth.kaurihealth.patientwithdoctor.util.Mode;
 
 import java.util.Iterator;
 import java.util.LinkedList;

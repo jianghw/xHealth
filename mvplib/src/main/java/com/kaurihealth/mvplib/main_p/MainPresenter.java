@@ -1,11 +1,11 @@
 package com.kaurihealth.mvplib.main_p;
 
 import com.kaurihealth.datalib.repository.IDataSource;
-import com.kaurihealth.datalib.response_bean.ContactUserDisplayBean;
+import com.kaurihealth.datalib.response_bean.ResponseDisplayBean;
 import com.kaurihealth.datalib.response_bean.SoftwareInfo;
 import com.kaurihealth.mvplib.base_p.Listener;
+import com.kaurihealth.utilslib.log.LogUtils;
 
-import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
@@ -17,7 +17,9 @@ import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
 /**
- * Created by Nick on 23/08/2016.
+ * Created by jianghw on 23/08/2016.
+ * <p/>
+ * Describe:
  */
 public class MainPresenter<V> implements IMainPresenter<V> {
 
@@ -38,25 +40,26 @@ public class MainPresenter<V> implements IMainPresenter<V> {
 
     @Override
     public void onSubscribe() {
-        Subscription subscription = mRepository.loadContactListByDoctorId()
+        String identityToken = mFragment.getPushNotificationDeviceIdentityToken();
+        Subscription subscription = mRepository.insertNewPushNotificationDevice(identityToken)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Subscriber<List<ContactUserDisplayBean>>() {
+                .subscribe(new Subscriber<ResponseDisplayBean>() {
                     @Override
                     public void onCompleted() {
                     }
 
                     @Override
                     public void onError(Throwable e) {
-                        mFragment.showToast(e.getMessage());
+                        LogUtils.e(e.getMessage());
                     }
 
                     @Override
-                    public void onNext(List<ContactUserDisplayBean> beanList) {
+                    public void onNext(ResponseDisplayBean bean) {
+                        if (!bean.isIsSucess()) mFragment.showToast(bean.getMessage());
                     }
                 });
         mSubscriptions.add(subscription);
-
     }
 
     public void checkVersion(Map<String, String> map, Listener<SoftwareInfo> listener) {
@@ -66,7 +69,6 @@ public class MainPresenter<V> implements IMainPresenter<V> {
                 .subscribe(new Subscriber<SoftwareInfo>() {
                     @Override
                     public void onCompleted() {
-//                            mFragment.showToast("检查成功");
                     }
 
                     @Override

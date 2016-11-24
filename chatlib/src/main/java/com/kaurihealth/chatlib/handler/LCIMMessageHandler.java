@@ -19,6 +19,7 @@ import com.kaurihealth.chatlib.utils.LCIMConstants;
 import com.kaurihealth.chatlib.utils.LCIMLogUtils;
 import com.kaurihealth.chatlib.utils.LCIMNotificationUtils;
 import com.kaurihealth.datalib.response_bean.ContactUserDisplayBean;
+import com.kaurihealth.utilslib.log.LogUtils;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -60,9 +61,8 @@ public class LCIMMessageHandler extends AVIMTypedMessageHandler<AVIMTypedMessage
                     LCIMConversationItemCache.getInstance().increaseUnreadCount(message.getConversationId());
                     if (LCIMNotificationUtils.isShowNotification(conversation.getConversationId())) {
                         sendNotification(message, conversation);
-                    } else {
-                        sendEvent(message, conversation);
                     }
+                    sendEvent(message, conversation);
                 } else {
                     LCIMConversationItemCache.getInstance().insertConversation(message.getConversationId());
                 }
@@ -82,10 +82,7 @@ public class LCIMMessageHandler extends AVIMTypedMessageHandler<AVIMTypedMessage
      * @param conversation
      */
     private void sendEvent(AVIMTypedMessage message, AVIMConversation conversation) {
-        LCIMIMTypeMessageEvent event = new LCIMIMTypeMessageEvent();
-        event.message = message;
-        event.conversation = conversation;
-        EventBus.getDefault().post(event);
+        EventBus.getDefault().post(new LCIMIMTypeMessageEvent(message,conversation));
     }
 
     private void sendNotification(final AVIMTypedMessage message, final AVIMConversation conversation) {
@@ -100,12 +97,11 @@ public class LCIMMessageHandler extends AVIMTypedMessageHandler<AVIMTypedMessage
             @Override
             protected void internalDone0(ContactUserDisplayBean userProfile, AVException e) {
                 if (e != null) {
-                    LCIMLogUtils.logException(e);
+                    LogUtils.e(e.getMessage());
                 } else if (null != userProfile) {
                     String title = userProfile.getFullName();
                     Intent intent = getIMNotificationIntent(conversation.getConversationId(), message.getFrom());
                     LCIMNotificationUtils.showNotification(context, title, notificationContent, null, intent);
-                    sendEvent(message, conversation);
                 }
             }
         });

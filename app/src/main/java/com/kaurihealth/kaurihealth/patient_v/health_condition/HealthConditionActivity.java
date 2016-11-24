@@ -16,12 +16,6 @@ import com.kaurihealth.kaurihealth.MyApplication;
 import com.kaurihealth.kaurihealth.R;
 import com.kaurihealth.kaurihealth.base_v.BaseActivity;
 import com.kaurihealth.kaurihealth.eventbus.HealthConditionBeanEvent;
-import com.kaurihealth.kaurihealth.patientwithdoctor.bean.HealthyRecordHabitNewBean;
-import com.kaurihealth.kaurihealth.patientwithdoctor.bean.HealthyRecordNewMenstrualReproductive;
-import com.kaurihealth.kaurihealth.patientwithdoctor.util.HealthyRecordInterface;
-import com.kaurihealth.kaurihealth.patientwithdoctor.util.Interface.IHealthyRecordHabit;
-import com.kaurihealth.kaurihealth.patientwithdoctor.util.Interface.IHealthyRecordNewActivity;
-import com.kaurihealth.kaurihealth.patientwithdoctor.util.Mode;
 import com.kaurihealth.mvplib.patient_p.HealthConditionPresenter;
 import com.kaurihealth.mvplib.patient_p.IHealthConditionView;
 
@@ -41,7 +35,6 @@ import butterknife.Bind;
 import butterknife.OnClick;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
-import static com.kaurihealth.kaurihealth.R.id.confirm_button;
 import static com.kaurihealth.kaurihealth.R.id.tv_operate;
 
 /**

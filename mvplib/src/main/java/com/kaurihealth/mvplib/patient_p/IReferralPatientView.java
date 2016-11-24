@@ -13,4 +13,5 @@ public interface IReferralPatientView extends IMvpView{
 
     void getResultBean(List<DoctorPatientRelationshipBean> bean);
 
+    void loadingIndicator(boolean flag);
 }

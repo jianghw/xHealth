@@ -23,8 +23,8 @@ android {
         applicationId "kaurihealth.mobile.andirod"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 54
-        versionName "2.02"
+        versionCode 56
+        versionName "2.04"
         multiDexEnabled true
     }
     buildTypes {
@@ -106,4 +106,5 @@ dependencies {
     provided 'org.glassfish:javax.annotation:10.0-b28'
     compile "com.google.dagger:dagger:$rootProject.daggerVersion"
     compile project(path: ':datalib')
+    compile "de.halfbit:pinned-section-listview:1.0.0"
 }

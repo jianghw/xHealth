@@ -30,7 +30,7 @@
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:layout_alignParentBottom="true"
-            android:layout_marginRight="10dp"
+            android:layout_marginRight="7dp"
             android:src="@mipmap/ic_circle_head_green"
             app:civ_border_color="#50d2c2"
             app:civ_border_overlay="true"

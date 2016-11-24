@@ -70,24 +70,56 @@ public class Global {
         public static final String DischargeRecordActivity = "DischargeRecordActivity"; //出院记录
         public static final String VerificationActivity = "VerificationActivity"; //验证信息
 
+        public static final String CommonMedicalRecordToReadActivity = "CommonMedicalRecordToReadActivity";//只读辅助检查、病理
+        public static final String LobTestOnlyReadAcivity = "LobTestOnlyReadAcivity";//只读实验室检查
+        public static final String OutpatientElectronicOnlyReadActivity = "OutpatientElectronicOnlyRead";//只读门诊记录电子病历
+        public static final String OutPatientPicturesOnlyReadActivity = "OutPatientPicturesOnlyReadActivity";//只读门诊记录图片存档
+        public static final String RemoteMedicalConsultationOnlyReadActivity = "RemoteMedicalConsultationOnlyReadActivity";//远程医疗只读
+        public static final String NetWorkMedicalConsultationOnlyReadActivity = "NetWorkMedicalConsultationOnlyReadActivity";//网络医疗只读
+        public static final String AdmissionRecordOnlyReadActivity = "AdmissionRecordOnlyReadActivity";//入院记录
+        public static final String TreatMentRelatedRecordsOnlyreadActivity = "TreatMentRelatedRecordsOnlyreadActivity";//院内治疗相关记录只读
+        public static final String DischargeRecordOnlyReadActivity = "DischargeRecordOnlyReadActivity";//出院记录  只读
+        public static final String FamilyMembersActivity = "FamilyMembersActivity"; //家庭成员界面
+
+        public static final String SystemMessageActivity = "SystemMessageActivity";//出院记录  只读
+        public static final String ConversationGroupItemActivity = "ConversationGroupItemActivity";//出院记录  只读
+
 
     }
 
-    public static final class ForResult {
-        public static final int ToOpenAccount = 9;
-        public static final int ToSearch = 8;
+    public static final class RequestCode {
+        public static final int REFERRAL = 100;
+        public static final int ACCEPT = 200;
+        public static final int REJECT = 400;
+
+        public static final int REQUEST_DOCTOR = 300;
+        public static final int REQUEST_PATIENT = 600;
+        public static final int SEARCH_PATIENT = 700;
+        public static final int ADD_VISIT = 800;
+
+        public static final int REFERRAL_DOCTOR = 900;
     }
 
     public static final class Bundle {
-        public static final String SEARCH_BUNDLE= "search_bundle";
+        public static final String SEARCH_BUNDLE = "search_bundle";
         public static final String SEARCH_DEFAULT = "default";
         public static final String SEARCH_HOSPITAL = "hospital";
         public static final String SEARCH_DEPARTMENT = "department";
         public static final String SEARCH_DOCTOR = "doctor";
         public static final String SEARCH_PATIENT = "patient";
-        public static final String CONVER_ITEM_BUNDLE= "conver_item_bundle";
-        public static final String CONVER_ITEM_DOCTOR= "conver_item_doctor";
-        public static final String CONVER_ITEM_PATIENT= "conver_item_patient";
+        public static final String CONVER_ITEM_BUNDLE = "conver_item_bundle";
+        public static final String CONVER_ITEM_DOCTOR = "conver_item_doctor";
+        public static final String CONVER_ITEM_PATIENT = "conver_item_patient";
+
+        public static final String REQUEST_DOCTOR = "request_doctor";
+        public static final String FRIEND_DOCTOR = "friend_doctor";
+        public static final String REQUEST_DOCTOR_WORK = "request_doctor_work";
+        public static final String REQUEST_DOCTOR_PRACTICE = "request_doctor_practice";
+
+        public static final String VISIT_PATIENT = "visit_patient";
+
+        public static final String DOCTOR_TEAM = "doctor_team";
+        public static final String LEANCLOUD_CON_ID = "leancloud_con_id";
     }
 
     public static final class Factory {
@@ -99,13 +131,19 @@ public class Global {
 
     public static final class Numerical {
         public static final int SWIPE_REFRESH = 400;
-
     }
 
     public static final class BugtagsConstants {
         public static final String BugTagUserKey = "UserName";
         public static final String BugTagUserPassKey = "Password";
         public static final String BugTagPlatform = "Platform";
+    }
 
+    public static final class LeanCloud {
+        public static final String USER_TYPE_DOCTOR = "医生";
+        public static final String USER_TYPE_PATIENT = "患者";
+        public static final String ATTR = "attr";
+        public static final String ATTR_TYPE = "type";
+        public static final String ATTR_MEMBERS = "members";
     }
 }

@@ -11,14 +11,15 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.kaurihealth.datalib.local.LocalData;
 import com.kaurihealth.datalib.request_bean.bean.LiteratureCommentDisplayBean;
 import com.kaurihealth.datalib.request_bean.bean.LiteratureReplyDisplayBean;
 import com.kaurihealth.kaurihealth.R;
 import com.kaurihealth.kaurihealth.adapter.CommonAdapter;
 import com.kaurihealth.kaurihealth.clinical_v.Interface.DeleteLiteratureCommentListener;
-import com.kaurihealth.kaurihealth.clinical_v.Utils.ClinicalUtil;
 import com.kaurihealth.kaurihealth.clinical_v.activity.DynamicActivity;
 import com.kaurihealth.kaurihealth.clinical_v.activity.LiteratureCommentActivity;
+import com.kaurihealth.kaurihealth.util.DateConvertUtils;
 import com.kaurihealth.utilslib.CheckUtils;
 import com.kaurihealth.utilslib.TranslationAnim;
 import com.kaurihealth.utilslib.image.ImageUrlUtils;
@@ -112,6 +113,11 @@ public class LiteratureCommentAdapter extends CommonAdapter implements PickImage
         setListViewHeight(pullLayout);
     }
 
+    @Override
+    public boolean isItemViewTypePinned(int viewType) {
+        return false;
+    }
+
 
     class ViewHolder {
         @Bind(R.id.iv_userAvartar)
@@ -155,6 +161,7 @@ public class LiteratureCommentAdapter extends CommonAdapter implements PickImage
                     TranslationAnim.zlStartActivityForResult(activity, LiteratureCommentActivity.class, bundle, 0);
                 }
             });
+
             tvDelete.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -190,18 +197,21 @@ public class LiteratureCommentAdapter extends CommonAdapter implements PickImage
                     ivUserAvartar.setImageResource(R.mipmap.ic_circle_head_green);
                 }
             }
-            tvUserFullName.setText(literatureCommentDisplayBean.userFullName);
-            tvLiteratureCommentContent.setText(literatureCommentDisplayBean.literatureCommentContent);
-            tvCreateTime.setText(new ClinicalUtil().getTimeByTimeFormat(literatureCommentDisplayBean.createTime, "MM-dd HH:mm"));
+            //不是自己评论的不可以删除
+            tvDelete.setVisibility(literatureCommentDisplayBean.userId != LocalData.getLocalData().getMyself().userId ? View.GONE : View.VISIBLE);
+            tvUserFullName.setText(literatureCommentDisplayBean.userFullName);//用户名
+            tvLiteratureCommentContent.setText(literatureCommentDisplayBean.literatureCommentContent);//评论内容
+            tvCreateTime.setText(DateConvertUtils.getWeekOfDate(null, literatureCommentDisplayBean.createTime));
 //            tvDelete.setVisibility(View.INVISIBLE);
 
             iteratureReplyDisplayBeanList = new ArrayList<>();
-            literatureReplyAdapter = new LiteratureReplyAdapter(context, literatureCommentDisplayBean.userId, literatureCommentDisplayBean.userFullName, iteratureReplyDisplayBeanList, lvLiteratureReply);
+            literatureReplyAdapter = new LiteratureReplyAdapter(context, literatureCommentDisplayBean.userId,
+                    literatureCommentDisplayBean.userFullName, iteratureReplyDisplayBeanList, lvLiteratureReply);
             lvLiteratureReply.setAdapter(literatureReplyAdapter);
 //            literatureReplyAdapter.notifyDataSetChanged();
 
-            //从v层那取数据
-            activityIntance.LoadLiteratureReplyByLiteratureCommentId(literatureCommentDisplayBean.literatureCommentId,iteratureReplyDisplayBeanList,literatureReplyAdapter);
+            //从v层拿取数据
+            activityIntance.LoadLiteratureReplyByLiteratureCommentId(literatureCommentDisplayBean.literatureCommentId, iteratureReplyDisplayBeanList, literatureReplyAdapter);
 
 //            List<LiteratureReplyDisplayBean> literatureReplyDisplayBeen = activityIntance.getCurrentLiteratureReplyDisplayBeen();
 //            iteratureReplyDisplayBeanList.clear();

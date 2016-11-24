@@ -4,8 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/color_bg_gray"
-    tools:context=".patient_v.PatientInfoActivity">
+    android:background="@color/color_bg_gray">
 
     <include
         android:id="@+id/in_title"
@@ -22,7 +21,7 @@
             android:orientation="vertical">
 
             <LinearLayout
-                android:id="@+id/LY_referral_layout"
+                android:id="@+id/ly_referral_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/margin_10"
@@ -47,8 +46,8 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="10dp"
                         android:layout_marginTop="15dp"
-                        android:text="丽江"
-                        android:textColor="#FFFF6600" />
+                        android:textColor="#FFFF6600"
+                        tools:text="丽江" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -69,8 +68,8 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="10dp"
                         android:layout_marginTop="10dp"
-                        android:text="2016.12.1"
-                        android:textColor="#FFFF6600" />
+                        android:textColor="#FFFF6600"
+                        tools:text="2016.12.1" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -89,31 +88,25 @@
                         android:id="@+id/tv_referral_reason"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginBottom="5dp"
                         android:layout_marginLeft="10dp"
                         android:layout_marginTop="10dp"
-                        android:layout_marginBottom="5dp"
-                        android:text="心肌梗塞,dfffffffffffffffdfijidf的季节都发生地方及地方的积分。" />
+                        tools:text="心肌梗塞,gggg节都发生ggg的积分。" />
                 </LinearLayout>
-
             </LinearLayout>
 
             <RelativeLayout
                 android:id="@+id/rl_info"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/info_height_240"
-                android:layout_margin="@dimen/margin_10"
+                android:layout_marginLeft="@dimen/margin_10"
+                android:layout_marginRight="@dimen/margin_10"
                 android:background="@drawable/bg_white">
 
                 <com.kaurihealth.utilslib.widget.CircleImageView
                     android:id="@+id/iv_photo"
-                    android:layout_width="@dimen/margin_60"
-                    android:layout_height="@dimen/margin_60"
-                    android:layout_margin="@dimen/margin_16"
-                    android:scaleType="centerCrop"
-                    android:src="@mipmap/ic_circle_head_green"
-                    app:civ_border_color="#4FD3C1"
-                    app:civ_border_overlay="true"
-                    app:civ_border_width="1px" />
+                    style="@style/Photo.Nomal"
+                    android:layout_margin="@dimen/margin_16" />
 
                 <TextView
                     android:id="@+id/tv_name"
@@ -174,14 +167,14 @@
                             android:id="@+id/tv_referral_type"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:textColor="#FFFF6600"
-                            android:text="专属医生服务" />
+                            android:text="专属医生服务"
+                            android:textColor="#FFFF6600" />
                     </LinearLayout>
 
                     <LinearLayout
-                        android:layout_marginTop="8dp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
                         android:orientation="horizontal">
 
                         <TextView
@@ -193,14 +186,14 @@
                             android:id="@+id/tv_referral_info_time"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:textColor="#FFFF6600"
-                            android:text="专属医生服务" />
+                            android:text="专属医生服务"
+                            android:textColor="#FFFF6600" />
                     </LinearLayout>
 
                     <LinearLayout
-                        android:layout_marginTop="8dp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
                         android:orientation="horizontal">
 
                         <TextView
@@ -212,15 +205,16 @@
                             android:id="@+id/tv_referral_info_state"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:textColor="#FFFF6600"
-                            android:text="专属医生服务" />
+                            android:text="专属医生服务"
+                            android:textColor="#FFFF6600" />
                     </LinearLayout>
 
                     <LinearLayout
-                        android:layout_marginTop="8dp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
                         android:orientation="horizontal">
+
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -254,8 +248,8 @@
 
                     <LinearLayout
                         android:id="@+id/layHealthyRecord"
-                        android:background="@drawable/btn_edge_radius"
-                        style="@style/Bg_Lay_Press">
+                        style="@style/Bg_Lay_Press"
+                        android:background="@drawable/btn_edge_radius">
 
                         <ImageView
                             android:layout_width="@dimen/margin_26"
@@ -335,8 +329,8 @@
 
                     <LinearLayout
                         android:id="@+id/lay_family"
-                        android:background="@drawable/btn_edge_radius_bottom"
-                        style="@style/Bg_Lay_Press">
+                        style="@style/Bg_Lay_Press"
+                        android:background="@drawable/btn_edge_radius_bottom">
 
                         <ImageView
                             android:layout_width="@dimen/margin_26"
@@ -350,8 +344,9 @@
 
                     <LinearLayout
                         android:id="@+id/lay_no"
-                        android:background="@color/color_bg_gray"
-                        style="@style/Bg_Lay_Press">
+                        style="@style/Bg_Lay_Press"
+                        android:layout_height="50dp"
+                        android:background="@color/color_bg_gray">
 
                     </LinearLayout>
 
@@ -370,7 +365,6 @@
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/floatbtn_refuse"
-        android:visibility="gone"
         android:layout_width="60dp"
         android:layout_height="56dp"
         android:layout_alignParentRight="true"
@@ -378,60 +372,59 @@
         android:layout_marginRight="@dimen/margin_16"
         android:layout_marginTop="150dp"
         android:src="@mipmap/refuse"
+        android:visibility="gone"
         app:backgroundTint="#f87151"
         app:borderWidth="1px" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/floatbtn_accept"
-        android:visibility="gone"
         android:layout_width="60dp"
         android:layout_height="56dp"
-        android:layout_marginTop="62dp"
-        app:backgroundTint="@color/color_enable_green"
-        app:borderWidth="1px"
-        android:src="@mipmap/accept"
-        android:layout_below="@+id/tips"
         android:layout_alignLeft="@+id/floatbtn_refuse"
-        android:layout_alignStart="@+id/floatbtn_refuse" />
+        android:layout_alignStart="@+id/floatbtn_refuse"
+        android:layout_below="@+id/tips"
+        android:layout_marginTop="62dp"
+        android:src="@mipmap/accept"
+        android:visibility="gone"
+        app:backgroundTint="@color/color_enable_green"
+        app:borderWidth="1px" />
 
     <LinearLayout
-        android:keepScreenOn="true"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-    <Button
-        android:id="@+id/floatbtn_accept_new"
-        android:layout_width="0dp"
-        android:layout_weight="1"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="5dp"
-        android:layout_height="40dp"
-        android:textColor="#ffffff"
-        android:text="接受转诊"
-        android:background="@drawable/btn_referral"
-        android:keepScreenOn="true"
-        android:layout_marginBottom="3dp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        />
-
-    <Button
-        android:id="@+id/floatbtn_refuse_new"
-        android:layout_width="0dp"
-        android:layout_weight="1"
-        android:layout_marginBottom="3dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginLeft="5dp"
-        android:layout_height="40dp"
-        android:textColor="#ffffff"
-        android:text="拒绝转诊"
-        android:background="@drawable/btn_referral_one"
-        android:keepScreenOn="true"
+        android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
-        />
+        android:keepScreenOn="true">
+
+        <Button
+            android:id="@+id/floatbtn_accept_new"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_marginBottom="3dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="5dp"
+            android:layout_weight="1"
+            android:background="@drawable/btn_referral"
+            android:keepScreenOn="true"
+            android:text="接受转诊"
+            android:textColor="#ffffff" />
+
+        <Button
+            android:id="@+id/floatbtn_refuse_new"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginBottom="3dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="10dp"
+            android:layout_weight="1"
+            android:background="@drawable/btn_referral_one"
+            android:keepScreenOn="true"
+            android:text="拒绝转诊"
+            android:textColor="#ffffff" />
     </LinearLayout>
 
 </RelativeLayout>

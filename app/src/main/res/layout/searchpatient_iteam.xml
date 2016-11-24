@@ -17,7 +17,7 @@
 
         <com.kaurihealth.utilslib.widget.CircleImageView
             android:id="@+id/civPhoto"
-            style="@style/common_photo"
+            style="@style/Photo.Nomal.Vertical"
             android:src="@mipmap/ic_circle_head_green"/>
 
         <TextView

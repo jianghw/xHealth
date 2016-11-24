@@ -7,12 +7,15 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.kaurihealth.datalib.request_bean.bean.SearchBooleanPatientBean;
+import com.kaurihealth.datalib.response_bean.DoctorPatientRelationshipBean;
 import com.kaurihealth.kaurihealth.MyApplication;
 import com.kaurihealth.kaurihealth.R;
 import com.kaurihealth.kaurihealth.adapter.SearchHistoryAdapter;
 import com.kaurihealth.kaurihealth.adapter.SearchPatientAdapter;
 import com.kaurihealth.kaurihealth.base_v.BaseFragment;
+import com.kaurihealth.kaurihealth.eventbus.PatientFragmentEvent;
 import com.kaurihealth.kaurihealth.eventbus.SearchAtyToFgtEvent;
+import com.kaurihealth.kaurihealth.util.VerticalSpaceItemDecoration;
 import com.kaurihealth.mvplib.home_p.ISearchpatientFragmentView;
 import com.kaurihealth.mvplib.home_p.SearchPatientFragmentPresenter;
 
@@ -32,7 +35,8 @@ import butterknife.Bind;
  * <p/>
  * Describe: 搜索页--所有
  */
-public class SearchPatientFragment extends BaseFragment implements SearchHistoryAdapter.ItemClickBack, ISearchpatientFragmentView {
+public class SearchPatientFragment extends BaseFragment implements
+        SearchHistoryAdapter.ItemClickBack, ISearchpatientFragmentView, SearchPatientAdapter.ItemClickBack {
     @Inject
     SearchPatientFragmentPresenter<ISearchpatientFragmentView> mPresenter;
 
@@ -62,9 +66,10 @@ public class SearchPatientFragment extends BaseFragment implements SearchHistory
         MyApplication.getApp().getComponent().inject(this);
         mPresenter.setPresenter(this);
 
-        mDataAdapter = new SearchPatientAdapter(getActivity(), dataContainer);
+        mDataAdapter = new SearchPatientAdapter(getActivity(), dataContainer,this);
         mRvData.setAdapter(mDataAdapter);
         mRvData.setLayoutManager(new LinearLayoutManager(getContext()));
+        mRvData.addItemDecoration(new VerticalSpaceItemDecoration(10));
     }
 
     @Override
@@ -77,8 +82,11 @@ public class SearchPatientFragment extends BaseFragment implements SearchHistory
 
     @Override
     protected void lazyLoadingData() {
-        if (getEditTextContent() != null && getEditTextContent().length() > 0 && isSearching)
+        if (getEditTextContent() != null && getEditTextContent().length() > 0 && isSearching) {
             mPresenter.onSubscribe();
+        }else {
+            setEditTextHintContent();
+        }
     }
 
     @Override
@@ -157,9 +165,36 @@ public class SearchPatientFragment extends BaseFragment implements SearchHistory
         return ((SearchActivity) getActivity()).getEditTextSearch();
     }
 
+    /**
+     * 设置当前edit的提示内容
+     */
+    @Override
+    public void setEditTextHintContent() {
+        ((SearchActivity) getActivity()).setEditTextHint();
+    }
+
     @Override
     public void switchPageUI(String className) {
-//TODO
+    }
+
+    /**
+     * 添加患者
+     */
+    @Override
+    public void onItemTextClick(int patientID) {
+        mPresenter.insertNewRelationshipByDoctor(patientID);
+    }
+
+    @Override
+    public void insertPatientSucceed(DoctorPatientRelationshipBean bean) {
+        if(bean!=null){
+            showToast("添加患者成功");
+            EventBus.getDefault().postSticky(new PatientFragmentEvent());//让其刷新
+            SearchActivity activity = (SearchActivity) getActivity();
+            activity.skipPatientFragment();
+        }else{
+            showToast("添加患者失败");
+        }
     }
 
 

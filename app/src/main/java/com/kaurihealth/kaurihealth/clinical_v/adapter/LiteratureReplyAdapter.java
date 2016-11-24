@@ -52,11 +52,16 @@ public class LiteratureReplyAdapter extends CommonAdapter implements PickImage.S
         setListViewHeight(listView);
     }
 
+    @Override
+    public boolean isItemViewTypePinned(int viewType) {
+        return false;
+    }
+
     class ViewHolder {
         @Bind(R.id.tv_userName)
-        TextView tvUserName;
+        TextView tvUserName;//用户name
         @Bind(R.id.tv_comment)
-        TextView tvComment;
+        TextView tvComment;//
         @Bind(R.id.tv_userFullName)
         TextView tvUserFullName;
         @Bind(R.id.tv_literatureReplyComment)

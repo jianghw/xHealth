@@ -14,6 +14,9 @@ import com.kaurihealth.kaurihealth.clinical_v.activity.CommentActivity;
 import com.kaurihealth.kaurihealth.clinical_v.activity.DynamicActivity;
 import com.kaurihealth.kaurihealth.clinical_v.activity.LiteratureCommentActivity;
 import com.kaurihealth.kaurihealth.clinical_v.activity.MyClinicalListActivity;
+import com.kaurihealth.kaurihealth.conversation_v.AddGroupChatActivity;
+import com.kaurihealth.kaurihealth.conversation_v.SystemMessageActivity;
+import com.kaurihealth.kaurihealth.conversation_v.SystemMessageSettingActivity;
 import com.kaurihealth.kaurihealth.dagger.module.ApplicationModule;
 import com.kaurihealth.kaurihealth.dagger.module.RepositoryModule;
 import com.kaurihealth.kaurihealth.department_v.SelectDepartmentLevel1Activity;
@@ -21,21 +24,24 @@ import com.kaurihealth.kaurihealth.department_v.SelectDepartmentLevel2Activity;
 import com.kaurihealth.kaurihealth.doctor_v.DoctorFragment;
 import com.kaurihealth.kaurihealth.doctor_v.DoctorInfoActivity;
 import com.kaurihealth.kaurihealth.findpassword_v.FindPasswordActivity;
-import com.kaurihealth.kaurihealth.home_v.AcceptReasonActivity;
-import com.kaurihealth.kaurihealth.home_v.DoctorRequestActivity;
-import com.kaurihealth.kaurihealth.home_v.FriendRequestsActivity;
-import com.kaurihealth.kaurihealth.home_v.PatientRequestInfoActivity;
-import com.kaurihealth.kaurihealth.home_v.VerificationActivity;
+import com.kaurihealth.kaurihealth.home_v.referral.AcceptReasonActivity;
 import com.kaurihealth.kaurihealth.home_v.referral.ReferralPatientRequestActivity;
 import com.kaurihealth.kaurihealth.home_v.referral.RejectReasonActivity;
+import com.kaurihealth.kaurihealth.home_v.request.DoctorRequestActivity;
+import com.kaurihealth.kaurihealth.home_v.request.FriendRequestsActivity;
+import com.kaurihealth.kaurihealth.home_v.request.PatientRequestActivity;
+import com.kaurihealth.kaurihealth.home_v.request.PatientRequestInfoActivity;
+import com.kaurihealth.kaurihealth.hospital_v.HospitalNameActivity;
 import com.kaurihealth.kaurihealth.login_v.LoginActivity;
 import com.kaurihealth.kaurihealth.main_v.ClinicalFragment;
-import com.kaurihealth.kaurihealth.main_v.HomeFragmentNew;
+import com.kaurihealth.kaurihealth.main_v.HomeFragment;
 import com.kaurihealth.kaurihealth.main_v.MainActivity;
 import com.kaurihealth.kaurihealth.main_v.MessageFragment;
 import com.kaurihealth.kaurihealth.main_v.MineFragment;
-import com.kaurihealth.kaurihealth.main_v.PatientRequestActivity;
+import com.kaurihealth.kaurihealth.main_v.PatientFragment;
 import com.kaurihealth.kaurihealth.mine_v.AccountDetailsActivity;
+import com.kaurihealth.kaurihealth.mine_v.ComeMoneyFragment;
+import com.kaurihealth.kaurihealth.mine_v.GetMoneyOutFragment;
 import com.kaurihealth.kaurihealth.mine_v.SetPasswordActivity;
 import com.kaurihealth.kaurihealth.mine_v.SettingActivity;
 import com.kaurihealth.kaurihealth.mine_v.account.AddBankCardActivity;
@@ -49,14 +55,11 @@ import com.kaurihealth.kaurihealth.mine_v.personal.EnterStudyExperienceActivity;
 import com.kaurihealth.kaurihealth.mine_v.personal.SelectTitleActivity;
 import com.kaurihealth.kaurihealth.mine_v.service.PersonalDoctorServiceSettingActivity;
 import com.kaurihealth.kaurihealth.mine_v.service.RemoteDoctorServiceSettingActivity;
-import com.kaurihealth.kaurihealth.open_an_account_v.OpenAnAccountActivity;
-import com.kaurihealth.kaurihealth.patient_v.DoctorTeamActivity;
-import com.kaurihealth.kaurihealth.patient_v.DoctorTeamFragment;
-import com.kaurihealth.kaurihealth.patient_v.FamilyMembersActivity;
-import com.kaurihealth.kaurihealth.patient_v.HospitalNameActivity;
-import com.kaurihealth.kaurihealth.patient_v.PatientFragment;
+import com.kaurihealth.kaurihealth.open_account_v.OpenAnAccountActivity;
 import com.kaurihealth.kaurihealth.patient_v.PatientInfoActivity;
-import com.kaurihealth.kaurihealth.patient_v.PrescriptionActivity;
+import com.kaurihealth.kaurihealth.patient_v.doctor_team.DoctorTeamActivity;
+import com.kaurihealth.kaurihealth.patient_v.family_members.AddFamilyMemberActivity;
+import com.kaurihealth.kaurihealth.patient_v.family_members.FamilyMembersActivity;
 import com.kaurihealth.kaurihealth.patient_v.health_condition.HealthConditionActivity;
 import com.kaurihealth.kaurihealth.patient_v.long_monitoring.AddMonitorIndexActivity;
 import com.kaurihealth.kaurihealth.patient_v.long_monitoring.CompileProgramActivity;
@@ -72,9 +75,12 @@ import com.kaurihealth.kaurihealth.patient_v.medical_records.OutpatientElectroni
 import com.kaurihealth.kaurihealth.patient_v.medical_records.OutpatientPicturesActivity;
 import com.kaurihealth.kaurihealth.patient_v.medical_records.RemoteMedicalConsultationActivity;
 import com.kaurihealth.kaurihealth.patient_v.medical_records.TreatmentRelatedRecordsActivity;
-import com.kaurihealth.kaurihealth.patient_v.referrals_patient.ReferralDoctorActivity;
-import com.kaurihealth.kaurihealth.patient_v.referrals_patient.ReferralPatientActivity;
-import com.kaurihealth.kaurihealth.patient_v.referrals_patient.ReferralReasonActivity;
+import com.kaurihealth.kaurihealth.patient_v.prescription.PrescriptionActivity;
+import com.kaurihealth.kaurihealth.patient_v.subsequent_visit.AddVisitRecordActivity;
+import com.kaurihealth.kaurihealth.patient_v.subsequent_visit.VisitRecordActivity;
+import com.kaurihealth.kaurihealth.referrals_v.ReferralDoctorActivity;
+import com.kaurihealth.kaurihealth.referrals_v.ReferralPatientActivity;
+import com.kaurihealth.kaurihealth.referrals_v.ReferralReasonActivity;
 import com.kaurihealth.kaurihealth.register_v.RegisterActivity;
 import com.kaurihealth.kaurihealth.register_v.RegisterPersonInfoActivity;
 import com.kaurihealth.kaurihealth.resetpassword_v.ResetPasswordActivity;
@@ -84,6 +90,7 @@ import com.kaurihealth.kaurihealth.search_v.SearchDoctorFragment;
 import com.kaurihealth.kaurihealth.search_v.SearchFragment;
 import com.kaurihealth.kaurihealth.search_v.SearchHospotalFragment;
 import com.kaurihealth.kaurihealth.search_v.SearchPatientFragment;
+import com.kaurihealth.kaurihealth.search_v.VerificationActivity;
 import com.kaurihealth.kaurihealth.welcome_v.WelcomeActivity;
 
 import javax.inject.Singleton;
@@ -155,8 +162,6 @@ public interface RepositoryComponent {
 
     void inject(DoctorInfoActivity activity);
 
-    void inject(FamilyMembersActivity activity);
-
     //临床支持Fragment
     void inject(DynamicFragment fragment);
 
@@ -213,7 +218,7 @@ public interface RepositoryComponent {
 
     void inject(DoctorRequestActivity activity);
 
-    void inject(HomeFragmentNew fragment);
+    void inject(HomeFragment fragment);
 
     void inject(FriendRequestsActivity activity);
 
@@ -255,7 +260,6 @@ public interface RepositoryComponent {
 
     void inject(ReferralReasonActivity activity);
 
-    void inject(DoctorTeamFragment fragment);
     void inject(ReferralPatientActivity activity);
 
     void inject(SearchActivity activity);
@@ -269,4 +273,24 @@ public interface RepositoryComponent {
     void inject(SearchHospotalFragment fragment);
 
     void inject(SearchPatientFragment fragment);
+
+    //患者信息 --> 家庭成员
+    void inject(FamilyMembersActivity activity);
+
+    void inject(VisitRecordActivity activity);
+
+    void inject(AddVisitRecordActivity activity);
+
+    //患者信息 -->添加家庭成员
+    void inject(AddFamilyMemberActivity activity);
+
+    void inject(SystemMessageActivity activity);
+
+    void inject(SystemMessageSettingActivity activity);
+
+    void inject(ComeMoneyFragment fragment);
+
+    void inject(GetMoneyOutFragment fragment);
+
+    void inject(AddGroupChatActivity activity);
 }

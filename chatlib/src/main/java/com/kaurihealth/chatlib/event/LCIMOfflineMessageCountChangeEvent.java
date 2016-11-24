@@ -12,9 +12,13 @@ import com.kaurihealth.chatlib.handler.LCIMConversationHandler;
  * @see LCIMConversationListFragment
  */
 public class LCIMOfflineMessageCountChangeEvent {
-    private final int unreadCount;
-    private final int readCount;
+    private int unreadCount;
+    private int readCount;
     public AVIMConversation conversation;
+
+
+    public LCIMOfflineMessageCountChangeEvent() {
+    }
 
     public LCIMOfflineMessageCountChangeEvent(int unreadCount, int readCount) {
         this.unreadCount = unreadCount;

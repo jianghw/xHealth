@@ -3,7 +3,6 @@ package com.kaurihealth.kaurihealth.patient_v.medical_records;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,9 +13,10 @@ import com.kaurihealth.datalib.response_bean.PatientRecordDisplayBean;
 import com.kaurihealth.kaurihealth.R;
 import com.kaurihealth.kaurihealth.adapter.ClinicalMedicalBeanAdapter;
 import com.kaurihealth.kaurihealth.adapter.ClinicalMedicalBeanItem;
-import com.kaurihealth.kaurihealth.common.Interface.IGetMedicaHistoryRecord;
 import com.kaurihealth.kaurihealth.eventbus.ClinicalMedcalFgtListEvent;
-import com.kaurihealth.kaurihealth.eventbus.OutpatientElectronicBeanEvent;
+import com.kaurihealth.kaurihealth.eventbus.OutpatientElectronicOnlyReadEvent;
+import com.kaurihealth.kaurihealth.patient_v.IGetMedicaHistoryRecord;
+import com.kaurihealth.utilslib.ColorUtils;
 import com.kaurihealth.utilslib.constant.Global;
 import com.kaurihealth.utilslib.log.LogUtils;
 import com.kaurihealth.utilslib.widget.AnimatedExpandableListView;
@@ -45,10 +45,8 @@ public class ClinicalMedicalFragment extends Fragment implements ExpandableListV
 
     @Bind(R.id.ae_listView)
     AnimatedExpandableListView mAeListView;
-
     @Bind(R.id.tv_note)
     TextView mTvNote;
-
     @Bind(clinical_SR)
     ScrollChildSwipeRefreshLayout mSwipeRefresh;
 
@@ -68,9 +66,7 @@ public class ClinicalMedicalFragment extends Fragment implements ExpandableListV
         ButterKnife.bind(this, view);
 
         mSwipeRefresh.setColorSchemeColors(
-                ContextCompat.getColor(getContext().getApplicationContext(), R.color.welcome_bg_cl),
-                ContextCompat.getColor(getContext().getApplicationContext(), R.color.welcome_bg_cl),
-                ContextCompat.getColor(getContext().getApplicationContext(), R.color.welcome_bg_cl)
+                ColorUtils.setSwipeRefreshColors(getContext())
         );
         mSwipeRefresh.setScrollUpChild(mAeListView);
         mSwipeRefresh.setDistanceToTriggerSync(Global.Numerical.SWIPE_REFRESH);
@@ -117,31 +113,32 @@ public class ClinicalMedicalFragment extends Fragment implements ExpandableListV
      */
     private void pointToActivityPage(PatientRecordDisplayBean patientRecordDisplayBean) {
         MedicalRecordActivity activity = (MedicalRecordActivity) getActivity();
-        EventBus.getDefault().postSticky(new OutpatientElectronicBeanEvent(patientRecordDisplayBean, activity.getShipBean()));
+        EventBus.getDefault().postSticky(new OutpatientElectronicOnlyReadEvent(patientRecordDisplayBean, activity.getShipBean()));
         //临床诊疗，点击条目界面跳转
         switch (patientRecordDisplayBean.getSubject()) {
             case "门诊记录电子病历":
-                activity.switchPageUI(Global.Jump.OutpatientElectronicActivity);
+                activity.switchPageUI(Global.Jump.OutpatientElectronicOnlyReadActivity, null);
                 break;
             case "门诊记录图片存档":
-                activity.switchPageUI(Global.Jump.OutpatientPicturesActivity);
+                activity.switchPageUI(Global.Jump.OutPatientPicturesOnlyReadActivity, null);
                 break;
             case "远程医疗咨询":
-                activity.switchPageUI(Global.Jump.RemoteMedicalConsultationActivity);
+                activity.switchPageUI(Global.Jump.RemoteMedicalConsultationOnlyReadActivity, null);
                 break;
             case "网络医疗咨询":
-                activity.switchPageUI(Global.Jump.NetworkMedicalConsultationActivity);
+                activity.switchPageUI(Global.Jump.NetWorkMedicalConsultationOnlyReadActivity, null);
                 break;
             case "入院记录":
-                activity.switchPageUI(Global.Jump.AdmissionRecordActivity);
+                activity.switchPageUI(Global.Jump.AdmissionRecordOnlyReadActivity, null);
                 break;
             case "院内治疗相关记录":
-                activity.switchPageUI(Global.Jump.TreatmentRelatedRecordsActivity);
+                activity.switchPageUI(Global.Jump.TreatMentRelatedRecordsOnlyreadActivity, null);
                 break;
             case "出院记录":
-                activity.switchPageUI(Global.Jump.DischargeRecordActivity);
+                activity.switchPageUI(Global.Jump.DischargeRecordOnlyReadActivity, null);
                 break;
-            default:break;
+            default:
+                break;
         }
     }
 
@@ -156,7 +153,7 @@ public class ClinicalMedicalFragment extends Fragment implements ExpandableListV
     }
 
     private void dataPacketProcessing(List<PatientRecordDisplayBean> list) {
-        mTvNote.setVisibility(View.GONE);
+        mTvNote.setVisibility(list.size() > 0 ? View.GONE : View.VISIBLE);
 
         if (!mGroupIteams.isEmpty()) mGroupIteams.clear();
         String[] arrays = getResources().getStringArray(R.array.clinical_medical_diagnosis);

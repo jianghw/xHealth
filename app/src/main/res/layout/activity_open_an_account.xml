@@ -39,7 +39,7 @@
             style="@style/content_open_an_account"
             android:layout_toRightOf="@id/tv1"
             android:background="@null"
-            android:hint="请填写患者手机号"
+            android:hint=" 请填写患者手机号"
             android:inputType="phone"/>
 
         <ImageView
@@ -67,7 +67,7 @@
             style="@style/content_open_an_account"
             android:layout_toRightOf="@id/tv2"
             android:background="@null"
-            android:hint="请输入姓"
+            android:hint=" 请输入姓"
             android:maxLength="5"/>
 
         <ImageView
@@ -94,7 +94,7 @@
             style="@style/content_open_an_account"
             android:layout_toRightOf="@id/tv5"
             android:background="@null"
-            android:hint="请输入名"
+            android:hint=" 请输入名"
             android:maxLength="5"/>
 
         <ImageView
@@ -130,7 +130,7 @@
             android:background="@null"
             android:clickable="false"
             android:editable="false"
-            android:hint="请选择性别"/>
+            android:hint=" 请选择性别"/>
     </RelativeLayout>
 
     <TextView
@@ -155,7 +155,7 @@
             android:background="@null"
             android:clickable="false"
             android:editable="false"
-            android:hint="请选择出生日期"/>
+            android:hint=" 请选择出生日期"/>
 
         <ImageView
             android:id="@+id/ivDelete4"

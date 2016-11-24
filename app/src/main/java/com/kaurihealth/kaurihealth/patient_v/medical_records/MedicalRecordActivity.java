@@ -14,7 +14,7 @@ import com.kaurihealth.kaurihealth.MyApplication;
 import com.kaurihealth.kaurihealth.R;
 import com.kaurihealth.kaurihealth.adapter.MainFragmentAdapter;
 import com.kaurihealth.kaurihealth.base_v.BaseActivity;
-import com.kaurihealth.kaurihealth.common.Interface.IGetMedicaHistoryRecord;
+import com.kaurihealth.kaurihealth.patient_v.IGetMedicaHistoryRecord;
 import com.kaurihealth.kaurihealth.eventbus.AddCommonMedicalRecordAddBeanEvent;
 import com.kaurihealth.kaurihealth.eventbus.AddLobTestBeanEvent;
 import com.kaurihealth.kaurihealth.eventbus.ClinicalMedcalFgtListEvent;
@@ -23,6 +23,15 @@ import com.kaurihealth.kaurihealth.eventbus.MedicalRecordIdEvent;
 import com.kaurihealth.kaurihealth.eventbus.OutpatientElectronicAddBeanEvent;
 import com.kaurihealth.kaurihealth.eventbus.PathologyFragmentEvent;
 import com.kaurihealth.kaurihealth.eventbus.SupplementTestEvent;
+import com.kaurihealth.kaurihealth.patient_v.medical_records_only_read.AdmissionRecordOnlyReadActivity;
+import com.kaurihealth.kaurihealth.patient_v.medical_records_only_read.CommonMedicalRecordToReadAcitivity;
+import com.kaurihealth.kaurihealth.patient_v.medical_records_only_read.DischargeRecordOnlyReadActivity;
+import com.kaurihealth.kaurihealth.patient_v.medical_records_only_read.LobTestOnlyReadActivtiy;
+import com.kaurihealth.kaurihealth.patient_v.medical_records_only_read.NetWorkMedicalConsultationOnlyReadActivity;
+import com.kaurihealth.kaurihealth.patient_v.medical_records_only_read.OutPatientPicturesOnlyReadActivity;
+import com.kaurihealth.kaurihealth.patient_v.medical_records_only_read.OutpatientElectronicOnlyReadActivity;
+import com.kaurihealth.kaurihealth.patient_v.medical_records_only_read.RemoteMedicalConsultationOnlyReadActivity;
+import com.kaurihealth.kaurihealth.patient_v.medical_records_only_read.TreatMentRelatedRecordsOnlyreadActivity;
 import com.kaurihealth.mvplib.patient_p.IMedicalRecordView;
 import com.kaurihealth.mvplib.patient_p.MedicalRecordPresenter;
 import com.kaurihealth.utilslib.OnClickUtils;
@@ -259,6 +268,45 @@ public class MedicalRecordActivity extends BaseActivity implements IMedicalRecor
                 break;
         }
     }
+
+
+    /**
+     * 跳转到只读activity
+     */
+    public void switchPageUI(String className,String nullString) {
+        switch (className) {
+            case Global.Jump.CommonMedicalRecordToReadActivity:
+                skipTo(CommonMedicalRecordToReadAcitivity.class);//只读辅助检查及病理类
+                break;
+            case Global.Jump.LobTestOnlyReadAcivity:
+                skipTo(LobTestOnlyReadActivtiy.class);//只读实验室检查
+                break;
+            case Global.Jump.OutpatientElectronicOnlyReadActivity:
+                skipTo(OutpatientElectronicOnlyReadActivity.class);//电子门诊病例 只可读
+                break;
+            case Global.Jump.OutPatientPicturesOnlyReadActivity:
+                skipTo(OutPatientPicturesOnlyReadActivity.class);//门诊记录图片存档 只可读
+                break;
+            case Global.Jump.RemoteMedicalConsultationOnlyReadActivity:
+                skipTo(RemoteMedicalConsultationOnlyReadActivity.class);//远程医疗 只可读
+                break;
+            case Global.Jump.NetWorkMedicalConsultationOnlyReadActivity:
+                skipTo(NetWorkMedicalConsultationOnlyReadActivity.class);//网络医疗 只可读
+                break;
+            case Global.Jump.AdmissionRecordOnlyReadActivity:
+                skipTo(AdmissionRecordOnlyReadActivity.class);//入院记录 只可读
+                break;
+            case Global.Jump.TreatMentRelatedRecordsOnlyreadActivity:
+                skipTo(TreatMentRelatedRecordsOnlyreadActivity.class);//院内治疗记录 只可读
+                break;
+            case Global.Jump.DischargeRecordOnlyReadActivity:
+                skipTo(DischargeRecordOnlyReadActivity.class);//出院记录 只可读
+                break;
+            default:
+                break;
+        }
+    }
+
 
     //统一地放送eventbus
     @Override

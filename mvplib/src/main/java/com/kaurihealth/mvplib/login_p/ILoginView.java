@@ -15,21 +15,14 @@ public interface ILoginView extends IMvpView {
 
     String getPassword();
 
-    void setUserName(String name);
-
-    void setPassword(String password);
-
     void completeRegister();
 
     void loginError(Throwable e);
 
     void showSuccessToast();
 
-
     //将用户名用sharedPerference存储起来
     void saveUsername();
-
-
 
     /**
      * 创建请求bean

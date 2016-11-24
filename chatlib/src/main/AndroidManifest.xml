@@ -22,6 +22,7 @@
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>
             </intent-filter>
         </receiver>
+
         <service android:name="com.avos.avoscloud.PushService"/>
         <!-- 实时通信模块、推送 END -->
 
@@ -32,6 +33,16 @@
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="com.kaurihealth.chatlib.conversation_item_click_action"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".activity.GroupConversationActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="com.kaurihealth.chatlib.conversation_item_click_action_group"/>
                 <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
         </activity>

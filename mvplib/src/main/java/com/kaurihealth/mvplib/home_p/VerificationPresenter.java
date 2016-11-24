@@ -6,23 +6,25 @@ import com.kaurihealth.datalib.response_bean.ResponseDisplayBean;
 
 import javax.inject.Inject;
 
-import rx.Subscriber;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
 /**
- * Created by mip on 2016/9/19.
+ * Created by jianghw on 2016/9/19.
+ * <p/>
+ * Describe:
  */
-public class VerificationPresenter<V> implements IVerificationPresenter<V>{
+public class VerificationPresenter<V> implements IVerificationPresenter<V> {
 
     private final IDataSource mRepository;
     private CompositeSubscription mSubscriptions;
     private IVerificationView mActivity;
 
     @Inject
-    public VerificationPresenter(IDataSource mRepository){
+    public VerificationPresenter(IDataSource mRepository) {
         this.mRepository = mRepository;
         mSubscriptions = new CompositeSubscription();
     }
@@ -40,24 +42,20 @@ public class VerificationPresenter<V> implements IVerificationPresenter<V>{
                 .doOnSubscribe(() -> mActivity.dataInteractionDialog())
                 .subscribeOn(AndroidSchedulers.mainThread())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Subscriber<ResponseDisplayBean>() {
+                .subscribe(new Action1<ResponseDisplayBean>() {
                     @Override
-                    public void onCompleted() {
-                        mActivity.dismissInteractionDialog();
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        mActivity.displayErrorDialog(e.getMessage());
-                    }
-
-                    @Override
-                    public void onNext(ResponseDisplayBean responseDisplayBean) {
-                        if(responseDisplayBean.isIsSucess()){
+                    public void call(ResponseDisplayBean responseDisplayBean) {
+                        if (responseDisplayBean.isIsSucess()) {
+                            mActivity.dismissInteractionDialog();
                             mActivity.getRequestResult(responseDisplayBean);
-                        }else{
-                            mActivity.showToast("该医生已添加,请勿重复请求"+responseDisplayBean.getMessage());
+                        } else {
+                            mActivity.displayErrorDialog("该医生已添加," + responseDisplayBean.getMessage());
                         }
+                    }
+                }, new Action1<Throwable>() {
+                    @Override
+                    public void call(Throwable throwable) {
+                        mActivity.displayErrorDialog(throwable.getMessage());
                     }
                 });
         mSubscriptions.add(subscription);
@@ -66,6 +64,7 @@ public class VerificationPresenter<V> implements IVerificationPresenter<V>{
     @Override
     public void unSubscribe() {
         mSubscriptions.clear();
-        mActivity=null;
+        if (mActivity != null) mActivity.dismissInteractionDialog();
+        mActivity = null;
     }
 }

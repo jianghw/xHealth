@@ -126,7 +126,7 @@
 
                 <TextView
                     style="@style/num_mine"
-                    android:text="02" />
+                    android:text="" />
             </LinearLayout>
 
             <TextView style="@style/Line_Gap" />

@@ -13,7 +13,7 @@
 
         <com.kaurihealth.utilslib.widget.CircleImageView
             android:id="@+id/civPhoto"
-            style="@style/common_photo"
+            style="@style/Photo.Nomal.Vertical"
             android:src="@mipmap/ic_circle_head_green" />
 
         <TextView
@@ -24,7 +24,6 @@
             android:layout_toRightOf="@id/civPhoto"
             android:textColor="#545252"
             tools:text="杜江" />
-
 
         <TextView
             android:id="@+id/tv_referral_request_comment"
@@ -45,8 +44,5 @@
             android:layout_alignParentRight="true"
             android:layout_alignBottom="@+id/civPhoto"
             android:text="12:45"/>
-
-
-
     </RelativeLayout>
 </LinearLayout>

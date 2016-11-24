@@ -83,4 +83,6 @@ dependencies {
     compile 'org.greenrobot:eventbus:3.0.0'
     //jianghw utils
     compile 'com.android.support:design:23.+'
+    //android查看真机中的数据库
+    compile 'com.facebook.stetho:stetho:1.4.1'
 }

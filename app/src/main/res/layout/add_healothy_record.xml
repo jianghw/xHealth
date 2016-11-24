@@ -10,7 +10,7 @@
         android:id="@+id/lay_title_medicalhistory"
         android:layout_width="match_parent"
         android:layout_height="@dimen/input_height_48"
-        android:background="@color/green">
+        android:background="@color/color_green">
 
         <ImageView
             android:id="@+id/iv_back"

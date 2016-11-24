@@ -21,9 +21,14 @@ public class DateUtils {
         return format.format(Calendar.getInstance().getTime());
     }
 
-    public static String GetNowDate(String dateFormat) {
-        SimpleDateFormat format = new SimpleDateFormat(dateFormat, Locale.SIMPLIFIED_CHINESE);
-        return format.format(Calendar.getInstance().getTime());
+    public static Date getNowDate() {
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ", Locale.SIMPLIFIED_CHINESE);
+        try {
+            return format.parse(getDateText(curDate()));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        throw new IllegalStateException("time is error");
     }
 
     public static String GetDateText(Date date) {
@@ -38,7 +43,7 @@ public class DateUtils {
         return format.format(date);
     }
 
-    private static String getDateText(Date date) {
+    public static String getDateText(Date date) {
         if (date == null) return null;
         return GetDateText(date, "yyyy-MM-dd'T'HH:mm:ssZ");
     }

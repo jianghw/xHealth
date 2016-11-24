@@ -14,7 +14,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager.LayoutParams;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -30,7 +29,7 @@ import java.io.IOException;
 /**
  * 录音的按钮
  */
-public class LCIMRecordButton extends Button {
+public class LCIMRecordButton extends TextView {
     public static final int BACK_RECORDING = R.drawable.lcim_chat_voice_bg_pressed;
     public static final int BACK_IDLE = R.drawable.lcim_chat_voice_bg;
     public static final int SLIDE_UP_TO_CANCEL = 0;
@@ -84,7 +83,8 @@ public class LCIMRecordButton extends Button {
 
     private void init() {
         volumeHandler = new ShowVolumeHandler();
-        setBackgroundResource(BACK_IDLE);
+//        setBackgroundResource(BACK_IDLE);
+        setBackgroundResource(R.drawable.btn_record_select);
     }
 
     @Override
@@ -138,7 +138,8 @@ public class LCIMRecordButton extends Button {
         LCIMAudioHelper.getInstance().stopPlayer();
         initRecordDialog();
         startTime = System.currentTimeMillis();
-        setBackgroundResource(BACK_RECORDING);
+//        setBackgroundResource(BACK_RECORDING);
+        setBackgroundResource(R.drawable.btn_record_pressed);
         try {
             startRecording();
         } catch (Exception e) {
@@ -173,7 +174,8 @@ public class LCIMRecordButton extends Button {
     private void finishRecord() {
         stopRecording();
         recordIndicator.dismiss();
-        setBackgroundResource(BACK_IDLE);
+//        setBackgroundResource(BACK_IDLE);
+        setBackgroundResource(R.drawable.btn_record_select);
 
         long intervalTime = System.currentTimeMillis() - startTime;
         if (intervalTime < MIN_INTERVAL_TIME) {
@@ -190,7 +192,8 @@ public class LCIMRecordButton extends Button {
 
     private void cancelRecord() {
         stopRecording();
-        setBackgroundResource(BACK_IDLE);
+//        setBackgroundResource(BACK_IDLE);
+        setBackgroundResource(R.drawable.btn_record_select);
         recordIndicator.dismiss();
         Toast.makeText(getContext(), getContext().getString(R.string.lcim_chat_cancelRecord),
                 Toast.LENGTH_SHORT).show();

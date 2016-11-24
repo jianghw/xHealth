@@ -2,14 +2,17 @@ package com.kaurihealth.kaurihealth.clinical_v.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.WindowManager;
 import android.webkit.WebResourceError;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.BaseAdapter;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RadioButton;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.kaurihealth.datalib.request_bean.bean.LiteratureCommentDisplayBean;
@@ -25,6 +28,8 @@ import com.kaurihealth.kaurihealth.clinical_v.Utils.ClinicalUtil;
 import com.kaurihealth.kaurihealth.clinical_v.adapter.LiteratureCommentAdapter;
 import com.kaurihealth.kaurihealth.eventbus.ClinicalRefreshEvent;
 import com.kaurihealth.kaurihealth.main_v.NewestVersion.Url;
+import com.kaurihealth.kaurihealth.util.DateConvertUtils;
+import com.kaurihealth.kaurihealth.util.ScrollWebView;
 import com.kaurihealth.mvplib.clinical_p.DynamicActivityPresenter;
 import com.kaurihealth.mvplib.clinical_p.IDynamicActivityView;
 
@@ -49,7 +54,7 @@ public class DynamicActivity extends BaseActivity implements IDynamicActivityVie
     @Bind(R.id.tv_clinicalName)
     TextView tvClinicalName;
     @Bind(R.id.webView)
-    WebView webView;
+    ScrollWebView webView;
     @Bind(R.id.lvContent)
     ListView lvContent;
     /**
@@ -97,6 +102,12 @@ public class DynamicActivity extends BaseActivity implements IDynamicActivityVie
     @Bind(R.id.tv_common_name)
     TextView tv_common_name;
 
+    @Bind(R.id.dfdf)
+    RelativeLayout dfdf;
+
+    @Bind(R.id.top)
+    LinearLayout top;
+
     private int likeCount;
     private Bundle bundle;
     private MedicalLiteratureDisPlayBean medicalLiteratureDisPlayBean;
@@ -119,10 +130,16 @@ public class DynamicActivity extends BaseActivity implements IDynamicActivityVie
     protected void initPresenterAndView(Bundle savedInstanceState) {
         MyApplication.getApp().getComponent().inject(this);
         mPresenter.setPresenter(this);
+
     }
 
     @Override
     protected void initDelayedData() {
+        WindowManager wm = this.getWindowManager();
+
+        int height = wm.getDefaultDisplay().getHeight();
+        webView.setMinimumHeight(height);
+
         initBackBtn(R.id.iv_back);
         bundle = getBundle();
         clinicalUtil = new ClinicalUtil();
@@ -134,7 +151,7 @@ public class DynamicActivity extends BaseActivity implements IDynamicActivityVie
         tvCommentCount.setText(medicalLiteratureDisPlayBean.commentCount + "");
         //新增加
         tv_common_title.setText("       " + medicalLiteratureDisPlayBean.medicalLiteratureTitle);
-        tv_time.setText(clinicalUtil.getTimeByTimeFormat(medicalLiteratureDisPlayBean.creatTime, "yyyy.MM.dd HH:mm"));
+        tv_time.setText(DateConvertUtils.getWeekOfDate(null, medicalLiteratureDisPlayBean.creatTime));
         tv_from_source.setText(clinicalUtil.getLengthString(medicalLiteratureDisPlayBean.source, 8));
         if (medicalLiteratureDisPlayBean.doctor != null) {
             tv_common_name.setText(medicalLiteratureDisPlayBean.doctor.fullName);
@@ -150,6 +167,26 @@ public class DynamicActivity extends BaseActivity implements IDynamicActivityVie
         literatureCommentDisplayBeanList = new ArrayList<>();
         literatureCommentAdapter = new LiteratureCommentAdapter(this, literatureCommentDisplayBeanList, lvContent);
         lvContent.setAdapter(literatureCommentAdapter);
+        webView.setOnScrollChangeListener(new ScrollWebView.OnScrollChangeListener() {
+            @Override
+            public void onPageEnd(int l, int t, int oldl, int oldt) {
+                //滑动末尾
+//            showToast("滑动末尾");
+            }
+
+            @Override
+            public void onPageTop(int l, int t, int oldl, int oldt) {
+                //滑动到顶部
+//                top.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onScrollChanged(int l, int t, int oldl, int oldt) {
+                //滑动中
+
+
+            }
+        });
         getData();
         lvContent.setClickable(false);
         EventBus.getDefault().postSticky(new ClinicalRefreshEvent());//返回后界面刷新
@@ -356,9 +393,10 @@ public class DynamicActivity extends BaseActivity implements IDynamicActivityVie
             throw new IllegalStateException("ResponseDisplayBean must be not null");
         }
         if (bean.isIsSucess()) {
-            literatureCommentDisplayBeanList.remove(position);
-            tvCommentCount.setText((Integer.parseInt(tvCommentCount.getText().toString())) - 1 + "");
-            literatureCommentAdapter.notifyDataSetChanged();
+            getData();
+//            literatureCommentDisplayBeanList.remove(position);
+//            tvCommentCount.setText((Integer.parseInt(tvCommentCount.getText().toString())) - 1 + "");
+//            literatureCommentAdapter.notifyDataSetChanged();
         }
     }
 

@@ -3,7 +3,6 @@ package com.kaurihealth.kaurihealth.doctor_v;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.View;
 import android.widget.GridView;
@@ -19,6 +18,7 @@ import com.kaurihealth.kaurihealth.eventbus.DoctorFragmentRefreshEvent;
 import com.kaurihealth.kaurihealth.eventbus.DoctorJumpEvent;
 import com.kaurihealth.mvplib.main_p.DoctorPresenter;
 import com.kaurihealth.mvplib.main_p.IPatientView;
+import com.kaurihealth.utilslib.ColorUtils;
 import com.kaurihealth.utilslib.constant.Global;
 import com.kaurihealth.utilslib.widget.ScrollChildSwipeRefreshLayout;
 
@@ -73,9 +73,7 @@ public class DoctorFragment extends ChildBaseFragment implements IPatientView {
     @Override
     protected void initDelayedData() {
         mSwipeRefresh.setColorSchemeColors(
-                ContextCompat.getColor(getActivity(), R.color.welcome_bg_cl),
-                ContextCompat.getColor(getActivity(), R.color.welcome_bg_cl),
-                ContextCompat.getColor(getActivity(), R.color.welcome_bg_cl)
+                ColorUtils.setSwipeRefreshColors(getContext())
         );
         mSwipeRefresh.setScrollUpChild(mGvContent);
         mSwipeRefresh.setDistanceToTriggerSync(Global.Numerical.SWIPE_REFRESH);
@@ -144,16 +142,11 @@ public class DoctorFragment extends ChildBaseFragment implements IPatientView {
      */
     @Override
     public void lazyLoadingDataSuccess(List<?> list) {
-        noDoctorDataState(list.isEmpty());
+        tvNote.setVisibility(list != null ? !list.isEmpty() ? View.GONE : View.VISIBLE : View.VISIBLE);
 
         if (mBeanList.size() > 0) mBeanList.clear();
         mBeanList.addAll((Collection<? extends DoctorRelationshipBean>) list);
         adapter.notifyDataSetChanged();
-    }
-
-    private void noDoctorDataState(boolean empty) {
-        tvNote.setVisibility(empty ? View.VISIBLE : View.GONE);
-        mGvContent.setVisibility(empty ? View.GONE : View.VISIBLE);
     }
 
 }

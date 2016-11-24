@@ -14,7 +14,7 @@
         android:layout_marginLeft="18dp"
         android:src="@mipmap/ic_circle_head_green"
         app:civ_border_overlay="true"
-        app:civ_border_color="@color/green"
+        app:civ_border_color="@color/color_green"
         app:civ_border_width="0.5dp"/>
 
     <TextView
@@ -34,7 +34,7 @@
         android:layout_marginLeft="20dp"
         android:layout_toRightOf="@id/tv_name_homeiteam"
         android:text="xxx"
-        android:textColor="@android:color/black"
+        android:textColor="#FFFF6600"
         android:textSize="@dimen/login_tv_textSize" />
 
     <LinearLayout

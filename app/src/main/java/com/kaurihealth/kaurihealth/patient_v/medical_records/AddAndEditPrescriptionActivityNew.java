@@ -2,9 +2,11 @@ package com.kaurihealth.kaurihealth.patient_v.medical_records;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import com.kaurihealth.datalib.local.LocalData;
@@ -15,14 +17,14 @@ import com.kaurihealth.datalib.response_bean.DoctorDisplayBean;
 import com.kaurihealth.datalib.response_bean.DoctorPatientRelationshipBean;
 import com.kaurihealth.kaurihealth.MyApplication;
 import com.kaurihealth.kaurihealth.R;
+import com.kaurihealth.kaurihealth.adapter.StringPathViewAdapter;
 import com.kaurihealth.kaurihealth.base_v.BaseActivity;
 import com.kaurihealth.kaurihealth.department_v.SelectDepartmentLevel1Activity;
 import com.kaurihealth.kaurihealth.department_v.SelectDepartmentLevel2Activity;
 import com.kaurihealth.kaurihealth.eventbus.AddPrescriptionBeanEvent;
 import com.kaurihealth.kaurihealth.eventbus.EditPrescriptionNewBeanEvent;
-import com.kaurihealth.kaurihealth.adapter.StringPathViewAdapter;
 import com.kaurihealth.kaurihealth.mine_v.personal.EnterHospitalActivity;
-import com.kaurihealth.kaurihealth.patient_v.PrescriptionActivity;
+import com.kaurihealth.kaurihealth.patient_v.prescription.PrescriptionActivity;
 import com.kaurihealth.mvplib.patient_p.IAddAndEditPrescriptionView;
 import com.kaurihealth.mvplib.patient_p.medical_records.AddAndEditPrescriptionPresenter;
 import com.kaurihealth.utilslib.CheckUtils;
@@ -50,6 +52,7 @@ import javax.inject.Inject;
 import butterknife.Bind;
 import butterknife.OnClick;
 import butterknife.OnItemClick;
+import butterknife.OnItemLongClick;
 
 /**
  * Created by mip on 2016/9/28.
@@ -133,7 +136,7 @@ public class AddAndEditPrescriptionActivityNew extends BaseActivity implements I
 
     @Override
     protected void initDelayedData() {
-        tv_add_edit_time.setText("处方时间");
+        tv_add_edit_time.setText("处方时间:");
         myself = LocalData.getLocalData().getMyself();
         validator = new Validator(this);
         validator.setValidationListener(this);
@@ -212,6 +215,30 @@ public class AddAndEditPrescriptionActivityNew extends BaseActivity implements I
     }
 
     /**
+     * 删除图片功能
+     * @param position
+     * @return
+     */
+    @OnItemLongClick(R.id.gv_image)
+    public boolean deletePicture(int position){
+        final PopupMenu popupMenu = new PopupMenu(this, mGvImage);
+        Menu menu = popupMenu.getMenu();
+        menu.add(Menu.NONE, Menu.FIRST, 0, "删除");
+        popupMenu.setOnMenuItemClickListener(item -> {
+            switch (item.getItemId()) {
+                case Menu.FIRST:
+                    paths.remove(position);
+                    adapter.notifyDataSetChanged();
+                    break;
+            }
+            return false;
+        });
+        popupMenu.show();
+        return true;
+    }
+
+
+    /**
      * 添加操作  跳转到此界面的
      */
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
@@ -228,10 +255,11 @@ public class AddAndEditPrescriptionActivityNew extends BaseActivity implements I
      * 必填项
      */
     private void initMustItems() {
-
         mEtClinicalTime.setText(DateUtil.GetNowDate("yyyy-MM-dd"));//设置当前时间
-        mEtDepartment.setText(myself.getDoctorInformations().getDepartment().getDepartmentName());//初始化科室
-        mEtInstitutions.setText(myself.getDoctorInformations().getHospitalName());//初始化机构
+        mEtDepartment.setText(myself.getDoctorInformations()!=null
+                ?myself.getDoctorInformations().getDepartment()!=null
+                ?myself.getDoctorInformations().getDepartment().getDepartmentName():"":"");//初始化科室
+        mEtInstitutions.setText(myself.getDoctorInformations()!=null?myself.getDoctorInformations().getHospitalName():"");//初始化机构
         mEtDoctor.setText(myself.getFullName());//设置医生
     }
 
@@ -241,11 +269,11 @@ public class AddAndEditPrescriptionActivityNew extends BaseActivity implements I
      */
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     public void eventBusMain(EditPrescriptionNewBeanEvent event) {
-        mTvMore.setText(getString(R.string.swipe_tv_compile));
+        mTvMore.setText(getString(R.string.title_save));
         isAble = event.getIsAble();
         offCurActivity(isAble);
         //view不可操作
-        setAllViewsEnable(false, this);
+//        setAllViewsEnable(false, this);
         mTvMore.setEnabled(true);
         initNewBackBtn("处方");
         mPrescriptionBean = event.getPrescriptionBean();

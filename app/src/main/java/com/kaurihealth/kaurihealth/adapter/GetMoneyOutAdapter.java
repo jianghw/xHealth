@@ -9,7 +9,6 @@ import android.widget.TextView;
 
 import com.kaurihealth.datalib.request_bean.bean.CreditTransactionDisplayBean;
 import com.kaurihealth.kaurihealth.R;
-import com.kaurihealth.kaurihealth.adapter.CommonAdapter;
 import com.kaurihealth.utilslib.date.DateUtils;
 
 import java.util.List;
@@ -45,6 +44,11 @@ public class GetMoneyOutAdapter extends CommonAdapter<CreditTransactionDisplayBe
         }
         viewHolder.setData(list.get(position));
         return convertView;
+    }
+
+    @Override
+    public boolean isItemViewTypePinned(int viewType) {
+        return false;
     }
 
     static class ViewHolder {

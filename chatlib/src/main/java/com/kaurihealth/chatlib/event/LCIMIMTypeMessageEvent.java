@@ -13,6 +13,15 @@ import com.kaurihealth.chatlib.handler.LCIMMessageHandler;
  * @see LCIMConversationListFragment
  */
 public class LCIMIMTypeMessageEvent {
-  public AVIMTypedMessage message;
-  public AVIMConversation conversation;
+
+    public AVIMTypedMessage message;
+    public AVIMConversation conversation;
+
+    public LCIMIMTypeMessageEvent() {
+    }
+
+    public LCIMIMTypeMessageEvent(AVIMTypedMessage message, AVIMConversation conversation) {
+        this.message = message;
+        this.conversation = conversation;
+    }
 }

@@ -53,7 +53,7 @@
             android:gravity="center"
             android:layout_width="0dp"
             android:layout_weight="3"
-            android:hint="请选择银行卡类型" />
+            android:hint=" 请选择银行卡类型" />
 
         <ImageView
             android:layout_width="wrap_content"
@@ -78,7 +78,7 @@
             android:layout_width="0dp"
             android:gravity="center"
             android:layout_weight="3"
-            android:hint="请输入发卡网点" />
+            android:hint=" 请输入发卡网点" />
 
         <ImageView
             android:layout_width="wrap_content"
@@ -104,7 +104,7 @@
             android:layout_weight="3"
             android:maxLength="20"
             android:gravity="center"
-            android:hint="请输入卡号"
+            android:hint=" 请输入卡号"
             android:inputType="number" />
 
         <ImageView

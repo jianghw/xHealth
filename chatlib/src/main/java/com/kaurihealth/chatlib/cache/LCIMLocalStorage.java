@@ -46,7 +46,7 @@ class LCIMLocalStorage extends SQLiteOpenHelper {
             ")";
     private static final String SQL_DROP_TABLE = "DROP TABLE IF EXISTS %s";
 
-    private static final int DB_VERSION = 2;
+    private static final int DB_VERSION = 3;
 
     private String tableName;
 

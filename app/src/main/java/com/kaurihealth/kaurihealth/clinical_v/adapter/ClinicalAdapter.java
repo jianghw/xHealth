@@ -17,6 +17,7 @@ import com.kaurihealth.kaurihealth.R;
 import com.kaurihealth.kaurihealth.adapter.CommonAdapter;
 import com.kaurihealth.kaurihealth.clinical_v.Utils.ClinicalUtil;
 import com.kaurihealth.kaurihealth.clinical_v.activity.ClinicalListActivity;
+import com.kaurihealth.kaurihealth.util.DateConvertUtils;
 import com.kaurihealth.utilslib.TranslationAnim;
 import com.kaurihealth.utilslib.image.ImageUrlUtils;
 
@@ -171,7 +172,8 @@ public class ClinicalAdapter extends CommonAdapter<Category> {
                         viewHolder.ivTitleImage.setScaleType(ImageView.ScaleType.CENTER);
                     }
                     viewHolder.tvContentBrief.setText(((MedicalLiteratureDisPlayBean) item).medicalLiteratureTitle);
-                    viewHolder.tvCreatTime.setText(new ClinicalUtil().getTimeByTimeFormat(((MedicalLiteratureDisPlayBean) item).creatTime, "MM月dd日 HH:mm"));
+//                    viewHolder.tvCreatTime.setText(new ClinicalUtil().getTimeByTimeFormat(((MedicalLiteratureDisPlayBean) item).creatTime, "MM月dd日 HH:mm"));
+                    viewHolder.tvCreatTime.setText(DateConvertUtils.getWeekOfDate(null,((MedicalLiteratureDisPlayBean) item).creatTime));
                     viewHolder.tvBrowse.setText(((MedicalLiteratureDisPlayBean) item).browse + "阅读");
                 }
                 break;
@@ -199,6 +201,11 @@ public class ClinicalAdapter extends CommonAdapter<Category> {
     public boolean isEnabled(int position) {
 
         return getItemViewType(position) != TYPE_CATEGORY_ITEM;
+    }
+
+    @Override
+    public boolean isItemViewTypePinned(int viewType) {
+        return getItemViewType(viewType) == TYPE_CATEGORY_ITEM;
     }
 
     private class ViewHolder {

@@ -11,6 +11,5 @@ public interface IRegisterPersonInfoPresenter<V> extends IMvpPresenter<V> {
     //我 医生详情
     void loadDoctorDetail();
 
-    //好友关系列表
-    void loadContactListByDoctorId();
+    void modifiedRegisterPercentage();
 }

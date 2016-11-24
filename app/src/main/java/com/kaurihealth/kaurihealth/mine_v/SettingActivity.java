@@ -106,12 +106,25 @@ public class SettingActivity extends BaseActivity implements ISettingView {
                 callHelpDesk();
                 break;
             case R.id.btn_logout:
-                LocalData.getLocalData().deleteAll(TokenBean.class);
-                LocalData.getLocalData().deleteAll(DoctorDisplayBean.class);
-                LocalData.getLocalData().setTokenBean(null);
-                LocalData.getLocalData().setMyself(null);
-                ActivityManager.getInstance().finishAllActivity();
-                skipTo(LoginActivity.class);
+
+                SweetAlertDialog dialogAccept = new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
+                        .setTitleText("您确定要离开么?")
+                        .setConfirmText("确定")
+                        .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                            @Override
+                            public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                LocalData.getLocalData().deleteAll(TokenBean.class);
+                                LocalData.getLocalData().deleteAll(DoctorDisplayBean.class);
+                                LocalData.getLocalData().setTokenBean(null);
+                                LocalData.getLocalData().setMyself(null);
+                                ActivityManager.getInstance().finishAllActivity();
+                                skipTo(LoginActivity.class);
+                                sweetAlertDialog.dismiss();
+                            }
+                        })
+                        .showCancelButton(true)
+                        .setCancelText("取消");
+                dialogAccept.show();
                 break;
         }
     }

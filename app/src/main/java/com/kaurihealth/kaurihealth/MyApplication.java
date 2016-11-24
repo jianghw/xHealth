@@ -4,6 +4,7 @@ import android.app.Application;
 import android.support.multidex.MultiDex;
 
 import com.avos.avoscloud.AVOSCloud;
+import com.facebook.stetho.Stetho;
 import com.kaurihealth.chatlib.LCChatKit;
 import com.kaurihealth.chatlib.cache.LeanchatUserProvider;
 import com.kaurihealth.chatlib.utils.LCIMConstants;
@@ -36,8 +37,6 @@ public class MyApplication extends Application {
         MultiDex.install(this);
 //环境
         initEnvironmentMode();
-//图片加载
-        initImageLoad();
 //dagger
         mRepositoryComponent = DaggerRepositoryComponent.builder()
                 .applicationModule(new ApplicationModule(getApplicationContext()))
@@ -55,14 +54,10 @@ public class MyApplication extends Application {
     }
 
 
-    private void initImageLoad() {
-
-    }
-
     private void initEnvironmentMode() {
 //聊天
         LCChatKit.getInstance().setProfileProvider(new LeanchatUserProvider());
-//bug
+//bugTag
         BugTagUtils.start(this, BuildConfig.Environment);
 //log
         LogUtils.initLogUtils(BuildConfig.Environment);
@@ -75,7 +70,9 @@ public class MyApplication extends Application {
 //LeakCanary
                 LeakCanary.install(this);
 //ButterKnife
-                ButterKnife.setDebug(true);
+                ButterKnife.setDebug(false);
+//android查看真机中的数据库
+                Stetho.initializeWithDefaults(this);
                 break;
             case Global.Environment.TEST:
                 LCChatKit.getInstance().initKey(getApplicationContext(), LCIMConstants.APP_ID_DEBUG, LCIMConstants.APP_KEY_DEBUG, WelcomeActivity.class);

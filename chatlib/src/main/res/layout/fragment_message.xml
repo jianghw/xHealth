@@ -33,6 +33,75 @@
             android:orientation="vertical">
 
             <RelativeLayout
+                android:id="@+id/rl_system"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:background="@drawable/bg_white_press">
+
+                <ImageView
+                    android:id="@+id/iv_head_system"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="16dp"
+                    android:src="@mipmap/ic_home_doctor"/>
+
+                <TextView
+                    android:id="@+id/tv_name_system"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignTop="@+id/iv_head_system"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
+                    android:layout_toLeftOf="@+id/tv_time_system"
+                    android:layout_toRightOf="@+id/iv_head_system"
+                    android:ellipsize="end"
+                    android:gravity="left"
+                    android:singleLine="true"
+                    android:text="佳仁健康系统消息"
+                    android:textColor="#3e403f"
+                    android:textSize="16sp"/>
+
+                <TextView
+                    android:id="@+id/tv_time_system"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignTop="@+id/tv_name_system"
+                    android:layout_marginRight="16dp"
+                    android:singleLine="true"
+                    android:textColor="#808080"
+                    android:textSize="14sp"
+                    tools:text="09-28 03:33"/>
+
+                <ImageView
+                    android:id="@+id/img_unread_system"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignRight="@+id/tv_time_system"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/bg_read_badge"
+                    android:visibility="gone"/>
+
+                <TextView
+                    android:id="@+id/tv_message_system"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignLeft="@+id/tv_name_system"
+                    android:layout_alignRight="@+id/tv_name_system"
+                    android:layout_below="@+id/tv_name_system"
+                    android:layout_marginTop="8dp"
+                    android:ellipsize="end"
+                    android:gravity="left"
+                    android:singleLine="true"
+                    android:text="暂无系统消息提醒"
+                    android:textColor="#ff9800"
+                    android:textSize="14sp"/>
+            </RelativeLayout>
+
+            <TextView style="@style/Line"/>
+
+            <RelativeLayout
                 android:id="@+id/rl_patient"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
@@ -157,6 +226,74 @@
                     android:layout_alignLeft="@+id/tv_name_doctor"
                     android:layout_alignRight="@+id/tv_name_doctor"
                     android:layout_below="@+id/tv_name_doctor"
+                    android:layout_marginTop="8dp"
+                    android:ellipsize="end"
+                    android:gravity="left"
+                    android:singleLine="true"
+                    android:textColor="#808080"
+                    android:textSize="14sp"
+                    tools:text="暂无医生给你留言消息"/>
+            </RelativeLayout>
+
+            <TextView style="@style/Line"/>
+
+            <RelativeLayout
+                android:id="@+id/rl_group"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:background="@drawable/bg_white_press">
+
+                <ImageView
+                    android:id="@+id/iv_head_group"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="16dp"
+                    android:src="@mipmap/ic_home_doctor"/>
+
+                <TextView
+                    android:id="@+id/tv_name_group"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignTop="@+id/iv_head_group"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
+                    android:layout_toLeftOf="@+id/tv_time_group"
+                    android:layout_toRightOf="@+id/iv_head_group"
+                    android:ellipsize="end"
+                    android:gravity="left"
+                    android:singleLine="true"
+                    android:text="群聊对话"
+                    android:textColor="#3e403f"
+                    android:textSize="16sp"/>
+
+                <TextView
+                    android:id="@+id/tv_time_group"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignTop="@+id/tv_name_group"
+                    android:layout_marginRight="16dp"
+                    android:singleLine="true"
+                    android:textColor="#808080"
+                    android:textSize="14sp"
+                    tools:text="09-28 03:33"/>
+
+                <ImageView
+                    android:id="@+id/img_unread_group"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignRight="@+id/tv_time_group"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/bg_read_badge"/>
+
+                <TextView
+                    android:id="@+id/tv_message_group"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignLeft="@+id/tv_name_group"
+                    android:layout_alignRight="@+id/tv_name_group"
+                    android:layout_below="@+id/tv_name_group"
                     android:layout_marginTop="8dp"
                     android:ellipsize="end"
                     android:gravity="left"

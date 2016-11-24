@@ -15,7 +15,7 @@
         android:layout_weight="4"
         android:gravity="center_vertical|left"
         android:padding="8dp"
-        android:textColor="@color/green"
+        android:textColor="@color/color_green"
         android:textSize="14sp"
         tools:text="消化内科"/>
 

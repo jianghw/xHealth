@@ -17,14 +17,14 @@ import rx.subscriptions.CompositeSubscription;
  * Created by mip on 2016/10/24.
  */
 
-public class ReferralPatientRequestPresenter<V> implements IReferralPatientRequestPresenter<V>{
+public class ReferralPatientRequestPresenter<V> implements IReferralPatientRequestPresenter<V> {
     private final IDataSource mRepository;
     private CompositeSubscription mSubscriptions;
     private IReferralPatientRequestView mActivity;
     private boolean mFirstLoad = true;
 
     @Inject
-    public ReferralPatientRequestPresenter(IDataSource mRepository){
+    public ReferralPatientRequestPresenter(IDataSource mRepository) {
         this.mRepository = mRepository;
         mSubscriptions = new CompositeSubscription();
     }
@@ -39,7 +39,11 @@ public class ReferralPatientRequestPresenter<V> implements IReferralPatientReque
         if (mFirstLoad) loadReferralDetail(false);
     }
 
-    public void loadReferralDetail(boolean b){
+    /**
+     * 通过医生查询转诊状态为等待的请求
+     */
+    @Override
+    public void loadReferralDetail(boolean b) {
         Subscription subscription = mRepository.LoadReferralsPatientRequestByDoctorId()
                 .subscribeOn(Schedulers.io())
                 .doOnSubscribe(() -> mActivity.loadingIndicator(true))
@@ -49,12 +53,10 @@ public class ReferralPatientRequestPresenter<V> implements IReferralPatientReque
                     public void onCompleted() {
                         mActivity.loadingIndicator(false);
                         mFirstLoad = false;
-
                     }
 
                     @Override
                     public void onError(Throwable e) {
-                        mFirstLoad = false;
                         mActivity.loadingIndicator(false);
                         mActivity.showToast(e.getMessage());
                     }
@@ -71,5 +73,6 @@ public class ReferralPatientRequestPresenter<V> implements IReferralPatientReque
     @Override
     public void unSubscribe() {
         mSubscriptions.clear();
+        mActivity = null;
     }
 }

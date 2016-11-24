@@ -55,7 +55,7 @@ public class AcceptReasonPresenter<V> implements IAcceptReasonPresenter<V> {
                     @Override
                     public void onNext(ResponseDisplayBean bean) {
                         if (bean.isIsSucess()) {
-                            mActivity.showToast("患者预约已同意");
+                            mActivity.showToast("已同意患者预约");
                             mActivity.getRequestResult(bean);
                         } else {
                             mActivity.displayErrorDialog(bean.getMessage());

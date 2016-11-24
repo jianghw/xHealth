@@ -112,7 +112,7 @@
         android:layout_marginRight="13dp"
         android:layout_marginTop="13dp"
         android:gravity="center"
-        android:text="———————————————热门评论—————————————"
+        android:text="—————————————热门评论————————————"
         android:layout_alignLeft="@+id/linearLayout"
         android:layout_alignStart="@+id/linearLayout" />
 

@@ -13,7 +13,8 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:scrollbars="none">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -194,6 +195,7 @@
                 <TextView
                     android:id="@+id/tv_organization"
                     style="@style/Doctor_BodyText"
+                    android:paddingLeft="20dp"
                     android:maxEms="10"
                     android:singleLine="true"
                     tools:text="ssssssssssssssssssssssssssssssssssssssssss" />
@@ -215,6 +217,7 @@
                     android:id="@+id/tv_education"
                     style="@style/Doctor_BodyText"
                     android:maxEms="10"
+                    android:paddingLeft="20dp"
                     android:singleLine="true"
                     tools:text="ssssssssssssssssssssssssssssssssssssssssss" />
             </RelativeLayout>
@@ -235,6 +238,7 @@
 
                 <TextView
                     android:id="@+id/tv_study_experience"
+                    android:paddingLeft="15dp"
                     style="@style/Doctor_BodyText"
                     android:maxEms="10"
                     android:singleLine="true"
@@ -257,6 +261,7 @@
 
                 <TextView
                     android:id="@+id/tv_goodat"
+                    android:paddingLeft="13dp"
                     style="@style/Doctor_BodyText"
                     android:maxEms="10"
                     android:singleLine="true"

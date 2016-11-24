@@ -20,7 +20,7 @@ import rx.subscriptions.CompositeSubscription;
 /**
  * Created by jianghw on 2016/8/5.
  * <p/>
- * 描述：登录逻辑
+ * 描述：
  */
 public class PatientInfoPresenter<V> implements IPatientInfoPresenter<V> {
 

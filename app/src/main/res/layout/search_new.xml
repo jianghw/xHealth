@@ -5,6 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/color_bg_gray"
     android:orientation="vertical">
 
     <android.support.design.widget.AppBarLayout
@@ -60,7 +61,7 @@
                         android:layout_height="30dp"
                         android:layout_marginRight="1dp"
                         android:background="@drawable/bg_white"
-                        android:hint="请填写搜索信息"
+                        android:hint=" 请填写搜索信息"
                         android:paddingLeft="@dimen/margin_26"
                         android:singleLine="true"
                         android:textColor="@color/app_tv_color"

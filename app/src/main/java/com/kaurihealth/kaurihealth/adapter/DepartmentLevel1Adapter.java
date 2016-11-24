@@ -7,7 +7,6 @@ import android.widget.TextView;
 
 import com.kaurihealth.datalib.response_bean.DepartmentDisplayBean;
 import com.kaurihealth.kaurihealth.R;
-import com.kaurihealth.kaurihealth.adapter.CommonAdapter;
 
 import java.util.List;
 
@@ -36,6 +35,11 @@ public class DepartmentLevel1Adapter extends CommonAdapter<DepartmentDisplayBean
         DepartmentDisplayBean bean = list.get(position);
         viewHolder.tvContent.setText(bean.getDepartmentName());
         return convertView;
+    }
+
+    @Override
+    public boolean isItemViewTypePinned(int viewType) {
+        return false;
     }
 
     public static class ViewHolder {

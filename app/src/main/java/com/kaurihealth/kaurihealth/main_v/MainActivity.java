@@ -8,10 +8,15 @@ import android.support.v4.view.ViewPager;
 import android.view.KeyEvent;
 import android.widget.Toast;
 
+import com.avos.avoscloud.AVException;
+import com.avos.avoscloud.AVInstallation;
+import com.avos.avoscloud.SaveCallback;
 import com.avos.avoscloud.im.v2.AVIMClient;
 import com.avos.avoscloud.im.v2.AVIMException;
 import com.avos.avoscloud.im.v2.callback.AVIMClientCallback;
 import com.kaurihealth.chatlib.LCChatKit;
+import com.kaurihealth.chatlib.cache.LCIMConversationItem;
+import com.kaurihealth.chatlib.cache.LCIMConversationItemCache;
 import com.kaurihealth.chatlib.event.LCIMConnectionChangeEvent;
 import com.kaurihealth.chatlib.event.LCIMOfflineMessageCountChangeEvent;
 import com.kaurihealth.datalib.local.LocalData;
@@ -27,7 +32,7 @@ import com.kaurihealth.kaurihealth.main_v.NewestVersion.Url;
 import com.kaurihealth.mvplib.base_p.Listener;
 import com.kaurihealth.mvplib.main_p.IMainView;
 import com.kaurihealth.mvplib.main_p.MainPresenter;
-import com.kaurihealth.utilslib.log.LogUtils;
+import com.kaurihealth.utilslib.constant.Global;
 import com.kaurihealth.utilslib.widget.UiTableBottom;
 
 import org.greenrobot.eventbus.EventBus;
@@ -52,13 +57,13 @@ public class MainActivity extends BaseActivity implements IMainView {
     @Inject
     MainPresenter<IMainView> mPresenter;
 
-    List<Fragment> mFragmentList = new ArrayList<>();
-
     @Bind(R.id.vp_content_main)
     ViewPager mVpContentMain;
+
     @Bind(R.id.ui_bottom)
     UiTableBottom mUiBottom;
 
+    List<Fragment> mFragmentList = new ArrayList<>();
     private int curBottomItem = 0;
     private long exitTime;
     Handler handler = new Handler();
@@ -77,8 +82,6 @@ public class MainActivity extends BaseActivity implements IMainView {
 
     /**
      * 网路状态      eventBusMain
-     *
-     * @param event
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void eventBusMain(LCIMConnectionChangeEvent event) {
@@ -90,14 +93,15 @@ public class MainActivity extends BaseActivity implements IMainView {
      * 离线消息数量发生变化是响应此事件
      * 避免登陆后先进入此页面，然后才收到离线消息数量的通知导致的页面不刷新的问题
      */
-    int countTip=0;
-
-    @Subscribe(threadMode = ThreadMode.MAIN,sticky = true)
+    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     public void eventBusMain(LCIMOfflineMessageCountChangeEvent event) {
-        LogUtils.e(event.getUnreadCount()+"======="+event.getReadCount());
-        countTip = countTip + event.getUnreadCount();
-        countTip = countTip - event.getReadCount();
-        if (mUiBottom != null) mUiBottom.setTipOfNumber(1, countTip);
+        int count = 0;
+        List<LCIMConversationItem> converList = LCIMConversationItemCache.getInstance().getConversationList();
+        for (LCIMConversationItem conversationItem : converList) {
+            count = count + conversationItem.unreadCount;
+        }
+
+        if (mUiBottom != null) mUiBottom.setTipOfNumber(1, count);
     }
 
     /**
@@ -107,6 +111,7 @@ public class MainActivity extends BaseActivity implements IMainView {
         LCChatKit.getInstance().open(getKauriHealthId(), new AVIMClientCallback() {
             @Override
             public void done(AVIMClient avimClient, AVIMException e) {
+                mPresenter.onSubscribe();
                 if (e != null) showToast("重新连接聊天服务失败,检查网络" + e.getMessage());
             }
         });
@@ -120,7 +125,7 @@ public class MainActivity extends BaseActivity implements IMainView {
 
     private void createCurrentFragment() {
         if (mFragmentList.size() > 0) mFragmentList.clear();
-        HomeFragmentNew homeFragment = HomeFragmentNew.newInstance();
+        HomeFragment homeFragment = HomeFragment.newInstance();
         MessageFragment messageFragment = MessageFragment.newInstance();
         RelationFragment relationFragment = RelationFragment.newInstance();
 
@@ -141,13 +146,21 @@ public class MainActivity extends BaseActivity implements IMainView {
         NetLastVersionAbstract versionCheck = new GetNewestVersion(handler, this, Url.LoadAndroidVersionWithDoctor);
         versionCheck.startWithDownloadManager();
 
+        AVInstallation.getCurrentInstallation().saveInBackground(new SaveCallback() {
+            public void done(AVException e) {
+                if (e == null) {
+                    mPresenter.onSubscribe();
+                }
+            }
+        });
+
         EventBus.getDefault().register(this);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        countTip = 0;
+
         removeStickyEvent(LCIMConnectionChangeEvent.class);
         removeStickyEvent(LCIMOfflineMessageCountChangeEvent.class);
         mPresenter.unSubscribe();
@@ -226,4 +239,18 @@ public class MainActivity extends BaseActivity implements IMainView {
         mPresenter.checkVersion(map, listener);
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK) {
+            if (requestCode == Global.RequestCode.SEARCH_PATIENT) {
+                setCurrentPager(2);
+            }
+        }
+    }
+
+    @Override
+    public String getPushNotificationDeviceIdentityToken() {
+        return AVInstallation.getCurrentInstallation().getInstallationId();
+    }
 }

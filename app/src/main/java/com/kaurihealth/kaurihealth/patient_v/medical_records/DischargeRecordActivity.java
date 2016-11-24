@@ -2,9 +2,11 @@ package com.kaurihealth.kaurihealth.patient_v.medical_records;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import com.kaurihealth.datalib.local.LocalData;
@@ -18,13 +20,13 @@ import com.kaurihealth.datalib.response_bean.PatientRecordDisplayBean;
 import com.kaurihealth.datalib.response_bean.RecordDocumentsBean;
 import com.kaurihealth.kaurihealth.MyApplication;
 import com.kaurihealth.kaurihealth.R;
+import com.kaurihealth.kaurihealth.adapter.StringPathViewAdapter;
 import com.kaurihealth.kaurihealth.base_v.BaseActivity;
 import com.kaurihealth.kaurihealth.department_v.SelectDepartmentLevel1Activity;
 import com.kaurihealth.kaurihealth.department_v.SelectDepartmentLevel2Activity;
 import com.kaurihealth.kaurihealth.eventbus.MedicalRecordIdEvent;
 import com.kaurihealth.kaurihealth.eventbus.OutpatientElectronicAddBeanEvent;
 import com.kaurihealth.kaurihealth.eventbus.OutpatientElectronicBeanEvent;
-import com.kaurihealth.kaurihealth.adapter.StringPathViewAdapter;
 import com.kaurihealth.kaurihealth.mine_v.personal.EnterHospitalActivity;
 import com.kaurihealth.mvplib.patient_p.medical_records.IOutpatientElectronicView;
 import com.kaurihealth.mvplib.patient_p.medical_records.OutpatientElectronicPresenter;
@@ -55,6 +57,7 @@ import javax.inject.Inject;
 import butterknife.Bind;
 import butterknife.OnClick;
 import butterknife.OnItemClick;
+import butterknife.OnItemLongClick;
 
 /**
  * 描述： 医患-->医疗记录-->临床诊疗-->出院记录
@@ -252,6 +255,30 @@ public class DischargeRecordActivity extends BaseActivity implements IOutpatient
         }, position);
     }
 
+    /**
+     * 删除图片功能
+     * @param position
+     * @return
+     */
+    @OnItemLongClick(R.id.gv_image)
+    public boolean deletePicture(int position){
+        final PopupMenu popupMenu = new PopupMenu(this, mGvImage);
+        Menu menu = popupMenu.getMenu();
+        menu.add(Menu.NONE, Menu.FIRST, 0, "删除");
+        popupMenu.setOnMenuItemClickListener(item -> {
+            switch (item.getItemId()) {
+                case Menu.FIRST:
+                    paths.remove(position);
+                    adapter.notifyDataSetChanged();
+                    break;
+            }
+            return false;
+        });
+        popupMenu.show();
+        return true;
+    }
+
+
     // #Fragment 启动Activity并取回数据 权限有关
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
@@ -266,9 +293,9 @@ public class DischargeRecordActivity extends BaseActivity implements IOutpatient
      **/
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     public void eventBusMain(OutpatientElectronicBeanEvent event) {
-        mTvMore.setText(getString(R.string.swipe_tv_compile));
+        mTvMore.setText(getString(R.string.title_save));
         //view不可操作
-        setAllViewsEnable(false, this);
+//        setAllViewsEnable(false, this);
         mTvMore.setEnabled(true);
 
         mPatientRecordDisplayBean = event.getPatientRecordDisplayBean();
@@ -341,11 +368,11 @@ public class DischargeRecordActivity extends BaseActivity implements IOutpatient
     }
 
     private void setMustItems() {
-
-
         mEtClinicalTime.setText(DateUtil.GetNowDate("yyyy-MM-dd"));//设置当前时间
-        mEtDepartment.setText(myself.getDoctorInformations().getDepartment().getDepartmentName());//初始化科室
-        mEtInstitutions.setText(myself.getDoctorInformations().getHospitalName());//初始化机构
+        mEtDepartment.setText(myself.getDoctorInformations()!=null
+                ?myself.getDoctorInformations().getDepartment()!=null
+                ?myself.getDoctorInformations().getDepartment().getDepartmentName():"":"");//初始化科室
+        mEtInstitutions.setText(myself.getDoctorInformations()!=null?myself.getDoctorInformations().getHospitalName():"");//初始化机构
         mEtDoctor.setText(myself.getFullName());//设置医生
     }
 

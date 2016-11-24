@@ -1,10 +1,8 @@
 package com.kaurihealth.mvplib.patient_p;
 
 import com.kaurihealth.datalib.repository.IDataSource;
-import com.kaurihealth.datalib.response_bean.ContactUserDisplayBean;
 import com.kaurihealth.datalib.response_bean.DoctorRelationshipBean;
 import com.kaurihealth.mvplib.home_p.IReferralPatientRequestPresenter;
-import com.kaurihealth.utilslib.log.LogUtils;
 
 import java.util.List;
 
@@ -14,6 +12,7 @@ import rx.Observable;
 import rx.Subscriber;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action0;
 import rx.functions.Action1;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
@@ -29,7 +28,7 @@ public class ReferrcalDoctorPresenter<V> implements IReferralPatientRequestPrese
     private IReferralDoctorView mActivity;
 
     @Inject
-    public ReferrcalDoctorPresenter(IDataSource mRepository){
+    public ReferrcalDoctorPresenter(IDataSource mRepository) {
         this.mRepository = mRepository;
         mSubscriptions = new CompositeSubscription();
     }
@@ -42,37 +41,26 @@ public class ReferrcalDoctorPresenter<V> implements IReferralPatientRequestPrese
 
     @Override
     public void onSubscribe() {
-        Subscription subscription = mRepository.loadContactListByDoctorId()
-                .subscribeOn(Schedulers.io())
-                .subscribeOn(AndroidSchedulers.mainThread())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                        new Action1<List<ContactUserDisplayBean>>() {
-                            @Override
-                            public void call(List<ContactUserDisplayBean> beanList) {
-                                updateDataByDirty();
-                            }
-                        },
-                        new Action1<Throwable>() {
-                            @Override
-                            public void call(Throwable throwable) {
-                                LogUtils.e(throwable.getMessage());                            }
-                        });
-        mSubscriptions.add(subscription);
-    }
-
-    private void updateDataByDirty() {
         Subscription subscription = mRepository.loadAllDoctorRelationships()
                 .subscribeOn(Schedulers.io())
+                .doOnSubscribe(new Action0() {
+                    @Override
+                    public void call() {
+                        mActivity.loadingIndicator(true);
+                    }
+                })
+                .subscribeOn(AndroidSchedulers.mainThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Subscriber<List<DoctorRelationshipBean>>() {
                     @Override
                     public void onCompleted() {
+                        mActivity.loadingIndicator(false);
                     }
 
                     @Override
                     public void onError(Throwable e) {
-                        LogUtils.e(e.getMessage());
+                        mActivity.showToast(e.getMessage());
+                        mActivity.loadingIndicator(false);
                     }
 
                     @Override
@@ -114,7 +102,7 @@ public class ReferrcalDoctorPresenter<V> implements IReferralPatientRequestPrese
                         new Action1<Throwable>() {
                             @Override
                             public void call(Throwable throwable) {
-                                LogUtils.e(throwable.getMessage());
+                                mActivity.showToast(throwable.getMessage());
                             }
                         });
         mSubscriptions.add(subscription);
@@ -122,6 +110,13 @@ public class ReferrcalDoctorPresenter<V> implements IReferralPatientRequestPrese
 
     @Override
     public void unSubscribe() {
+        if (mActivity != null) mActivity.loadingIndicator(false);
         mSubscriptions.clear();
+        mActivity = null;
+    }
+
+    @Override
+    public void loadReferralDetail(boolean b) {
+
     }
 }

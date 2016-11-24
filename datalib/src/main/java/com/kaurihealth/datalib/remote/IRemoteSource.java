@@ -15,6 +15,7 @@ import com.kaurihealth.datalib.request_bean.bean.MobileUpdateDoctorBean;
 import com.kaurihealth.datalib.request_bean.bean.NewCashOutAccountBean;
 import com.kaurihealth.datalib.request_bean.bean.NewCashOutBean;
 import com.kaurihealth.datalib.request_bean.bean.NewDoctorRelationshipBean;
+import com.kaurihealth.datalib.request_bean.bean.NewFamilyMemberBean;
 import com.kaurihealth.datalib.request_bean.bean.NewLabTestPatientRecordDisplayBean;
 import com.kaurihealth.datalib.request_bean.bean.NewLiteratureCommentDisplayBean;
 import com.kaurihealth.datalib.request_bean.bean.NewLiteratureReplyDisplayBean;
@@ -25,6 +26,7 @@ import com.kaurihealth.datalib.request_bean.bean.NewPathologyPatientRecordDispla
 import com.kaurihealth.datalib.request_bean.bean.NewPatientRecordDisplayBean;
 import com.kaurihealth.datalib.request_bean.bean.NewPrescriptionBean;
 import com.kaurihealth.datalib.request_bean.bean.NewPriceBean;
+import com.kaurihealth.datalib.request_bean.bean.NewReferralMessageAlertBean;
 import com.kaurihealth.datalib.request_bean.bean.NewRegistByDoctorBean;
 import com.kaurihealth.datalib.request_bean.bean.NewRegisterBean;
 import com.kaurihealth.datalib.request_bean.bean.NewSupplementaryTestPatientRecordDisplayBean;
@@ -35,7 +37,6 @@ import com.kaurihealth.datalib.request_bean.bean.PatientRequestReferralPatientDi
 import com.kaurihealth.datalib.request_bean.bean.PrescriptionBean;
 import com.kaurihealth.datalib.request_bean.bean.RequestResetPasswordDisplayBean;
 import com.kaurihealth.datalib.request_bean.bean.ResetPasswordDisplayBean;
-import com.kaurihealth.datalib.response_bean.SearchResultBean;
 import com.kaurihealth.datalib.response_bean.ContactUserDisplayBean;
 import com.kaurihealth.datalib.response_bean.DepartmentDisplayBean;
 import com.kaurihealth.datalib.response_bean.DoctorCooperationBean;
@@ -43,16 +44,21 @@ import com.kaurihealth.datalib.response_bean.DoctorDisplayBean;
 import com.kaurihealth.datalib.response_bean.DoctorPatientRelationshipBean;
 import com.kaurihealth.datalib.response_bean.DoctorRelationshipBean;
 import com.kaurihealth.datalib.response_bean.DocumentDisplayBean;
+import com.kaurihealth.datalib.response_bean.FamilyMemberBean;
 import com.kaurihealth.datalib.response_bean.InitiateVerificationResponse;
 import com.kaurihealth.datalib.response_bean.LongTermMonitoringDisplayBean;
+import com.kaurihealth.datalib.response_bean.NotifyIsReadDisplayBean;
 import com.kaurihealth.datalib.response_bean.PatientDisplayBean;
 import com.kaurihealth.datalib.response_bean.PatientRecordDisplayBean;
 import com.kaurihealth.datalib.response_bean.PriceDisplayBean;
+import com.kaurihealth.datalib.response_bean.ReferralMessageAlertDisplayBean;
 import com.kaurihealth.datalib.response_bean.RegisterResponse;
 import com.kaurihealth.datalib.response_bean.ResponseDisplayBean;
+import com.kaurihealth.datalib.response_bean.SearchResultBean;
 import com.kaurihealth.datalib.response_bean.SoftwareInfo;
 import com.kaurihealth.datalib.response_bean.TokenBean;
 import com.kaurihealth.datalib.response_bean.UserCashOutAccountDisplayBean;
+import com.kaurihealth.datalib.response_bean.UserNotifyDisplayBean;
 
 import java.util.List;
 import java.util.Map;
@@ -213,8 +219,6 @@ public interface IRemoteSource {
     //插入新的临床诊疗记录 医生和患者的token都可以
     Observable<PatientRecordDisplayBean> addNewPatientRecord(NewPatientRecordDisplayBean newPatientRecordDisplayBean);
 
-    //为现医生查询所有的医患关系
-    Observable<List<DoctorPatientRelationshipBean>> LoadDoctorPatientRelationshipForDoctor();
 
     //为现医生加载所有医生关系
     Observable<List<DoctorRelationshipBean>> LoadDoctorRelationships();
@@ -281,12 +285,43 @@ public interface IRemoteSource {
 
     //通过医生查询转诊状态为等待的请求
     Observable<List<PatientRequestDisplayBean>> LoadReferralsPatientRequestByDoctorId();
+
     //向多个医生转诊患者
     Observable<ResponseDisplayBean> InsertPatientRequestReferralByDoctorList(PatientRequestReferralDoctorDisplayBean bean);
+
     //想一个医生转诊多个患者
     Observable<ResponseDisplayBean> InsertPatientRequestReferralByPatientList(PatientRequestReferralPatientDisplayBean bean);
 
     //使用患者id查询医疗团队，查询者必须为医生   -->医疗团队
     Observable<List<DoctorPatientRelationshipBean>> LoadDoctorTeamForPatient(int patientId);
 
+    //根据医患关系ID加载复诊提醒信息
+    Observable<List<ReferralMessageAlertDisplayBean>> loadReferralMessageAlert(int id);
+
+    //插入新的复诊提醒信息
+    Observable<ReferralMessageAlertDisplayBean> insertReferralMessageAlert(NewReferralMessageAlertBean bean);
+
+    //删除复诊提醒信息
+    Observable<ReferralMessageAlertDisplayBean> deleteReferralMessageAlert(int id);
+
+    //患者信息--> 家庭成员 --> 添加家庭成员
+    Observable<ResponseDisplayBean> addFamilyMemberByDoctor(NewFamilyMemberBean newFamilyMemberBean);
+
+    //查询该用户的所有系统消息
+    Observable<List<UserNotifyDisplayBean>> loadUserAllNotify();
+
+    //App和Web端 判断小红点是否显示时触发
+    Observable<NotifyIsReadDisplayBean> isReadNotify();
+
+    //更新 已读 未读
+    Observable<ResponseDisplayBean> updateUserNotifyIsRead(List<Integer> list);
+
+    //Web端和app 点击 “全部忽略”时触发
+    Observable<ResponseDisplayBean> updateUserNotify();
+
+    //患者信息 --> 家庭成员列表
+    Observable<List<FamilyMemberBean>> loadAllFamilyMembers(int patientId);
+
+    //插入推送设备 医生使用的token
+    Observable<ResponseDisplayBean> insertNewPushNotificationDevice(String IdentityToken);
 }

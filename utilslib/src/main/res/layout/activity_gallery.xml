@@ -10,12 +10,17 @@
         android:layout_height="match_parent"
         android:background="#000" />
 
-    <ImageView
+    <TextView
         android:id="@+id/ivCancle"
-        android:padding="15dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:shadowDx="1"
+        android:shadowDy="1"
+        android:shadowColor="#000"
+        android:shadowRadius="5"
         android:layout_alignParentRight="true"
-        android:layout_marginTop="60dp"
-        android:src="@mipmap/ic_cross_gray" />
+        android:layout_marginTop="40dp"
+        android:layout_marginRight="30dp"
+        android:background="@mipmap/ic_cross_gray" />
+
 </RelativeLayout>

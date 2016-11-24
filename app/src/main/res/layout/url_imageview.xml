@@ -3,9 +3,9 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/cle_imgeView"
-    android:layout_width="26dp"
-    android:layout_height="26dp"
+    android:layout_width="48dp"
+    android:layout_height="48dp"
     android:src="@mipmap/ic_el_group_child"
-    app:civ_border_color="@color/green"
+    app:civ_border_color="@color/color_green"
     app:civ_border_overlay="true"
     app:civ_border_width="0.1dp"/>

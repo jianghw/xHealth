@@ -249,6 +249,24 @@
         <item>患者</item>
     </string-array>
 
+    <string-array name="system_setting">
+        <item>清空系统消息</item>
+        <item>取消</item>
+    </string-array>
+
+    描述:（0：夫妻，1：母亲，2：父亲，3：子女，4：丈母娘，5：老丈人）
+    <!--家属关系-->
+    <string-array name="relationship">
+        <item>夫妻</item>
+        <item>母亲</item>
+        <item>父亲</item>
+        <item>子女</item>
+        <item>丈母娘</item>
+        <item>老丈人</item>
+    </string-array>
+
+
+
     <!-- TODO: Remove or change this placeholder text -->
 
     <string name="main_table_home">首页</string>
@@ -258,7 +276,7 @@
     <string name="main_table_mine">我的</string>
 
     <string name="patient_age_null">年龄:无</string>
-    <string name="patient_age">年龄:%d岁</string>
+    <string name="patient_age">%d岁</string>
     <string name="patient_gender">性别:%s</string>
     <string name="long_standard_title">监测指标</string>
     <string name="prescription_title">处方</string>
@@ -303,10 +321,28 @@
     <string name="add_bank_card">添加银行卡</string>
     <string name="find_password">找回密码</string>
     <string name="set_password">设置密码</string>
-    <string name="no_search_data">暂无搜索到相关数据:%s</string>
+    <string name="no_search_data">暂无相关数据:%s</string>
     <string name="search_data_size">当前共搜索到%d条数据</string>
     <string name="no_doctor_message">暂无医生给你留言消息</string>
     <string name="no_patient_message">暂无患者给你留言消息</string>
+    <string name="swipe_tv_stick">置顶</string>
+    <string name="swipe_tv_unstick">取消置顶</string>
+    <string name="visit_record">复诊提醒</string>
+    <string name="add_visit_record">设置复诊提醒</string>
+    <string name="patient_request">患者请求</string>
+    <string name="patient_hint_context"> 请填写患者的手机号码</string>
+    <string name="referral_patient_to_select"> 请选择转诊患者</string>
+    <string name="referral_patient_to_select_only_one"> 只能选择一位转诊患者</string>
+    <string name="referral_doctor_to_select"> 请选择转诊医生</string>
+    <string name="referral_doctor_to_select_only_one"> 只能选择一位转诊医生</string>
+    <string name="doctor_team">医疗团队</string>
+    <string name="no_system_message">暂时没有系统消息</string>
+    <string name="system_message_title">佳仁健康系统消息</string>
+    <string name="system_message_setting">系统消息设置</string>
+    <string name="more_set">设置</string>
+    <string name="no_group_message">暂无未读群聊留言消息</string>
+    <string name="patient_request_team_tips">接受预约后才可查看医疗团队</string>
+    <string name="patient_request_familytips">接受预约后才可查看家庭成员</string>
 
 
 </resources>

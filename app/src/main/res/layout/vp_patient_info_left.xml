@@ -24,12 +24,27 @@
                 android:layout_marginTop="@dimen/patientrightmargintop"
                 android:gravity="center"
                 android:text="剩余时间："/>
+            <TextView
+                style="@style/patientrelleft_tv"
+                android:layout_marginTop="@dimen/patientrightmargintop"
+                android:gravity="center"
+                android:text="当前状态："/>
+            <TextView
+                style="@style/patientrelleft_tv"
+                android:layout_marginTop="@dimen/patientrightmargintop"
+                android:gravity="center"
+                android:text="联系电话："/>
+            <TextView
+                style="@style/patientrelleft_tv"
+                android:layout_marginTop="@dimen/patientrightmargintop"
+                android:gravity="top"
+                android:text="联系地址："/>
 
             <TextView
                 style="@style/patientrelleft_tv"
                 android:layout_marginTop="@dimen/patientrightmargintop"
                 android:gravity="top"
-                android:text="请求原因："/>
+                android:text="预约原因："/>
 
         </LinearLayout>
 
@@ -47,7 +62,7 @@
                 android:textColor="#FFFF6600"/>
 
             <LinearLayout
-                android:id="@+id/lay"
+                android:id="@+id/ly_time_bg_red"
                 style="@style/patientrelleft_tv.right"
                 android:layout_marginTop="@dimen/patientrightmargintop"
                 android:background="@drawable/bg_edt_red"
@@ -76,7 +91,6 @@
                     tools:text="00:00:00"
                     android:textColor="@color/textblue"/>
             </LinearLayout>
-
             <TextView
                 android:id="@+id/tvTimeTag"
                 style="@style/patientrelleft_tv.right"
@@ -85,6 +99,35 @@
                 android:text="请您于48小时内完成咨询服务"
                 android:textColor="@color/holo_blue_light"
                 android:visibility="visible"/>
+
+            <TextView
+                android:id="@+id/tv_state"
+                style="@style/patientrelleft_tv.right"
+                android:layout_marginTop="5dp"
+                android:gravity="center"
+                android:text="  "
+                android:textColor="#FFFF6600"
+                />
+
+            <TextView
+                android:id="@+id/tvTel"
+                style="@style/patientrelleft_tv.right"
+                android:layout_marginTop="5dp"
+                android:gravity="center"
+                android:text="123546"
+                android:textSize="14sp"
+                android:textColor="@color/textblue"
+                />
+            <TextView
+                android:id="@+id/tvAdress"
+                style="@style/patientrelleft_tv.right"
+                android:layout_marginTop="5dp"
+                android:gravity="center"
+                android:textSize="13sp"
+                android:lines="2"
+                android:ellipsize="end"
+                android:text="上海市"
+                />
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -97,7 +140,7 @@
                     android:layout_alignParentLeft="true"
                     android:layout_alignParentRight="true"
                     android:layout_marginRight="22dp"
-
+                    android:textSize="14sp"
                     android:layout_marginTop="@dimen/patientrightmargintop"
                     android:gravity="top"
                     android:text=" "/>

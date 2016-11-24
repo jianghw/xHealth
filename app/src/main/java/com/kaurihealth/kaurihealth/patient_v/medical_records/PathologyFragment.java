@@ -14,9 +14,10 @@ import com.kaurihealth.datalib.response_bean.PatientRecordDisplayBean;
 import com.kaurihealth.kaurihealth.R;
 import com.kaurihealth.kaurihealth.adapter.ClinicalMedicalBeanAdapter;
 import com.kaurihealth.kaurihealth.adapter.ClinicalMedicalBeanItem;
-import com.kaurihealth.kaurihealth.common.Interface.IGetMedicaHistoryRecord;
-import com.kaurihealth.kaurihealth.eventbus.AddCommonMedicalRecordBeanEvent;
+import com.kaurihealth.kaurihealth.patient_v.IGetMedicaHistoryRecord;
+import com.kaurihealth.kaurihealth.eventbus.CommonMedicalRecordToReadEvent;
 import com.kaurihealth.kaurihealth.eventbus.PathologyFragmentEvent;
+import com.kaurihealth.utilslib.ColorUtils;
 import com.kaurihealth.utilslib.constant.Global;
 import com.kaurihealth.utilslib.log.LogUtils;
 import com.kaurihealth.utilslib.widget.AnimatedExpandableListView;
@@ -65,9 +66,7 @@ public class PathologyFragment extends Fragment implements ExpandableListView.On
         ButterKnife.bind(this,view);
 
         clinical_SR.setSize(SwipeRefreshLayout.DEFAULT);
-        clinical_SR.setColorSchemeResources(R.color.holo_blue_light_new
-                , R.color.holo_blue_light_new,
-                R.color.holo_blue_light_new, R.color.holo_blue_light_new);
+        clinical_SR.setColorSchemeColors(ColorUtils.setSwipeRefreshColors(getContext()));
         clinical_SR.setProgressBackgroundColor(R.color.linelogin);
         clinical_SR.setOnRefreshListener(() -> {
             medicaHistoryRecord.getDate();
@@ -108,11 +107,11 @@ public class PathologyFragment extends Fragment implements ExpandableListView.On
      */
     private void pointToActivityPage(PatientRecordDisplayBean patientRecordDisplayBean) {
         MedicalRecordActivity activity = (MedicalRecordActivity) getActivity();
-        EventBus.getDefault().postSticky(new AddCommonMedicalRecordBeanEvent(patientRecordDisplayBean, activity.getShipBean(),MedicalRecordActivity.PATHOLOGY));
+        EventBus.getDefault().postSticky(new CommonMedicalRecordToReadEvent(patientRecordDisplayBean, activity.getShipBean(),MedicalRecordActivity.PATHOLOGY));
         //TODO
         switch (patientRecordDisplayBean.getSubject()) {
             case "病理":
-                activity.switchPageUI(Global.Jump.AddCommonMedicalRecordActivity);
+                activity.switchPageUI(Global.Jump.CommonMedicalRecordToReadActivity,null);
                 break;
         }
     }
@@ -132,7 +131,7 @@ public class PathologyFragment extends Fragment implements ExpandableListView.On
     }
 
     private void dataPacketProcessing(List<PatientRecordDisplayBean> list) {
-        mTvNote.setVisibility(View.GONE);
+        mTvNote.setVisibility(list.size() > 0 ? View.GONE : View.VISIBLE);
 
         if (!mGroupIteams.isEmpty()) mGroupIteams.clear();
         String[] arrays = getResources().getStringArray(R.array.Pathology);

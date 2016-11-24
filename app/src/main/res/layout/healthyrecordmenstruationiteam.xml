@@ -6,7 +6,7 @@
 <RelativeLayout
     xmlns:tools="http://schemas.android.com/tools"
     style="@style/healthyrecordnew_lay_copy"
-    tools:context="com.kaurihealth.kaurihealth.patientwithdoctor.bean.HealthyRecordNewMenstrualReproductive">
+    tools:context="com.kaurihealth.kaurihealth.patient_v.health_condition.HealthyRecordNewMenstrualReproductive">
 
     <TextView
         android:id="@+id/tvAge"

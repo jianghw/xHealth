@@ -6,12 +6,14 @@ import android.widget.BaseAdapter;
 
 import java.util.List;
 
+import de.halfbit.pinnedsection.PinnedSectionListView;
+
 /**
  * 对Baseadapter的封装
  * 修订时间:
  * 使用说明:
  */
-public abstract class CommonAdapter<T> extends BaseAdapter {
+public abstract class CommonAdapter<T> extends BaseAdapter implements PinnedSectionListView.PinnedSectionListAdapter{
     protected List<T> list;
     protected Context context;
     protected LayoutInflater inflater;

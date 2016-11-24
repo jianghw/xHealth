@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:background="@color/color_bg_gray"
     android:orientation="vertical">
-
+   <!--导航栏(标题栏)-->
     <include
         android:id="@+id/in_title"
         layout="@layout/include_bar_no_more" />
@@ -13,5 +13,6 @@
         android:id="@+id/lv_content"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:dividerHeight="0.5dp" />
+        android:dividerHeight="0.5dp"
+        android:scrollbars="none"/>
 </LinearLayout>

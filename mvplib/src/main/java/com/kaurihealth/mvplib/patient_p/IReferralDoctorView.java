@@ -9,8 +9,9 @@ import java.util.List;
  * Created by mip on 2016/10/24.
  */
 
-public interface IReferralDoctorView extends IMvpView{
+public interface IReferralDoctorView extends IMvpView {
 
     void getDoctorRelationshipBeanList(List<DoctorRelationshipBean> doctorRelationshipBeen);
 
+    void loadingIndicator(boolean flag);
 }

@@ -32,7 +32,7 @@ public class FastBlurUtil {
 
     public static Bitmap GetUrlBitmap(String url, int scaleRatio) {
 
-        int blurRadius = 8;//通常设置为8就行。
+        int blurRadius = 1;//通常设置为8就行。
         if (scaleRatio <= 0) {
             scaleRatio = 10;
         }

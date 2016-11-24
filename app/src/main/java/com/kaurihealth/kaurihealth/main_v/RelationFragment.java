@@ -17,7 +17,8 @@ import com.kaurihealth.kaurihealth.base_v.ChildBaseFragment;
 import com.kaurihealth.kaurihealth.doctor_v.DoctorFragment;
 import com.kaurihealth.kaurihealth.eventbus.DoctorFragmentEvent;
 import com.kaurihealth.kaurihealth.eventbus.DoctorFragmentRefreshEvent;
-import com.kaurihealth.kaurihealth.patient_v.PatientFragment;
+import com.kaurihealth.kaurihealth.eventbus.PatientFragmentEvent;
+import com.kaurihealth.kaurihealth.eventbus.RelationFragmentEvent;
 import com.kaurihealth.kaurihealth.search_v.SearchActivity;
 import com.kaurihealth.utilslib.TranslationAnim;
 import com.kaurihealth.utilslib.constant.Global;
@@ -188,6 +189,16 @@ public class RelationFragment extends Fragment {
         initCurPager(1);
         mCurItem = 1;
         EventBus.getDefault().postSticky(new DoctorFragmentRefreshEvent());//让其刷新
+    }
+
+    /**
+     * 开户成功后跳转到主fragment
+     * @param event
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
+    public void eventBusMain(RelationFragmentEvent event) {
+        initCurPager(0);
+        EventBus.getDefault().postSticky(new PatientFragmentEvent());
     }
 
 }

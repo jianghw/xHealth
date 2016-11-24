@@ -58,7 +58,7 @@ public class AccountDetailsPresenter<V> implements IAccountDetailsPresenter<V> {
 
                     @Override
                     public void onNext(List<CreditTransactionDisplayBean> been) {
-                        mActivity.getAmountDetail(been);
+//                        mActivity.getAmountDetail(been);
                     }
                 });
 

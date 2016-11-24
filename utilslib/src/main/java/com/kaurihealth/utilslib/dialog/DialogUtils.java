@@ -102,9 +102,12 @@ public class DialogUtils {
 
     public static void changeAlertTypeWarning(Context context, String message) {
         if (isProgressDialogAlive()) {
-            pDialog.setTitleText(context.getResources().getString(R.string.dialog_warning_title))
-                    .setContentText(message)
-                    .changeAlertType(SweetAlertDialog.WARNING_TYPE);
+//            pDialog.setTitleText(context.getResources().getString(R.string.dialog_warning_title))
+//                    .setContentText(message)
+//                    .changeAlertType(SweetAlertDialog.WARNING_TYPE);
+            pDialog.dismiss();
+            pDialog = null;
+            sweetWarningDialog(context, message);
         } else {
             sweetWarningDialog(context, message);
         }
@@ -118,6 +121,12 @@ public class DialogUtils {
      */
     public static void showDateDialog(Activity activity, SelectDateDialog.DialogListener listener) {
         SelectDateDialog selectDateDialog = new SelectDateDialog(activity, listener);
+        Dialog dateDialog = selectDateDialog.getDataDialog();
+        dateDialog.show();
+    }
+
+    public static void showAllDateDialog(Activity activity, SelectAllDateDialog.DialogListener listener) {
+        SelectAllDateDialog selectDateDialog = new SelectAllDateDialog(activity, listener);
         Dialog dateDialog = selectDateDialog.getDataDialog();
         dateDialog.show();
     }

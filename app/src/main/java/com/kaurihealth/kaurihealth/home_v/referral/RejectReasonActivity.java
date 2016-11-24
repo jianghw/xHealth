@@ -16,6 +16,7 @@ import com.kaurihealth.mvplib.home_p.IRejectReasonView;
 import com.kaurihealth.mvplib.home_p.RejectReasonPresenter;
 import com.kaurihealth.utilslib.OnClickUtils;
 import com.kaurihealth.utilslib.ValidatorUtils;
+import com.kaurihealth.utilslib.constant.Global;
 import com.mobsandgeeks.saripaar.ValidationError;
 import com.mobsandgeeks.saripaar.Validator;
 import com.mobsandgeeks.saripaar.annotation.NotEmpty;
@@ -59,7 +60,6 @@ public class RejectReasonActivity extends BaseActivity implements IRejectReasonV
     protected void initPresenterAndView(Bundle savedInstanceState) {
         MyApplication.getApp().getComponent().inject(this);
         mPresenter.setPresenter(this);
-        EventBus.getDefault().register(this);
 
         initNewBackBtn("拒绝预约");
         tvMore.setText(getString(R.string.title_complete));
@@ -110,8 +110,8 @@ public class RejectReasonActivity extends BaseActivity implements IRejectReasonV
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        EventBus.getDefault().unregister(this);
         mPresenter.unSubscribe();
+        EventBus.getDefault().unregister(this);
     }
 
     /**
@@ -124,7 +124,7 @@ public class RejectReasonActivity extends BaseActivity implements IRejectReasonV
 
     @Override
     public void getRequestResult(ResponseDisplayBean bean) {
-        EventBus.getDefault().postSticky(new HomefragmentPatientEvent("Reject"));
+        EventBus.getDefault().postSticky(new HomefragmentPatientEvent(Global.RequestCode.REJECT));
         setResult(RESULT_OK);
         finishCur();
     }

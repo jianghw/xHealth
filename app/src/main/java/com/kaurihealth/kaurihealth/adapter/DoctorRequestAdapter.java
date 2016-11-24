@@ -38,6 +38,11 @@ public class DoctorRequestAdapter extends CommonAdapter<DoctorRelationshipBean> 
         return convertView;
     }
 
+    @Override
+    public boolean isItemViewTypePinned(int viewType) {
+        return false;
+    }
+
     class ViewHolder {
         @Bind(R.id.civPhoto)
         CircleImageView civPhoto;

@@ -13,7 +13,7 @@
 
         <com.kaurihealth.utilslib.widget.CircleImageView
             android:id="@+id/civPhoto"
-            style="@style/common_photo"
+            style="@style/Photo.Nomal.Vertical"
             android:src="@mipmap/ic_circle_head_green" />
 
         <TextView
@@ -24,7 +24,6 @@
             android:layout_toRightOf="@id/civPhoto"
             android:textColor="#545252"
             tools:text="杜江" />
-
 
         <TextView
             android:id="@+id/tv_referral_doctor_department"
@@ -39,7 +38,7 @@
             tools:text="北京协和医院" />
 
         <LinearLayout
-            android:id="@+id/LY_referral_layout"
+            android:id="@+id/ly_referral_layout"
             style="@style/searchiteam_tv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -71,7 +70,7 @@
         <TextView
             android:id="@+id/tv_referral_doctor_organization"
             style="@style/searchiteam_tv"
-            android:layout_below="@id/LY_referral_layout"
+            android:layout_below="@id/ly_referral_layout"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="50dp"
             android:layout_marginTop="10dp"

@@ -10,8 +10,8 @@ import com.kaurihealth.datalib.response_bean.DoctorDisplayBean;
 import com.kaurihealth.datalib.response_bean.DoctorRelationshipBean;
 import com.kaurihealth.kaurihealth.R;
 import com.kaurihealth.utilslib.CheckUtils;
+import com.kaurihealth.utilslib.image.ImageUrlUtils;
 import com.kaurihealth.utilslib.widget.CircleImageView;
-import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -44,6 +44,11 @@ public class ReferralDoctorAdapter extends CommonAdapter<DoctorRelationshipBean>
         return convertView;
     }
 
+    @Override
+    public boolean isItemViewTypePinned(int viewType) {
+        return false;
+    }
+
     class ViewHolder {
         @Bind(R.id.civPhoto)
         CircleImageView civPhoto;
@@ -64,15 +69,12 @@ public class ReferralDoctorAdapter extends CommonAdapter<DoctorRelationshipBean>
             ButterKnife.bind(this, view);
         }
 
-        public void setInfo(DoctorRelationshipBean info, int position) {
-            if (info.getRelatedDoctor() != null) {
-                DoctorDisplayBean doctorDisplayBean = info.getRelatedDoctor();
+        public void setInfo(DoctorRelationshipBean doctorRelationshipBean, int position) {
+            if (doctorRelationshipBean.getRelatedDoctor() != null) {
+                DoctorDisplayBean doctorDisplayBean = doctorRelationshipBean.getRelatedDoctor();
                 if (CheckUtils.checkUrlNotNull(doctorDisplayBean.getAvatar())) {
-                    Picasso.with(context).load(doctorDisplayBean.getAvatar())
-                            .placeholder(R.mipmap.ic_circle_head_green)
-                            .error(R.mipmap.ic_circle_head_green)
-                            .into(civPhoto);
-                }else {
+                    ImageUrlUtils.picassoByUrlCircle(context,doctorDisplayBean.getAvatar(),civPhoto);
+                } else {
                     civPhoto.setImageResource(R.mipmap.ic_circle_head_green);
                 }
                 tv_referral_request_name.setText(doctorDisplayBean.getFullName());
@@ -80,7 +82,7 @@ public class ReferralDoctorAdapter extends CommonAdapter<DoctorRelationshipBean>
                         ? doctorDisplayBean.getDoctorInformations().getDepartment() != null
                         ? doctorDisplayBean.getDoctorInformations().getDepartment().getDepartmentName()
                         : "暂无" : "暂无");
-                tv_referral_doctor_professional.setText(doctorDisplayBean.getHospitalTitle());
+                tv_referral_doctor_professional.setText(doctorDisplayBean.getHospitalTitle() != null ? doctorDisplayBean.getHospitalTitle() : "暂无");
                 tv_referral_doctor_professional_Two.setText(doctorDisplayBean.getMentorshipTitle() != null
                         ? doctorDisplayBean.getMentorshipTitle() : "暂无");
                 tv_referral_doctor_organization.setText(doctorDisplayBean.getDoctorInformations().getHospitalName() != null
@@ -89,21 +91,21 @@ public class ReferralDoctorAdapter extends CommonAdapter<DoctorRelationshipBean>
                         : "暂无" : "暂无");
                 tv_referral_checkbox.setOnCheckedChangeListener((compoundButton, isChecked) -> {
 
-                    if (!isChecked){
-                        info.type = 0;
+                    if (!isChecked) {
+                        doctorRelationshipBean.type = 0;
                     }
                     if (isChecked) {
-                        info.type = 1;//表示被点击
-                        if (!(doctorIdlist.contains(info.getRelatedDoctor().getDoctorId()))){
-                            doctorIdlist.add(info.getRelatedDoctor().getDoctorId());
+                        doctorRelationshipBean.type = 1;//表示被点击
+                        if (!(doctorIdlist.contains(doctorRelationshipBean.getRelatedDoctor().getDoctorId()))) {
+                            doctorIdlist.add(doctorRelationshipBean.getRelatedDoctor().getDoctorId());
                         }
-                    } else if (doctorIdlist.contains(info.getRelatedDoctor().getDoctorId())) {
-                        doctorIdlist.remove(doctorIdlist.indexOf(info.getRelatedDoctor().getDoctorId()));
+                    } else if (doctorIdlist.contains(doctorRelationshipBean.getRelatedDoctor().getDoctorId())) {
+                        doctorIdlist.remove(doctorIdlist.indexOf(doctorRelationshipBean.getRelatedDoctor().getDoctorId()));
                     }
                 });
 
                 //防止checkBox混乱的问题
-                if (info.type == 1) {
+                if (doctorRelationshipBean.type == 1) {
                     tv_referral_checkbox.setChecked(true);
                 } else {
                     tv_referral_checkbox.setChecked(false);

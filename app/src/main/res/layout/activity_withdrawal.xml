@@ -23,7 +23,7 @@
             android:id="@+id/tv_bankCard"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/padding_6"
+            android:layout_marginTop="@dimen/padding_4"
             android:layout_marginBottom="6dp"
             android:paddingBottom="5dp"
             android:paddingTop="5dp"
@@ -32,12 +32,13 @@
             android:textColorHint="@color/color_label_gray"
             android:layout_marginLeft="@dimen/margin_16"
             android:layout_marginRight="@dimen/margin_16"
+            android:paddingLeft="5dp"
             android:layout_toRightOf="@+id/tv1"
             android:gravity="left|center_vertical"
             android:hint="选择提现通道"
             android:textColor="@color/color_enable_green" />
 
-        <ImageView style="@style/Image_Arrow_Right" />
+        <!--<ImageView style="@style/Image_Arrow_Right" />-->
 
     </RelativeLayout>
 
@@ -58,6 +59,7 @@
             android:layout_marginLeft="@dimen/margin_16"
             android:layout_marginRight="@dimen/margin_16"
             android:layout_toRightOf="@+id/tv2"
+            android:paddingLeft="5dp"
             android:hint="提现需填写个人真实身份证号" />
         <ImageView style="@style/Image_Arrow_Right"
             android:visibility="invisible"/>
@@ -112,6 +114,7 @@
             android:layout_toRightOf="@+id/tv5"
             android:layout_marginLeft="@dimen/margin_16"
             android:layout_marginRight="@dimen/margin_16"
+            android:paddingLeft="5dp"
             android:layout_width="match_parent"
             android:inputType="numberDecimal" />
 

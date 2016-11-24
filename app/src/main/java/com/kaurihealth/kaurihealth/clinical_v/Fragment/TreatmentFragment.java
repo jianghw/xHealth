@@ -5,16 +5,16 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.kaurihealth.datalib.request_bean.bean.MedicalLiteratureDisPlayBean;
+import com.kaurihealth.datalib.request_bean.builder.Category;
 import com.kaurihealth.kaurihealth.MyApplication;
 import com.kaurihealth.kaurihealth.R;
-import com.kaurihealth.kaurihealth.adapter.TreatmentAdapter;
 import com.kaurihealth.kaurihealth.base_v.BaseFragment;
 import com.kaurihealth.kaurihealth.clinical_v.Utils.ClinicalUtil;
 import com.kaurihealth.kaurihealth.clinical_v.activity.DynamicActivity;
+import com.kaurihealth.kaurihealth.clinical_v.adapter.ClinicalAdapter;
 import com.kaurihealth.kaurihealth.eventbus.ClinicalRefreshEvent;
 import com.kaurihealth.mvplib.clinical_p.ITreatmentView;
 import com.kaurihealth.mvplib.clinical_p.TreatmentPresenter;
@@ -31,6 +31,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import butterknife.Bind;
+import de.halfbit.pinnedsection.PinnedSectionListView;
 
 /**
  * Created by mip on 2016/8/26.
@@ -38,14 +39,14 @@ import butterknife.Bind;
 public class TreatmentFragment extends BaseFragment implements ITreatmentView {
 
     @Bind(R.id.lv_content)
-    ListView mLvContent;
+    PinnedSectionListView mLvContent;
     @Bind(R.id.swipe_refresh)
     ScrollChildSwipeRefreshLayout mSwipeRefresh;
-
+    private ArrayList<Category> mListData = new ArrayList<>();
     private List<MedicalLiteratureDisPlayBean> medicalLiteratureDisPlayBeanList = new ArrayList<>();
-    private TreatmentAdapter mAdapter;
     private MedicalLiteratureDisPlayBean mMedicalLiteratureDisPlayBean;
     private TextView textView;
+    private ClinicalAdapter mAdapter;
 
     @Inject
     TreatmentPresenter<ITreatmentView> mPresenter;
@@ -69,7 +70,7 @@ public class TreatmentFragment extends BaseFragment implements ITreatmentView {
     }
 
     private void initPagerView() {
-        mAdapter = new TreatmentAdapter(getContext(), medicalLiteratureDisPlayBeanList);
+        mAdapter = new ClinicalAdapter(getContext(), getActivity(), mListData, medicalLiteratureDisPlayBeanList);
         mLvContent.setAdapter(mAdapter);
     }
 
@@ -113,7 +114,7 @@ public class TreatmentFragment extends BaseFragment implements ITreatmentView {
         if (medicalLiteratureDisPlayBeanList != null && medicalLiteratureDisPlayBeanList.size() > 0)
             medicalLiteratureDisPlayBeanList.clear();
         medicalLiteratureDisPlayBeanList.addAll(new ClinicalUtil().getListMedicalLiteratureDisPlayBean(mMedicalLiteratureDisPlayBeanList));
-
+        mPresenter.getArrayList();
         if (medicalLiteratureDisPlayBeanList.size() > 5 && mLvContent.getFooterViewsCount() == 0) {
             textView = new TextView(getActivity());
             textView.setText("已加载完成");
@@ -121,6 +122,20 @@ public class TreatmentFragment extends BaseFragment implements ITreatmentView {
             mLvContent.addFooterView(textView, null, false);
         }
         mAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public ArrayList<Category> getCategoryList() {
+        if (mListData == null)
+            throw new IllegalStateException("mListData must be not null");
+        return mListData;
+    }
+
+    @Override
+    public List<MedicalLiteratureDisPlayBean> getMedicalLiteratureDisPlayBeanList() {
+        if (medicalLiteratureDisPlayBeanList == null)
+            throw new IllegalStateException("medicalLiteratureDisPlayBeanList must be not null");
+        return medicalLiteratureDisPlayBeanList;
     }
 
     /**

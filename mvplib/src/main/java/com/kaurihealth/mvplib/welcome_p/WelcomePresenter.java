@@ -55,6 +55,7 @@ public class WelcomePresenter<V> implements IWelcomePresenter<V> {
                     public void call(Subscriber<? super TokenBean> subscriber) {
                         try {
                             subscriber.onNext(LocalData.getLocalData().getTokenBean());
+                            subscriber.onCompleted();
                         } catch (Exception e) {
                             subscriber.onError(e);
                         }
@@ -69,10 +70,11 @@ public class WelcomePresenter<V> implements IWelcomePresenter<V> {
                                 if (tokenBean == null) return;
                                 UserBean userBean = tokenBean.getUser();
                                 if (userBean == null) return;
-                                if (userBean.getRegistPercentage() < 30) {
+                                if (userBean.getUserType().equals("患者")) {
+                                    mActivity.switchPageUI(Global.Jump.LoginActivity);
+                                } else if (userBean.getRegistPercentage() < 30) {
                                     mActivity.completeRegister();
                                 } else {
-                                    loadContactListByDoctorId();
                                     loadDoctorDetail();
                                     mActivity.initChatKitOpen(tokenBean);
                                 }

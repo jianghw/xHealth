@@ -36,6 +36,15 @@ public class DoctorPatientRelationshipBean implements Serializable{
     private boolean isPatientConfirmed;   //患者是否确认结束关系
     private String relationship;  //关系（0：普通，1：专属，2：转诊，3：协作）
     private DoctorDisplayBean doctor; //医生的参数
+
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
+    }
+
     public int type;
     /**
      * patientId : 44428

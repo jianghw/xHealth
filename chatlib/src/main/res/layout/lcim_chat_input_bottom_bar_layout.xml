@@ -20,7 +20,7 @@
 
         <RelativeLayout
             android:layout_width="0dp"
-            android:layout_weight="1"
+            android:layout_weight="1.5"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical">
         <!--<Button-->
@@ -34,6 +34,7 @@
                 android:id="@+id/input_bar_btn_keyboard"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
+                android:layout_marginLeft="12dp"
                 android:layout_gravity="center"
                 android:background="@drawable/bg_bottom_bar_keyboard_button"
                 android:visibility="gone" />
@@ -42,7 +43,7 @@
             android:id="@+id/input_bar_btn_voice"
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:layout_marginLeft="5dp"
+            android:layout_marginLeft="12dp"
             android:layout_gravity="center"
             android:background="@drawable/bg_bottom_bar_voice_button"/>
         </RelativeLayout>
@@ -63,7 +64,7 @@
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:layout_centerHorizontal="true"
-                android:layout_marginLeft="3dp"
+                android:layout_marginLeft="16dp"
                 android:background="@drawable/bg_bottom_bar_add_button" />
             <Button
                 android:id="@+id/input_bar_btn_send_text"

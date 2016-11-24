@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import com.kaurihealth.datalib.request_bean.bean.PrescriptionBean;
 import com.kaurihealth.kaurihealth.R;
-import com.kaurihealth.kaurihealth.patient_v.PrescriptionImageActivity;
+import com.kaurihealth.kaurihealth.patient_v.prescription.PrescriptionImageActivity;
 import com.kaurihealth.utilslib.TranslationAnim;
 import com.kaurihealth.utilslib.date.DateUtils;
 import com.kaurihealth.utilslib.image.GalleryUtil;
@@ -47,6 +47,11 @@ public class PrescriptionAdapter extends CommonAdapter<PrescriptionBean> {
         ViewHolder viewHolder = new ViewHolder(convertView, position);
         viewHolder.setInfo(list.get(position));
         return convertView;
+    }
+
+    @Override
+    public boolean isItemViewTypePinned(int viewType) {
+        return false;
     }
 
     class ViewHolder {

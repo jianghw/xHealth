@@ -5,7 +5,6 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.kaurihealth.datalib.request_bean.bean.MedicalLiteratureDisPlayBean;
@@ -32,6 +31,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import butterknife.Bind;
+import de.halfbit.pinnedsection.PinnedSectionListView;
 
 
 /**
@@ -42,7 +42,7 @@ public class StudentFragment extends BaseFragment implements IStudentView {
     Studentpresenter<IStudentView> mPresenter;
 
     @Bind(R.id.lv_content)
-    ListView mLvContent;
+    PinnedSectionListView mLvContent;
 
     @Bind(R.id.swipe_refresh)
     ScrollChildSwipeRefreshLayout mSwipeRefresh;

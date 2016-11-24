@@ -1,29 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
 
     <include layout="@layout/include_bar_no_more"/>
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-    <com.kaurihealth.utilslib.widget.ScrollChildSwipeRefreshLayout
-        android:id="@+id/swipe_refresh"
-        style="@style/lay_refresh">
-        <ListView
-            android:id="@+id/lv_content"
-            style="@style/lv_refresh">
-        </ListView>
+
+        <com.kaurihealth.utilslib.widget.ScrollChildSwipeRefreshLayout
+            android:id="@+id/swipe_refresh"
+            style="@style/lay_refresh">
+
+            <ListView
+                android:id="@+id/lv_content"
+                style="@style/lv_refresh">
+            </ListView>
 
 
-    </com.kaurihealth.utilslib.widget.ScrollChildSwipeRefreshLayout>
-     <TextView
-         android:id="@+id/patient_tips"
-         android:layout_width="wrap_content"
-         android:layout_height="wrap_content"
-         android:layout_centerInParent="true"
-         android:textColor="@color/color_gold"
-         android:text="暂无候诊患者请求~"/>
+        </com.kaurihealth.utilslib.widget.ScrollChildSwipeRefreshLayout>
+
+        <TextView
+            android:id="@+id/patient_tips"
+            android:visibility="gone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="暂无候诊患者请求~"
+            android:textColor="@color/color_gold"/>
     </RelativeLayout>
 </LinearLayout>

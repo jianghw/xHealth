@@ -71,6 +71,7 @@ public class OpenAnAccountPresenter<T> implements  IOpenAnAccountPresenter<T> {
                         if(registerResponse.isSuccessful()){
                             mActivity.openAnAccountSuccess(registerResponse);
                         }else{
+                            mActivity.showToast(registerResponse.getMessage());
                             mActivity.displayErrorDialog(registerResponse.getMessage());
                         }
                     }

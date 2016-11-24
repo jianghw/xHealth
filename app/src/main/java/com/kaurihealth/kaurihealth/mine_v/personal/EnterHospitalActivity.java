@@ -26,6 +26,8 @@ import javax.inject.Inject;
 import butterknife.Bind;
 import butterknife.OnClick;
 
+import static android.app.Activity.RESULT_OK;
+//edt_hospitalName
 
 /**
  * 我的Fragment-->个人信息-->机构   created by Nick
@@ -79,10 +81,12 @@ public class EnterHospitalActivity extends BaseActivity implements IEnterHospita
 
         //初始化Adapter
         adapter = new ArrayAdapter<>(getApplicationContext(), R.layout.simple_list_item, hospitalList);
+
         lvContent.setAdapter(adapter);
         lvContent.setOnItemClickListener((adapterView, view, position, id) -> {
             String selectHospital = hospitalList.get(position);
             setEdtHospitalName(selectHospital);
+
         });
 
         initAllHospitalList();
@@ -148,5 +152,7 @@ public class EnterHospitalActivity extends BaseActivity implements IEnterHospita
 
     public void setEdtHospitalName(String edtHospitalName) {
         this.edtHospitalName.setText(edtHospitalName);
+//        this.edtHospitalName.setSelection(edtHospitalName.length());  // 光标移到文本末尾
+        setSelection(this.edtHospitalName);
     }
 }

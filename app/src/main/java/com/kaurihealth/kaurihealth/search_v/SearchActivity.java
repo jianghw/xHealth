@@ -53,9 +53,9 @@ public class SearchActivity extends BaseActivity implements ISearchActivityView,
     TabLayout tablayTop;
 
     List<Fragment> fragmentList = new ArrayList<>();//页面
-
     List<String> searchList = new ArrayList<>();//历史记录
     private SearchFragmentAdapter adapter;
+    private SearchPatientFragment patientFragment;
 
     @Override
     protected int getActivityLayoutID() {
@@ -81,7 +81,7 @@ public class SearchActivity extends BaseActivity implements ISearchActivityView,
     protected void onDestroy() {
         super.onDestroy();
         removeStickyEvent(SearchAtyToFgtEvent.class);
-        if (!searchList.isEmpty()) searchList.clear();
+        if (!searchList.isEmpty()) searchList.clear();  //历史记录
         if (!fragmentList.isEmpty()) fragmentList.clear();
         mPresenter.unSubscribe();
     }
@@ -104,7 +104,7 @@ public class SearchActivity extends BaseActivity implements ISearchActivityView,
             }
             adapter = new SearchFragmentAdapter(getSupportFragmentManager(), fragmentList, stringArray);
             vpContent.setAdapter(adapter);
-            vpContent.setOffscreenPageLimit(fragmentList.size() - 1);
+            vpContent.setOffscreenPageLimit(fragmentList.size() - 1);   //viewPager限定预加载的页面个数
             tablayTop.setupWithViewPager(vpContent);
         }
     }
@@ -134,8 +134,9 @@ public class SearchActivity extends BaseActivity implements ISearchActivityView,
     }
 
     private void addPatientFragment() {
-        SearchPatientFragment patientFragment = SearchPatientFragment.newInstance();
+        patientFragment = SearchPatientFragment.newInstance();
         fragmentList.add(patientFragment);
+
     }
 
     @Override
@@ -151,6 +152,8 @@ public class SearchActivity extends BaseActivity implements ISearchActivityView,
         return new InitialiseSearchRequestBeanBuilder().Build("default", getEditTextSearch());
     }
 
+
+
     @Override
     public void updataDataSucceed(List<SearchBooleanResultBean> been) {
         if (!searchList.contains(getEditTextSearch())) {
@@ -162,6 +165,25 @@ public class SearchActivity extends BaseActivity implements ISearchActivityView,
     @Override
     public String getEditTextSearch() {
         return etSearch.getText().toString().trim();
+    }
+
+    @Override
+    public void setEditTextHint() {
+        etSearch.setHint(" "+getString(R.string.patient_hint_context));
+    }
+
+    @Override
+    public String getEditTextHint() {
+        String hintcontext = "";
+        if (TextUtils.isEmpty(etSearch.getText().toString().trim())){
+            hintcontext = etSearch.getHint().toString().trim();
+        }
+        return hintcontext;
+    }
+
+    @Override
+    public void setEditDoctorHint() {
+        etSearch.setHint(" 请填写搜索信息");
     }
 
     public List<String> getSearchHistroyList() {
@@ -186,7 +208,7 @@ public class SearchActivity extends BaseActivity implements ISearchActivityView,
                 if (editTextIsEmpter()) {
                     mPresenter.onSubscribe();
                 }
-                hideSoftInput();
+                hideSoftInput();   //隐藏软键盘
                 break;
             case R.id.iv_delete:
                 clearTextview(etSearch);
@@ -224,6 +246,11 @@ public class SearchActivity extends BaseActivity implements ISearchActivityView,
     public void onTextChanged(CharSequence s, int start, int before, int count) {
         if (TextUtils.isEmpty(etSearch.getText().toString().trim()))
             EventBus.getDefault().post(new SearchAtyToFgtEvent(null));
+        if (patientFragment!=null&&patientFragment.getUserVisibleHint()) {
+            setEditTextHint();
+        }else {
+            setEditDoctorHint();
+        }
     }
 
     @Override
@@ -231,5 +258,11 @@ public class SearchActivity extends BaseActivity implements ISearchActivityView,
 
     }
 
-
+    /**
+     * 跳转患者界面
+     */
+    public void skipPatientFragment() {
+        setResult(RESULT_OK);
+        finishCur();
+    }
 }

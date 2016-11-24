@@ -11,37 +11,38 @@
         android:layout_marginLeft="12dp"
         android:text="杜江"
         android:textColor="#000000"
-        android:textSize="16sp" />
+        android:textSize="14sp" />
 
     <TextView
         android:id="@+id/tv_comment"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="12dp"
+        android:layout_marginLeft="5dp"
         android:layout_toRightOf="@+id/tv_userName"
         android:text="回复"
         android:textColor="#979797"
-        android:textSize="16sp" />
+        android:textSize="14sp" />
 
     <TextView
         android:id="@+id/tv_userFullName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="12dp"
+        android:layout_marginLeft="5dp"
         android:layout_toRightOf="@+id/tv_comment"
         android:text="白依依:"
         android:textColor="#000000"
-        android:textSize="16sp" />
+        android:textSize="14sp" />
 
     <TextView
         android:id="@+id/tv_literatureReplyComment"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="12dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="@dimen/margin_20"
         android:layout_toRightOf="@+id/tv_userFullName"
-        android:text="c"
+        android:text="水电费付付付付付付付付付辅导辅导费付付付c"
         android:textColor="#000000"
-        android:textSize="16sp" />
+        android:textSize="14sp" />
 </RelativeLayout>
 
 

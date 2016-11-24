@@ -48,6 +48,7 @@
     <dimen name="textSize_18">18sp</dimen>
     <dimen name="textSize_22">22sp</dimen>
 
+    <dimen name="padding_1">1dp</dimen>
     <dimen name="padding_4">4dp</dimen>
     <dimen name="padding_6">6dp</dimen>
     <dimen name="padding_8">8dp</dimen>

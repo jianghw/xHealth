@@ -49,7 +49,7 @@ public class LiteratureCommentActivity extends BaseActivity implements ILiteratu
 
     @Override
     protected void initDelayedData() {
-
+        initBackBtn(R.id.iv_back);
         bundle = getBundle();
         literatureCommentDisplayBean = (LiteratureCommentDisplayBean) bundle.getSerializable("LiteratureCommentDisplayBean");
         tvMedicalLiteratureTitle.setText(new ClinicalUtil().getLengthString(literatureCommentDisplayBean.literatureCommentContent, 10));

@@ -1,6 +1,7 @@
 package com.kaurihealth.kaurihealth.adapter;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -8,8 +9,8 @@ import android.widget.TextView;
 import com.kaurihealth.datalib.request_bean.bean.PatientRequestDisplayBean;
 import com.kaurihealth.datalib.response_bean.PatientDisplayBean;
 import com.kaurihealth.kaurihealth.R;
+import com.kaurihealth.kaurihealth.util.DateConvertUtils;
 import com.kaurihealth.utilslib.CheckUtils;
-import com.kaurihealth.utilslib.date.DateUtils;
 import com.kaurihealth.utilslib.image.ImageUrlUtils;
 import com.kaurihealth.utilslib.widget.CircleImageView;
 
@@ -44,6 +45,11 @@ public class ReferralPatientRequestAdapter extends CommonAdapter<PatientRequestD
         return convertView;
     }
 
+    @Override
+    public boolean isItemViewTypePinned(int viewType) {
+        return false;
+    }
+
     class ViewHolder {
         @Bind(R.id.civPhoto)
         CircleImageView civPhoto;
@@ -66,9 +72,10 @@ public class ReferralPatientRequestAdapter extends CommonAdapter<PatientRequestD
                 civPhoto.setImageResource(R.mipmap.ic_circle_head_green);
             }
             tv_referral_request_name.setText(patient.getFullName());
-            tv_referral_request_comment.setText(bean.getRequestReason().equals("") ? "您好，我预约转诊服务。" : bean.getRequestReason());
-            tv_referral_request_comment.setText(bean.getConsultationReferral().getComment().equals("")?"您好，我预约转诊服务。":bean.getConsultationReferral().getComment());
-            tv_time.setText(DateUtils.GetDateText(bean.getRequestDate(), "HH:mm"));
+            tv_referral_request_comment.setText(TextUtils.isEmpty(bean.getRequestReason())? "您好，我预约转诊服务。" : bean.getRequestReason());
+            tv_referral_request_comment.setText(TextUtils.isEmpty(bean.getConsultationReferral().getComment())?"您好，我预约转诊服务。":bean.getConsultationReferral().getComment());
+//            tv_time.setText(DateUtils.GetDateText(bean.getRequestDate(), "HH:mm"));
+            tv_time.setText(DateConvertUtils.getWeekOfDate(bean.getRequestDate(),null));
         }
     }
 }

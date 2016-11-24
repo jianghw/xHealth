@@ -8,7 +8,6 @@ import android.widget.TextView;
 
 import com.kaurihealth.datalib.request_bean.bean.SearchDoctorDisplayBean;
 import com.kaurihealth.kaurihealth.R;
-import com.kaurihealth.kaurihealth.adapter.CommonAdapter;
 
 import java.util.List;
 
@@ -34,6 +33,11 @@ public class DoctorAdapter extends CommonAdapter<SearchDoctorDisplayBean> {
         ViewHolder viewHolder = new ViewHolder(convertView);
         viewHolder.setInfo(list.get(position));
         return convertView;
+    }
+
+    @Override
+    public boolean isItemViewTypePinned(int viewType) {
+        return false;
     }
 
     class ViewHolder {

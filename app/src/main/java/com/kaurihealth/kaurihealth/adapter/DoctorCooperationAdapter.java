@@ -43,13 +43,18 @@ public class DoctorCooperationAdapter extends CommonAdapter<DoctorRelationshipBe
         if (convertView != null) {
             viewHolder = (ViewHolder) convertView.getTag();
         } else {
-            convertView = inflater.inflate(R.layout.doctor_iteam_gv, null);
+            convertView = inflater.inflate(R.layout.doctor_item_gv, null);
             viewHolder = new ViewHolder(convertView);
             convertView.setTag(viewHolder);
         }
         DoctorRelationshipBean bean = list.get(position);
         viewHolder.disposeData(bean);
         return convertView;
+    }
+
+    @Override
+    public boolean isItemViewTypePinned(int viewType) {
+        return false;
     }
 
     class ViewHolder {

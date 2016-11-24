@@ -15,6 +15,8 @@ import org.json.JSONObject;
 
 /**
  * Created by jianghw on 2016/10/25.
+ * <p/>
+ * Describe:
  */
 
 public class CustomReceiver extends BroadcastReceiver {

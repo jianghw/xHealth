@@ -4,13 +4,14 @@ package com.kaurihealth.kaurihealth.eventbus;
  * Created by KauriHealth on 2016/9/23.
  */
 public class HomeFragmentDoctorEvent {
-    final String tips;
 
-    public HomeFragmentDoctorEvent(String tips){
+    private final int tips;
+
+    public HomeFragmentDoctorEvent(int tips){
         this.tips = tips;
     }
 
-    public String getTips(){
+    public int getTips(){
         return tips;
     }
 }

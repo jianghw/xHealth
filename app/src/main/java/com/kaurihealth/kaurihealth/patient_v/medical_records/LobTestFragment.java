@@ -14,12 +14,14 @@ import com.kaurihealth.datalib.response_bean.PatientRecordDisplayBean;
 import com.kaurihealth.kaurihealth.R;
 import com.kaurihealth.kaurihealth.adapter.ClinicalMedicalBeanAdapter;
 import com.kaurihealth.kaurihealth.adapter.ClinicalMedicalBeanItem;
-import com.kaurihealth.kaurihealth.common.Interface.IGetMedicaHistoryRecord;
-import com.kaurihealth.kaurihealth.eventbus.EditLabTestBeanEvent;
+import com.kaurihealth.kaurihealth.eventbus.LabTestOnlyReadEvent;
 import com.kaurihealth.kaurihealth.eventbus.LobTestEvent;
+import com.kaurihealth.kaurihealth.patient_v.IGetMedicaHistoryRecord;
+import com.kaurihealth.utilslib.ColorUtils;
 import com.kaurihealth.utilslib.constant.Global;
 import com.kaurihealth.utilslib.log.LogUtils;
 import com.kaurihealth.utilslib.widget.AnimatedExpandableListView;
+import com.kaurihealth.utilslib.widget.ScrollChildSwipeRefreshLayout;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -38,44 +40,41 @@ import rx.schedulers.Schedulers;
 /**
  * Created by mip on 2016/9/29.
  */
-    //医患-->医疗记录-->实验室检查Fragment
-public class LobTestFragment extends Fragment implements ExpandableListView.OnChildClickListener{
+//医患-->医疗记录-->实验室检查Fragment
+public class LobTestFragment extends Fragment implements ExpandableListView.OnChildClickListener {
 
     @Bind(R.id.ae_listView)
     AnimatedExpandableListView mAeListView;
-
     @Bind(R.id.tv_note)
     TextView mTvNote;
-
     @Bind(R.id.clinical_SR)
-    SwipeRefreshLayout clinical_SR;
+    ScrollChildSwipeRefreshLayout clinical_SR;
 
-    List<ClinicalMedicalBeanItem> mGroupIteams = new ArrayList<>();
+    List<ClinicalMedicalBeanItem> mGroupItems = new ArrayList<>();
     private ClinicalMedicalBeanAdapter adapter;
 
     private IGetMedicaHistoryRecord medicaHistoryRecord;
-    public static LobTestFragment newInstance(){
+
+    public static LobTestFragment newInstance() {
         return new LobTestFragment();
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_clinical_medical,container,false);
-        ButterKnife.bind(this,view);
+        View view = inflater.inflate(R.layout.fragment_clinical_medical, container, false);
+        ButterKnife.bind(this, view);
 
         clinical_SR.setSize(SwipeRefreshLayout.DEFAULT);
-        clinical_SR.setColorSchemeResources(R.color.holo_blue_light_new
-                , R.color.holo_blue_light_new,
-                R.color.holo_blue_light_new, R.color.holo_blue_light_new);
-        clinical_SR.setProgressBackgroundColor(R.color.linelogin);
+        clinical_SR.setColorSchemeColors(ColorUtils.setSwipeRefreshColors(getContext()));
+        clinical_SR.setScrollUpChild(mAeListView);
+        clinical_SR.setDistanceToTriggerSync(Global.Numerical.SWIPE_REFRESH);
         clinical_SR.setOnRefreshListener(() -> {
             medicaHistoryRecord.getDate();
             clinical_SR.setRefreshing(false);
-
         });
 
-        adapter = new ClinicalMedicalBeanAdapter(getContext(),mGroupIteams);
+        adapter = new ClinicalMedicalBeanAdapter(getContext(), mGroupItems);
         mAeListView.setAdapter(adapter);
         mAeListView.setGroupIndicator(null);
         mAeListView.setOnChildClickListener(this);
@@ -96,7 +95,7 @@ public class LobTestFragment extends Fragment implements ExpandableListView.OnCh
      */
     @Override
     public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
-        PatientRecordDisplayBean patientRecordDisplayBean = mGroupIteams.get(groupPosition).getList().get(childPosition);
+        PatientRecordDisplayBean patientRecordDisplayBean = mGroupItems.get(groupPosition).getList().get(childPosition);
         if (patientRecordDisplayBean == null) return false;
 
         pointToActivityPage(patientRecordDisplayBean);
@@ -108,28 +107,28 @@ public class LobTestFragment extends Fragment implements ExpandableListView.OnCh
      */
     private void pointToActivityPage(PatientRecordDisplayBean patientRecordDisplayBean) {
         MedicalRecordActivity activity = (MedicalRecordActivity) getActivity();
-        EventBus.getDefault().postSticky(new EditLabTestBeanEvent(patientRecordDisplayBean, activity.getShipBean()));
+        EventBus.getDefault().postSticky(new LabTestOnlyReadEvent(patientRecordDisplayBean, activity.getShipBean()));
         //TODO
         switch (patientRecordDisplayBean.getSubject()) {
             case "常规血液学检查":
-                activity.switchPageUI(Global.Jump.AddAndEditLobTestActivity);
+                activity.switchPageUI(Global.Jump.LobTestOnlyReadAcivity, null);
                 break;
             case "常规尿液检查":
-                activity.switchPageUI(Global.Jump.AddAndEditLobTestActivity);
+                activity.switchPageUI(Global.Jump.LobTestOnlyReadAcivity, null);
                 break;
             case "常规粪便检查":
-                activity.switchPageUI(Global.Jump.AddAndEditLobTestActivity);
+                activity.switchPageUI(Global.Jump.LobTestOnlyReadAcivity, null);
                 break;
             case "特殊检查":
-                activity.switchPageUI(Global.Jump.AddAndEditLobTestActivity);
+                activity.switchPageUI(Global.Jump.LobTestOnlyReadAcivity, null);
                 break;
             case "其它":
-                activity.switchPageUI(Global.Jump.AddAndEditLobTestActivity);
+                activity.switchPageUI(Global.Jump.LobTestOnlyReadAcivity, null);
                 break;
         }
     }
 
-    public void setGetMedicaHistoryRecordListener(IGetMedicaHistoryRecord medicaHistoryRecord){
+    public void setGetMedicaHistoryRecordListener(IGetMedicaHistoryRecord medicaHistoryRecord) {
         this.medicaHistoryRecord = medicaHistoryRecord;
     }
 
@@ -144,9 +143,9 @@ public class LobTestFragment extends Fragment implements ExpandableListView.OnCh
     }
 
     private void dataPacketProcessing(List<PatientRecordDisplayBean> list) {
-        mTvNote.setVisibility(View.GONE);
+        mTvNote.setVisibility(list.size() > 0 ? View.GONE : View.VISIBLE);
 
-        if (!mGroupIteams.isEmpty()) mGroupIteams.clear();
+        if (!mGroupItems.isEmpty()) mGroupItems.clear();
         String[] arrays = getResources().getStringArray(R.array.LabTest);
         adapterDataUpdate(list, arrays);
     }
@@ -186,7 +185,7 @@ public class LobTestFragment extends Fragment implements ExpandableListView.OnCh
 
                     @Override
                     public void onNext(ClinicalMedicalBeanItem clinicalMedicalBeanItem) {
-                        mGroupIteams.add(clinicalMedicalBeanItem);
+                        mGroupItems.add(clinicalMedicalBeanItem);
                     }
                 });
     }

@@ -10,12 +10,22 @@ import com.kaurihealth.datalib.response_bean.DoctorPatientRelationshipBean;
 public class PatientInfoShipBeanEvent {
 
     private final DoctorPatientRelationshipBean bean;
+    /**
+     * 0--全部权限
+     * 1--转诊权限
+     */
+    private final int status;
 
-    public PatientInfoShipBeanEvent(DoctorPatientRelationshipBean bean) {
+    public PatientInfoShipBeanEvent(DoctorPatientRelationshipBean bean, int status) {
         this.bean = bean;
+        this.status = status;
     }
 
     public DoctorPatientRelationshipBean getBean() {
         return bean;
+    }
+
+    public int getPatenetStatus() {
+        return status;
     }
 }

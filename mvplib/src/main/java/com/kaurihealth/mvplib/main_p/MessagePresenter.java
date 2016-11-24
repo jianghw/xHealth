@@ -1,16 +1,13 @@
 package com.kaurihealth.mvplib.main_p;
 
 import com.kaurihealth.datalib.repository.IDataSource;
-import com.kaurihealth.datalib.response_bean.ContactUserDisplayBean;
-
-import java.util.List;
+import com.kaurihealth.datalib.response_bean.NotifyIsReadDisplayBean;
 
 import javax.inject.Inject;
 
+import rx.Subscriber;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action0;
-import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
@@ -24,7 +21,7 @@ public class MessagePresenter<V> implements IMessagePresenter<V> {
     private final IDataSource mRepository;
     private final CompositeSubscription mSubscriptions;
     private IMessageView mFragment;
-    private boolean mFirstLoad = true;
+
 
     @Inject
     MessagePresenter(IDataSource repository) {
@@ -39,44 +36,34 @@ public class MessagePresenter<V> implements IMessagePresenter<V> {
 
     @Override
     public void onSubscribe() {
-        if (mFirstLoad) loadingRemoteData(false);
-    }
-
-    @Override
-    public void loadingRemoteData(boolean isDirty) {
-        if (isDirty) {//刷新
-            mRepository.manuallyRefresh();
-        }
-        Subscription subscription = mRepository.loadContactListByDoctorId()
+        Subscription subscription = mRepository.isReadNotify()
                 .subscribeOn(Schedulers.io())
                 .doOnSubscribe(() -> mFragment.loadingIndicator(true))
                 .subscribeOn(AndroidSchedulers.mainThread())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                        new Action1<List<ContactUserDisplayBean>>() {
-                            @Override
-                            public void call(List<ContactUserDisplayBean> beanList) {
-                                mFragment.loadContactListByDoctorIdSucceed();
-                            }
-                        },
-                        new Action1<Throwable>() {
-                            @Override
-                            public void call(Throwable throwable) {
-                                mFragment.loadingIndicator(false);
-                                mFragment.showToast(throwable.getMessage());
-                            }
-                        },
-                        new Action0() {
-                            @Override
-                            public void call() {
-                                mFragment.loadingIndicator(false);
-                            }
-                        });
+                .subscribe(new Subscriber<NotifyIsReadDisplayBean>() {
+                    @Override
+                    public void onCompleted() {
+                        mFragment.loadingIndicator(false);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        mFragment.loadingIndicator(false);
+                        mFragment.showToast(e.getMessage());
+                    }
+
+                    @Override
+                    public void onNext(NotifyIsReadDisplayBean bean) {
+                        mFragment.isReadNotifySucceed(bean);
+                    }
+                });
         mSubscriptions.add(subscription);
     }
 
     @Override
     public void unSubscribe() {
+        if (mFragment != null) mFragment.loadingIndicator(false);
         mSubscriptions.clear();
         mFragment.loadingIndicator(false);
         mFragment = null;

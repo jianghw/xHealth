@@ -64,7 +64,7 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     @Override
     public boolean dispatchTouchEvent(MotionEvent motionEvent) {
-             // Bugtags.onDispatchTouchEvent(this, motionEvent);
+        // Bugtags.onDispatchTouchEvent(this, motionEvent);
         return super.dispatchTouchEvent(motionEvent);
     }
 
@@ -143,21 +143,15 @@ public abstract class BaseActivity extends AppCompatActivity {
      */
     protected void setText(String value, TextView textView) {
         if (textView == null) return;
-        if (value.trim().equalsIgnoreCase("null") || value.trim().length() == 0) {
-            textView.setText("暂无");
-        } else {
-            textView.setText(value);
-        }
+        textView.setText(setDefaultText(value));
     }
 
     protected String setDefaultText(String value) {
-        return value != null ? value.equalsIgnoreCase("null") ? "暂无" : value.length() == 0 ? "暂无" : value : "暂无";
+        return value != null ? value.trim().equalsIgnoreCase("null") ? "暂无" : value.length() == 0 ? "暂无" : value : "暂无";
     }
 
     /**
      * 清除数据
-     *
-     * @param textView
      */
     public void clearTextview(TextView textView) {
         if (textView != null) {
@@ -244,8 +238,10 @@ public abstract class BaseActivity extends AppCompatActivity {
                     editText.setFocusableInTouchMode(enable);
                     editText.setFocusable(enable);
                     if (enable) editText.requestFocus();
-                    editText.setBackground(enable ?
-                            getApplicationContext().getResources().getDrawable(R.drawable.bg_edt_login) : null);
+                    editText.setBackgroundResource(enable ?
+//                            getApplicationContext().getResources().getDrawable(R.drawable.bg_edt_login) : null);
+                            R.drawable.bg_edt_login : R.drawable.bg_edt_login_no_stroke);
+
                 } else if (mObject instanceof ImageView) {
                     ((ImageView) mObject).setEnabled(enable);
                 } else if (mObject instanceof com.rey.material.widget.CheckBox) {
@@ -254,6 +250,9 @@ public abstract class BaseActivity extends AppCompatActivity {
                 } else if (mObject instanceof TextView) {
                     TextView textView = (TextView) mObject;
                     textView.setEnabled(enable);
+                    textView.setBackgroundResource(enable ?
+//                            getApplicationContext().getResources().getDrawable(R.drawable.bg_edt_login) : null);
+                            R.drawable.bg_edt_login : 0);
                 }
             }
         } catch (IllegalAccessException e) {
@@ -273,21 +272,13 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
     }
 
-    protected boolean filterException(Exception e) {
-        if (e != null) {
-            showToast(e.getMessage());
-            return false;
-        } else {
-            return true;
-        }
-    }
-
     /**
      * 设置光标移动到末尾位置
+     *
      * @param selection
      */
-    protected void setSelection(EditText selection){
-        if (!(selection.getText().equals(""))){
+    protected void setSelection(EditText selection) {
+        if (!(selection.getText().equals(""))) {
             selection.setSelection(selection.getText().length());
         }
     }

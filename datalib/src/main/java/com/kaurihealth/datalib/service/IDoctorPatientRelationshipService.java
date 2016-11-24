@@ -19,12 +19,6 @@ import rx.Observable;
  */
 public interface IDoctorPatientRelationshipService {
 
-    @GET("api/DoctorPatientRelationship/LoadDoctorPatientRelationshipForDoctor")
-    Call<List<DoctorPatientRelationshipBean>> LoadDoctorPatientRelationshipForDoctor();
-
-    @GET("api/DoctorPatientRelationship/LoadDoctorPatientRelationshipForDoctor")
-    Observable<List<DoctorPatientRelationshipBean>> LoadDoctorPatientRelationshipForDoctor_New();
-
     /**
      * 为现医生查询所有医患关系
      */
@@ -53,7 +47,7 @@ public interface IDoctorPatientRelationshipService {
     Call<ResponseDisplayBean> RequestEndDoctorPatientRelationship(@Body int doctorPatientReplationshipId);
 
     @POST("api/DoctorPatientRelationship/RequestEndDoctorPatientRelationship")
-    Observable<ResponseDisplayBean> RequestEndDoctorPatientRelationship_new(@Body int doctorPatientReplationshipId);
+    Observable<ResponseDisplayBean> requestEndDoctorPatientRelationship(@Body int doctorPatientReplationshipId);
 
     /**
      * 使用患者id查询医患关系
@@ -61,17 +55,15 @@ public interface IDoctorPatientRelationshipService {
      * @param patientId
      * @return
      */
-    @GET("api/DoctorPatientRelationship/LoadDoctorPatientRelationshipForPatientId")
-    Call<List<com.kaurihealth.datalib.request_bean.bean.DoctorPatientRelationshipBean>> LoadDoctorPatientRelationshipForPatientId(@Query("patientId") int patientId);
 
     @GET("api/DoctorPatientRelationship/LoadDoctorPatientRelationshipForPatientId")
-    Observable<List<DoctorPatientRelationshipBean>> LoadDoctorPatientRelationshipForPatientId_new(@Query("patientId") int patientId);
+    Observable<List<DoctorPatientRelationshipBean>> LoadDoctorPatientRelationshipForPatientId(@Query("patientId") int patientId);
 
 
     /**
      * 使用患者id查询医疗团队，查询者必须为医生
      */
     @GET("api/DoctorPatientRelationship/LoadDoctorTeamForPatient")
-    Observable<List<DoctorPatientRelationshipBean>> LoadDoctorTeamForPatient(@Query("patientId")  int patientId);
+    Observable<List<DoctorPatientRelationshipBean>> LoadDoctorTeamForPatient(@Query("patientId") int patientId);
 
 }

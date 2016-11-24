@@ -7,7 +7,6 @@ import android.widget.TextView;
 
 import com.kaurihealth.datalib.request_bean.bean.ResidualAccountBean;
 import com.kaurihealth.kaurihealth.R;
-import com.kaurihealth.kaurihealth.adapter.CommonAdapter;
 
 import java.util.List;
 
@@ -35,6 +34,11 @@ public class ResidualAccountAdapter extends CommonAdapter<ResidualAccountBean> {
         ViewHolder ViewHolder = new ViewHolder(convertView);
         ViewHolder.setData(item);
         return convertView;
+    }
+
+    @Override
+    public boolean isItemViewTypePinned(int viewType) {
+        return false;
     }
 
     class ViewHolder {

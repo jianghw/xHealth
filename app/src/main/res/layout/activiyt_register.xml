@@ -164,7 +164,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="《佳仁健康注册协议》"
-                    android:textColor="@color/green"/>
+                    android:textColor="@color/color_green"/>
             </LinearLayout>
 
             <Button

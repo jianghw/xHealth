@@ -113,6 +113,28 @@ public class TreatmentPresenter<V> implements ITreatmentPresenter<V> {
         mSubscriptions.add(subscription);
     }
 
+    public void getArrayList() {
+        ArrayList<Category> listDate = new ArrayList<>();
+        Category categoryOne = new Category("疾病与治疗");
+
+        mMedicalLiteratureDisPlayBeanList = mFragment.getMedicalLiteratureDisPlayBeanList();
+        mListData = mFragment.getCategoryList();
+        for (MedicalLiteratureDisPlayBean item : mMedicalLiteratureDisPlayBeanList) {
+            String medicalLiteratureCategory = item.medicalLiteratureCategory;
+            if (medicalLiteratureCategory.equals("疾病与治疗") && categoryOne.getItemBoolean()) {
+                categoryOne.addItem(item);
+            }
+        }
+
+        //判断Category对象里面是否有list 数量是否大于0
+        if (categoryOne.getMedicalLiteratureDisPlayBeanItem().size() > 0) {
+            listDate.add(categoryOne);
+        }
+        mListData.clear();
+        mListData.addAll(listDate);
+    }
+
+
     @Override
     public void unSubscribe() {
         mSubscriptions.clear();

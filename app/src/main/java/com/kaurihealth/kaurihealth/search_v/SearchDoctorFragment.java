@@ -13,7 +13,7 @@ import com.kaurihealth.kaurihealth.adapter.SearchBaseAdapter;
 import com.kaurihealth.kaurihealth.adapter.SearchHistoryAdapter;
 import com.kaurihealth.kaurihealth.base_v.BaseFragment;
 import com.kaurihealth.kaurihealth.eventbus.SearchAtyToFgtEvent;
-import com.kaurihealth.kaurihealth.home_v.VerificationActivity;
+import com.kaurihealth.kaurihealth.util.VerticalSpaceItemDecoration;
 import com.kaurihealth.mvplib.home_p.ISearchCommonFragmentView;
 import com.kaurihealth.mvplib.home_p.SearchCommonFragmentPresenter;
 
@@ -65,10 +65,10 @@ public class SearchDoctorFragment extends BaseFragment implements SearchBaseAdap
         MyApplication.getApp().getComponent().inject(this);
         mPresenter.setPresenter(this);
 
-        mDataAdapter = new SearchBaseAdapter(getActivity(), dataContainer);
+        mDataAdapter = new SearchBaseAdapter(getActivity(), dataContainer,this);
         mRvData.setAdapter(mDataAdapter);
         mRvData.setLayoutManager(new LinearLayoutManager(getContext()));
-        mDataAdapter.setItemClickBack(this);
+        mRvData.addItemDecoration(new VerticalSpaceItemDecoration(10));
     }
 
     @Override
@@ -82,6 +82,9 @@ public class SearchDoctorFragment extends BaseFragment implements SearchBaseAdap
 
     @Override
     protected void lazyLoadingData() {
+        if (((SearchActivity) getActivity()).getEditTextHint().equals(getString(R.string.patient_hint_context))){
+            ((SearchActivity) getActivity()).setEditDoctorHint();
+        }
     }
 
     @Override

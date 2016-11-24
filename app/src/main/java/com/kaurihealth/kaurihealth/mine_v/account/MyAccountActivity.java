@@ -59,8 +59,10 @@ public class MyAccountActivity extends BaseActivity{
         DoctorDisplayBean myself = LocalData.getLocalData().getMyself();
         double totalCredit = myself.getTotalCredit();
         double availableCredit = myself.getAvailableCredit();
-        tvTotalCredit.setText(String.format("￥%.2f", totalCredit));
-        tvAvailableCredit.setText(String.format("￥%.2f", availableCredit));
+       // tvTotalCredit.setText(String.format("￥%.2f", totalCredit));
+        //tvAvailableCredit.setText(String.format("￥%.2f", availableCredit));
+        tvTotalCredit.setText(String.format("%.2f元", totalCredit));
+        tvAvailableCredit.setText(String.format("%.2f元", availableCredit));
         btnDrawCash.setEnabled(availableCredit > 0);
     }
 

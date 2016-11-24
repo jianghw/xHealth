@@ -10,7 +10,7 @@ import android.widget.TextView;
 import com.kaurihealth.datalib.request_bean.bean.MedicalLiteratureDisPlayBean;
 import com.kaurihealth.kaurihealth.R;
 import com.kaurihealth.kaurihealth.adapter.CommonAdapter;
-import com.kaurihealth.kaurihealth.clinical_v.Utils.ClinicalUtil;
+import com.kaurihealth.kaurihealth.util.DateConvertUtils;
 import com.kaurihealth.utilslib.image.ImageUrlUtils;
 
 import java.util.List;
@@ -39,6 +39,11 @@ public class ClinicalListAdapter extends CommonAdapter {
         return convertView;
     }
 
+    @Override
+    public boolean isItemViewTypePinned(int viewType) {
+        return false;
+    }
+
     class ViewHolder {
         @Bind(R.id.iv_titleImage)
         ImageView ivTitleImage;
@@ -58,7 +63,7 @@ public class ClinicalListAdapter extends CommonAdapter {
                 ImageUrlUtils.picassoBySmallUrlReference(context, medicalLiteratureDisPlayBean.titleImage, ivTitleImage);
             }
             tvContentBrief.setText(medicalLiteratureDisPlayBean.medicalLiteratureTitle);
-            tvCreatTime.setText(new ClinicalUtil().getTimeByTimeFormat(medicalLiteratureDisPlayBean.creatTime, "yyyy-MM-dd HH:mm:ss"));
+            tvCreatTime.setText(DateConvertUtils.getWeekOfDate(null,medicalLiteratureDisPlayBean.creatTime));
             tvBrowse.setText(medicalLiteratureDisPlayBean.browse + "阅读");
         }
     }

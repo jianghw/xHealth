@@ -23,16 +23,18 @@ public class ContactUserDisplayBean {
     private boolean isTop;
     private String kauriHealthId;
     private String gender;
-    private int userType;
+    private String userType;
     private String avatar;
     private String fullName;
     private Date dateOfBirth;
+    private  int primaryId;
 
-    public ContactUserDisplayBean(String fullName) {
-        this.fullName = fullName;
+
+    public ContactUserDisplayBean(String kauriHealthId) {
+        this.kauriHealthId = kauriHealthId;
     }
 
-    public ContactUserDisplayBean(String kauriHealthId, String gender, int userType, String avatar, String fullName, Date dateOfBirth,boolean isTop) {
+    public ContactUserDisplayBean(String kauriHealthId, String gender, String userType, String avatar, String fullName, Date dateOfBirth,boolean isTop,int primaryId) {
         this.kauriHealthId = kauriHealthId;
         this.gender = gender;
         this.userType = userType;
@@ -40,6 +42,7 @@ public class ContactUserDisplayBean {
         this.fullName = fullName;
         this.dateOfBirth = dateOfBirth;
         this.isTop = isTop;
+        this.primaryId = primaryId;
     }
 
     public String getKauriHealthId() {
@@ -58,11 +61,11 @@ public class ContactUserDisplayBean {
         this.gender = gender;
     }
 
-    public int getUserType() {
+    public String getUserType() {
         return userType;
     }
 
-    public void setUserType(int userType) {
+    public void setUserType(String  userType) {
         this.userType = userType;
     }
 
@@ -96,5 +99,13 @@ public class ContactUserDisplayBean {
 
     public void setTop(boolean top) {
         isTop = top;
+    }
+
+    public int getPrimaryId() {
+        return primaryId;
+    }
+
+    public void setPrimaryId(int primaryId) {
+        this.primaryId = primaryId;
     }
 }

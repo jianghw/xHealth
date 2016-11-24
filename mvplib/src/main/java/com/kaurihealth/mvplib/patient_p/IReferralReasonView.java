@@ -11,9 +11,9 @@ import com.kaurihealth.mvplib.base_p.IMvpView;
 
 public interface IReferralReasonView extends IMvpView{
 
-    void getresult(ResponseDisplayBean displayBean);
+    void insertPatientRequestReferralByDoctorListSucceed(ResponseDisplayBean displayBean);
 
-    PatientRequestReferralDoctorDisplayBean getBean();
+    PatientRequestReferralDoctorDisplayBean getPatientRequestReferralDoctorDisplayBean();
 
     PatientRequestReferralPatientDisplayBean getPatientRequestBean();
 

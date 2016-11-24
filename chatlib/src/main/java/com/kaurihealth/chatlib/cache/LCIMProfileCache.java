@@ -33,6 +33,7 @@ public class LCIMProfileCache {
     private static final String USER_GENDER = "user_gender";
     private static final String USER_DATA = "user_data";
     private static final String USER_TOP = "user_top";
+    private static final String USER_PRIMARY_ID = "user_primaryId";
 
     private ArrayMap<String, ContactUserDisplayBean> contactUserMap;//缓存好友列表
     private LCIMLocalStorage profileDBHelper;
@@ -60,7 +61,7 @@ public class LCIMProfileCache {
      * @param clientId 用户kauriHealthId
      */
     public synchronized void initDB(Context context, String clientId) {
-        profileDBHelper = new LCIMLocalStorage(context, clientId, "ProfileCache");
+        profileDBHelper = new LCIMLocalStorage(context, clientId, "NewUserRelationShip");
     }
 
     /**
@@ -109,10 +110,10 @@ public class LCIMProfileCache {
                     //查询数据库
                     profileDBHelper.getData(idList, new AVCallback<List<String>>() {
                         @Override
-                        protected void internalDone0(List<String> strings, AVException e) {
-                            if (null != strings && !strings.isEmpty() && strings.size() == unCachedIdList.size()) {
+                        protected void internalDone0(List<String> stringIdList, AVException e) {
+                            if (null != stringIdList && !stringIdList.isEmpty() && stringIdList.size() == unCachedIdList.size()) {
                                 List<ContactUserDisplayBean> profileList = new ArrayList<>();
-                                for (String data : strings) {
+                                for (String data : stringIdList) {
                                     ContactUserDisplayBean userProfile = getUserProfileFromJson(data);
                                     contactUserMap.put(userProfile.getKauriHealthId(), userProfile);
                                     profileList.add(userProfile);
@@ -196,7 +197,7 @@ public class LCIMProfileCache {
     /**
      * 内存中是否包相关 LCChatKitUser 的信息
      *
-     * @param id
+     * @param id --kauriID
      * @return
      */
     public synchronized boolean hasCachedUser(String id) {
@@ -217,6 +218,29 @@ public class LCIMProfileCache {
     }
 
     /**
+     * 置顶
+     */
+    public synchronized void changStickType(ContactUserDisplayBean userProfile) {
+        if (null != userProfile && null != profileDBHelper) {
+            userProfile.setTop(!userProfile.isTop());
+            contactUserMap.put(userProfile.getKauriHealthId(), userProfile);
+            profileDBHelper.insertData(userProfile.getKauriHealthId(), getStringFormUserProfile(userProfile));
+        }
+    }
+
+    /**
+     * 群聊置顶
+     */
+    public synchronized void changGroupStickType(String id, boolean stick) {
+        if (null != id && null != profileDBHelper) {
+            ContactUserDisplayBean userProfile = new ContactUserDisplayBean(id);
+            userProfile.setTop(!stick);
+            contactUserMap.put(userProfile.getKauriHealthId(), userProfile);
+            profileDBHelper.insertData(userProfile.getKauriHealthId(), getStringFormUserProfile(userProfile));
+        }
+    }
+
+    /**
      * 从 db 中的 String 解析出 ContactUserDisplayBean
      */
     private ContactUserDisplayBean getUserProfileFromJson(String str) {
@@ -224,11 +248,14 @@ public class LCIMProfileCache {
         String userId = jsonObject.getString(USER_ID);
         String userName = jsonObject.getString(USER_NAME);
         String userAvatar = jsonObject.getString(USER_AVATAR);
-        int userType = jsonObject.getInteger(USER_TYPE);
+
+        String userType = jsonObject.getString(USER_TYPE);
+
         String gender = jsonObject.getString(USER_GENDER);
         Date dateOfBirth = jsonObject.getDate(USER_DATA);
         boolean istop = jsonObject.getBoolean(USER_TOP);
-        return new ContactUserDisplayBean(userId, gender, userType, userAvatar,userName, dateOfBirth, istop);
+        int primaryId = jsonObject.getInteger(USER_PRIMARY_ID);
+        return new ContactUserDisplayBean(userId, gender, userType, userAvatar, userName, dateOfBirth, istop, primaryId);
     }
 
     /**
@@ -243,6 +270,7 @@ public class LCIMProfileCache {
         jsonObject.put(USER_TYPE, userProfile.getUserType());
         jsonObject.put(USER_DATA, userProfile.getDateOfBirth());
         jsonObject.put(USER_TOP, userProfile.isTop());
+        jsonObject.put(USER_PRIMARY_ID, userProfile.getPrimaryId());
         return jsonObject.toJSONString();
     }
 }

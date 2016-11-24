@@ -22,7 +22,7 @@ public interface IPatientInfoView extends IMvpView {
      */
     int getPatientId();
 
-    void setFloatingActionButton(boolean active,boolean b);
+    void floatingActionButtonState(boolean active, boolean b);
 
     DoctorPatientRelationshipBean getShipBean();
 
@@ -37,4 +37,5 @@ public interface IPatientInfoView extends IMvpView {
 
 
     void visitSuccessful();
+
 }

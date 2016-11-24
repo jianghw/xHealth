@@ -55,6 +55,7 @@ public class FriendRequestPresenter<V> implements IFriendRequestPresenter<V> {
                     public void onNext(ResponseDisplayBean bean) {
                         if (bean.isIsSucess()) {
                             mActivity.agreeFriendSuccess(bean);
+                            mActivity.showToast("已同意对方请求");
                         } else {
                             mActivity.displayErrorDialog(bean.getMessage());
                         }
@@ -88,6 +89,7 @@ public class FriendRequestPresenter<V> implements IFriendRequestPresenter<V> {
                     public void onNext(ResponseDisplayBean bean) {
                         if (bean.isIsSucess()) {
                             mActivity.rejectFriendSuccess(bean);
+                            mActivity.showToast("已拒绝对方请求");
                         } else {
                             mActivity.displayErrorDialog(bean.getMessage());
                         }

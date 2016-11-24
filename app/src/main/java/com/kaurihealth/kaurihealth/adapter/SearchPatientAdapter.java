@@ -20,15 +20,18 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class SearchPatientAdapter extends RecyclerView.Adapter<SearchPatientAdapter.ViewHolder> {
 
     private final Context context;
     private final List<SearchBooleanPatientBean> beanList;
+    private final ItemClickBack itemClickBack;
 
-    public SearchPatientAdapter(Context context, List<SearchBooleanPatientBean> beanList) {
+    public SearchPatientAdapter(Context context, List<SearchBooleanPatientBean> beanList, ItemClickBack itemClickBack) {
         this.context = context.getApplicationContext();
         this.beanList = beanList;
+        this.itemClickBack = itemClickBack;
     }
 
     @Override
@@ -39,7 +42,7 @@ public class SearchPatientAdapter extends RecyclerView.Adapter<SearchPatientAdap
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        holder.setIteam(beanList.get(position));
+        holder.setIteam(beanList.get(position), itemClickBack);
     }
 
 
@@ -63,6 +66,8 @@ public class SearchPatientAdapter extends RecyclerView.Adapter<SearchPatientAdap
         TextView tvAddFriend;
 
         private final Context context;
+        private int mPatientID;
+        private ItemClickBack mItemClickBack;
 
         public ViewHolder(View itemView, Context context) {
             super(itemView);
@@ -70,8 +75,10 @@ public class SearchPatientAdapter extends RecyclerView.Adapter<SearchPatientAdap
             this.context = context;
         }
 
-        public void setIteam(SearchBooleanPatientBean iteam) {
+        public void setIteam(SearchBooleanPatientBean iteam, ItemClickBack itemClickBack) {
+            this.mItemClickBack = itemClickBack;
             PatientDisplayBean bean = iteam.getItemsBean();
+            mPatientID = bean.getPatientId();
             if (bean != null) {
                 if (CheckUtils.checkUrlNotNull(bean.getAvatar())) {
                     ImageUrlUtils.picassoBySmallUrlCircle(context, bean.getAvatar(), civPhoto);
@@ -98,6 +105,22 @@ public class SearchPatientAdapter extends RecyclerView.Adapter<SearchPatientAdap
                 tvAddFriend.setText(iteam.isAdd() ? "已添加" : "添加");
             }
         }
+
+        //添加“按钮”
+        @OnClick({R.id.tvAddFriend})
+        public void onClick(View view) {
+            switch (view.getId()) {
+                case R.id.tvAddFriend:
+                    mItemClickBack.onItemTextClick(mPatientID);
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+
+    public interface ItemClickBack {
+        void onItemTextClick(int patientID);
     }
 
 }

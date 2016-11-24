@@ -7,7 +7,6 @@ import android.widget.TextView;
 
 import com.kaurihealth.datalib.response_bean.DepartmentDisplayBean;
 import com.kaurihealth.kaurihealth.R;
-import com.kaurihealth.kaurihealth.adapter.CommonAdapter;
 
 import java.util.List;
 
@@ -26,12 +25,17 @@ public class DepartmentLevel2Adapter extends CommonAdapter<DepartmentDisplayBean
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         if (convertView == null) {
-            convertView = inflater.inflate(R.layout.departmentlevel_item, null);
+            convertView = inflater.inflate(R.layout.departmentlevel_item_two, null);
             ButterKnife.bind(this, convertView);
         }
         DepartmentDisplayBean item = list.get(position);
         TextView tvContent = (TextView) convertView.findViewById(R.id.tvContent);
         tvContent.setText(item.getDepartmentName());
         return convertView;
+    }
+
+    @Override
+    public boolean isItemViewTypePinned(int viewType) {
+        return false;
     }
 }

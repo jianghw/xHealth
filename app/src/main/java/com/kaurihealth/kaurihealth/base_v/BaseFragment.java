@@ -24,7 +24,7 @@ import butterknife.ButterKnife;
  * 描述：的基础父类
  */
 public abstract class BaseFragment extends LazyFragment {
-    protected BaseActivity  mActivity;
+    protected BaseActivity mActivity;
 
     @Override
     public void onAttach(Activity activity) {

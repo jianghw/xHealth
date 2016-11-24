@@ -40,6 +40,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:dividerHeight="1px"
+            android:scrollbars="none"
             android:fadeScrollbars="true">
         </ListView>
     </LinearLayout>

@@ -9,17 +9,21 @@ package com.kaurihealth.datalib.request_bean.bean;
 public class ConversationItemBean<T> {
 
     private final long time;
-    private final CharSequence message;
     private final int num;
     private final T bean;
+    private final CharSequence message;
     private final String conversationId;
 
-    public ConversationItemBean(T bean, long time, CharSequence message, int num, String conversationId) {
-        this.bean = bean;
-        this.time = time;
-        this.message = message;
-        this.num = num;
+    public ConversationItemBean(String conversationId, T bean) {
+        this(conversationId, "", 0, 0, bean);
+    }
+
+    public ConversationItemBean(String conversationId, CharSequence message, long time, int num, T bean) {
         this.conversationId = conversationId;
+        this.message = message;
+        this.time = time;
+        this.num = num;
+        this.bean = bean;
     }
 
     public long getTime() {

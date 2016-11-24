@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:background="@color/color_bg_gray"
     android:orientation="vertical"
-    tools:context=".patient_v.HospitalNameActivity">
+    tools:context=".hospital_v.HospitalNameActivity">
 
     <include
         android:id="@+id/in_title"
@@ -24,7 +24,7 @@
             android:layout_margin="@dimen/padding_6"
             android:hint="输入医院名称"
             android:inputType="number"
-            android:maxLength="15" />
+            android:maxLength="24" />
 
         <ImageView
             android:id="@+id/ivDelete"
@@ -37,5 +37,6 @@
         android:id="@+id/lv_content"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="@dimen/margin_10" />
+        android:paddingLeft="10dp"
+        android:scrollbars="none" />
 </LinearLayout>

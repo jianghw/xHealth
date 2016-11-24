@@ -7,7 +7,6 @@ import com.kaurihealth.datalib.remote.RetrofitFactory;
 import com.kaurihealth.datalib.response_bean.ContactUserDisplayBean;
 import com.kaurihealth.datalib.service.IContacListService;
 import com.kaurihealth.utilslib.constant.Global;
-import com.kaurihealth.utilslib.log.LogUtils;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -71,11 +70,11 @@ public class UserCacheUtils {
                 return;
             }
         }
-        LogUtils.e("RetrofitFactory=============="+1);
+
 //网络获取关系列表
         RetrofitFactory.getInstance().createRetrofit(Global.Factory.DEFAULT_TOKEN)
                 .create(IContacListService.class)
-                .loadContactListByDoctorId()
+                .loadContactListByKauriHealthIds(ids)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(

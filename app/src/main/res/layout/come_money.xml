@@ -3,41 +3,80 @@
 
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/kaurihealth_background"
     android:orientation="vertical">
 
+    <!--<LinearLayout-->
+    <!--style="@style/get_money_out">-->
+
     <LinearLayout
-        style="@style/get_money_out">
+        android:id="@+id/layTop"
+        style="@style/laytop_getmoney">
 
-        <LinearLayout
-            android:id="@+id/layTop"
-            style="@style/laytop_getmoney">
+        <TextView
+            style="@style/come_money_tv"
+            android:text="共收取" />
 
-            <TextView
-                android:text="共收取"
-                style="@style/come_money_tv" />
+        <TextView
+            android:id="@+id/tvMoney"
+            style="@style/come_money_tv_orange"
+            android:text="0" />
 
-            <TextView
-                android:id="@+id/tvMoney"
-                android:text="3600"
-                style="@style/come_money_tv_orange" />
+        <TextView
 
-            <TextView
+            style="@style/come_money_tv"
+            android:layout_marginLeft="4dp"
+            android:text="元" />
+    </LinearLayout>
 
-                android:layout_marginLeft="4dp"
-                android:text="元"
-                style="@style/come_money_tv" />
-        </LinearLayout>
 
-<android.support.v4.widget.SwipeRefreshLayout
-    android:id="@+id/rfreshLay"
+
+<ScrollView
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginLeft="10dp"
-    android:layout_marginRight="10dp"
-    android:layout_marginBottom="50dp">
-        <ListView
-            android:id="@+id/lv_content"
-            style="@style/lv_getmoney"></ListView>
-        </android.support.v4.widget.SwipeRefreshLayout>
+    android:scrollbars="none"
+    android:layout_marginLeft="@dimen/margin_20"
+    android:layout_marginRight="20dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/kaurihealth_background"
+        android:orientation="vertical">
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/margin_10"
+        android:background="@color/kaurihealth_background"/>
+    <LinearLayout
+        android:id="@+id/lay_out"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_white_stroke"
+        android:orientation="vertical">
     </LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/margin_10"
+        android:background="@color/kaurihealth_background"/>
+    </LinearLayout>
+</ScrollView>
+
+
+        <com.kaurihealth.utilslib.widget.ScrollChildSwipeRefreshLayout
+            android:id="@+id/rfreshLay"
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp">
+
+                <ListView
+                    android:id="@+id/lv_content"
+                    style="@style/lv_getmoney"
+                    android:background="#ffffff"
+                    android:scrollbars="none"></ListView>
+
+        </com.kaurihealth.utilslib.widget.ScrollChildSwipeRefreshLayout>
+    <!--</LinearLayout>-->
 </LinearLayout>

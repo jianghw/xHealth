@@ -3,9 +3,9 @@ package com.kaurihealth.kaurihealth.doctor_v;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -20,11 +20,14 @@ import com.kaurihealth.kaurihealth.base_v.BaseActivity;
 import com.kaurihealth.kaurihealth.eventbus.DoctorFragmentRefreshEvent;
 import com.kaurihealth.kaurihealth.eventbus.DoctorPatientRelationshipBeanEvent;
 import com.kaurihealth.kaurihealth.eventbus.DoctorRelationshipBeanEvent;
-import com.kaurihealth.kaurihealth.home_v.DoctorPracticeFieldActivity;
-import com.kaurihealth.kaurihealth.home_v.DoctorStudyExprienceActivity;
+import com.kaurihealth.kaurihealth.eventbus.ReferralPatientEvent;
+import com.kaurihealth.kaurihealth.home_v.request.DoctorPracticeFieldActivity;
+import com.kaurihealth.kaurihealth.home_v.request.DoctorStudyExprienceActivity;
+import com.kaurihealth.kaurihealth.referrals_v.ReferralPatientActivity;
 import com.kaurihealth.mvplib.patient_p.DoctorInfoPresenter;
 import com.kaurihealth.mvplib.patient_p.IDoctorInfoView;
 import com.kaurihealth.utilslib.OnClickUtils;
+import com.kaurihealth.utilslib.constant.Global;
 import com.kaurihealth.utilslib.date.DateUtils;
 import com.kaurihealth.utilslib.image.ImageUrlUtils;
 import com.kaurihealth.utilslib.widget.CircleImageView;
@@ -45,6 +48,7 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
 public class DoctorInfoActivity extends BaseActivity implements IDoctorInfoView {
     @Inject
     DoctorInfoPresenter<IDoctorInfoView> mPresenter;
+
     @Bind(R.id.iv_photo)
     CircleImageView mIvPhoto;
     @Bind(R.id.tv_name)
@@ -63,8 +67,6 @@ public class DoctorInfoActivity extends BaseActivity implements IDoctorInfoView 
     TextView mTvPracticeNumber;
     @Bind(R.id.tv_organization)
     TextView mTvOrganization;
-    @Bind(R.id.vpager_top)
-    LinearLayout mVpagerTop;
 
     //学习与工作经历
     @Bind(R.id.lay_experience)
@@ -72,21 +74,20 @@ public class DoctorInfoActivity extends BaseActivity implements IDoctorInfoView 
     //专业特长
     @Bind(R.id.lay_speciality)
     LinearLayout mLaySpeciality;
-
-    //转诊按钮
-    @Bind(R.id.floatbtn_chat_new)
-    FloatingActionButton mFloatbtnChat;
-    @Bind(R.id.floatbtn_active_new)
-    FloatingActionButton mFloatbtnActive;
     @Bind(R.id.tv_mentorshipTitle)
     TextView tv_mentorshipTitle;
     @Bind(R.id.tv_EducationTitle)
     TextView tv_EducationTitle;
-//    @Bind(R.id.floatbtn_referral_new)
-//    Button floatbtn_active_referral;
 
     @Bind(R.id.tv_more)
     TextView mTvMore;
+
+    @Bind(R.id.ly_visit_referral_gone)
+    LinearLayout mLyVisitReferralGone;
+    @Bind(R.id.floatbtn_chat)
+    Button mFloatbtnChat;
+    @Bind(R.id.floatbtn_referral)
+    Button mFloatbtnReferral;
 
     private DoctorDisplayBean doctorDisplayBean;//关联医生的参数
     private int relationshipId;
@@ -100,16 +101,14 @@ public class DoctorInfoActivity extends BaseActivity implements IDoctorInfoView 
     protected void initPresenterAndView(Bundle savedInstanceState) {
         MyApplication.getApp().getComponent().inject(this);
         mPresenter.setPresenter(this);
-        //"转诊"悬浮按钮消失
-        mFloatbtnActive.setVisibility(View.GONE);
+
+        initNewBackBtn(getString(R.string.doctor_tv_title));
+        mTvMore.setText("删除");
+        mTvMore.setTextColor(getResources().getColor(R.color.color_red));
     }
 
     @Override
     protected void initDelayedData() {
-        initNewBackBtn(getString(R.string.doctor_tv_title));
-        mTvMore.setText("删除");
-        mTvMore.setTextColor(getResources().getColor(R.color.color_red));
-        //注册事件
         EventBus.getDefault().register(this);
     }
 
@@ -117,8 +116,10 @@ public class DoctorInfoActivity extends BaseActivity implements IDoctorInfoView 
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        removeStickyEvent(DoctorRelationshipBeanEvent.class);
+        removeStickyEvent(DoctorPatientRelationshipBeanEvent.class);
+
         mPresenter.unSubscribe();
-        //注销事件
         EventBus.getDefault().unregister(this);
     }
 
@@ -139,10 +140,19 @@ public class DoctorInfoActivity extends BaseActivity implements IDoctorInfoView 
 
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)//DoctorTeamAdapter0发送事件
     public void eventBusMain(DoctorPatientRelationshipBeanEvent event) {
+        //隐藏"删除"按钮-->接受DoctorTeam发来的消息
+        mTvMore.setText("");
+        mTvMore.setVisibility(View.INVISIBLE);
         DoctorPatientRelationshipBean doctorRelationshipBean = event.getBean();
+        typeStatusHandle(event.getType());
         relationshipId = doctorRelationshipBean.getDoctorPatientId();
         doctorDisplayBean = doctorRelationshipBean.getDoctor();
         showDoctorInfo();
+    }
+
+    private void typeStatusHandle(String type) {
+        mLyVisitReferralGone.setVisibility(type.equals("接受") ? View.VISIBLE : View.GONE);
+        mTvMore.setVisibility(type.equals("接受") ? View.VISIBLE : View.GONE);
     }
 
     private void showDoctorInfo() {
@@ -161,7 +171,8 @@ public class DoctorInfoActivity extends BaseActivity implements IDoctorInfoView 
             tv_EducationTitle.setText(setDefaultText(doctorDisplayBean.getEducationTitle()));
 
             mTvMajor.setText(doctorDisplayBean.getDoctorInformations() != null
-                    ? doctorDisplayBean.getDoctorInformations().getDepartment() == null ? "暂无" : doctorDisplayBean.getDoctorInformations().getDepartment().getDepartmentName() : "暂无");
+                    ? doctorDisplayBean.getDoctorInformations().getDepartment() == null ? "暂无"
+                    : doctorDisplayBean.getDoctorInformations().getDepartment().getDepartmentName() : "暂无");
 
             DoctorInformationDisplayBean doctorInformations = doctorDisplayBean.getDoctorInformations();
             if (doctorInformations != null) {
@@ -170,21 +181,21 @@ public class DoctorInfoActivity extends BaseActivity implements IDoctorInfoView 
         }
     }
 
-    @OnClick({R.id.lay_experience, R.id.lay_speciality, R.id.floatbtn_chat_new, R.id.tv_more})
+    @OnClick({R.id.lay_experience, R.id.lay_speciality, R.id.floatbtn_chat, R.id.tv_more, R.id.floatbtn_referral})
     public void onClick(View view) {
         if (OnClickUtils.onNoDoubleClick()) return;
         switch (view.getId()) {
             case R.id.lay_experience://学习与工作经历
                 Bundle bundle_workingExperience = new Bundle();
-                bundle_workingExperience.putString("workingExperience", getWorkingExperience());
+                bundle_workingExperience.putString(Global.Bundle.REQUEST_DOCTOR_WORK, getWorkingExperience());
                 skipToBundle(DoctorStudyExprienceActivity.class, bundle_workingExperience);
                 break;
             case R.id.lay_speciality://特长
                 Bundle bundle_practiceField = new Bundle();
-                bundle_practiceField.putString("practiceField", getPracticeField());
+                bundle_practiceField.putString(Global.Bundle.REQUEST_DOCTOR_PRACTICE, getPracticeField());
                 skipToBundle(DoctorPracticeFieldActivity.class, bundle_practiceField);
                 break;
-            case R.id.floatbtn_chat_new://聊天
+            case R.id.floatbtn_chat://聊天
                 try {
                     Intent intent = new Intent();
                     intent.setPackage(getApplication().getPackageName());
@@ -198,7 +209,7 @@ public class DoctorInfoActivity extends BaseActivity implements IDoctorInfoView 
                 break;
             case R.id.tv_more://删除
                 SweetAlertDialog dialogAccept = new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
-                        .setTitleText("确定删除当前医生吗?")
+                        .setTitleText("确定删除该协作医生?")
                         .setConfirmText("确定")
                         .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
                             @Override
@@ -211,35 +222,27 @@ public class DoctorInfoActivity extends BaseActivity implements IDoctorInfoView 
                         .setCancelText("取消");
                 dialogAccept.show();
                 break;
-            /**
-             * 暂时屏蔽
-             case R.id.floatbtn_referral_new:
-             EventBus.getDefault().postSticky(new ReferralPatientEvent(doctorDisplayBean.doctorId));
-             skipTo(ReferralPatientActivity.class);
-             break;
-             */
+            case R.id.floatbtn_referral:
+                EventBus.getDefault().postSticky(new ReferralPatientEvent(doctorDisplayBean.doctorId));
+                skipTo(ReferralPatientActivity.class);
+                break;
             default:
                 break;
         }
     }
 
     public String getPracticeField() {
-        if (doctorDisplayBean != null) {
-            return doctorDisplayBean.getPracticeField();
-        }
-        return "暂无";
+        return doctorDisplayBean != null ? doctorDisplayBean.getPracticeField() : "暂无";
     }
 
     public String getWorkingExperience() {
-        if (doctorDisplayBean != null) {
-            return doctorDisplayBean.getWorkingExperience();
-        }
-        return "暂无";
+
+        return doctorDisplayBean != null ? doctorDisplayBean.getWorkingExperience() : "暂无";
     }
 
     @Override
     public void switchPageUI(String className) {
-        showToast("解除当前医生");
+        showToast("已删除该协作医生");
         EventBus.getDefault().postSticky(new DoctorFragmentRefreshEvent());
         finish();
     }

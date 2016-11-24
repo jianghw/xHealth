@@ -3,16 +3,14 @@ package com.kaurihealth.mvplib.register_p;
 import com.kaurihealth.datalib.local.LocalData;
 import com.kaurihealth.datalib.repository.Repository;
 import com.kaurihealth.datalib.request_bean.bean.DoctorUserBean;
-import com.kaurihealth.datalib.response_bean.ContactUserDisplayBean;
 import com.kaurihealth.datalib.response_bean.DoctorDisplayBean;
 import com.kaurihealth.datalib.response_bean.ResponseDisplayBean;
 import com.kaurihealth.datalib.response_bean.TokenBean;
 import com.kaurihealth.utilslib.log.LogUtils;
 
-import java.util.List;
-
 import javax.inject.Inject;
 
+import rx.Observable;
 import rx.Observer;
 import rx.Subscriber;
 import rx.Subscription;
@@ -62,9 +60,8 @@ public class RegisterPersonInfoPresenter<V> implements IRegisterPersonInfoPresen
                     public void onNext(ResponseDisplayBean bean) {
                         if (bean.isIsSucess()) {
                             modifiedRegisterPercentage();
-                            mActivity.connectLeanCloud();
-                            loadContactListByDoctorId();
                             loadDoctorDetail();
+                            mActivity.connectLeanCloud();
                         } else {
                             mActivity.showToast(bean.getMessage());
                         }
@@ -73,9 +70,13 @@ public class RegisterPersonInfoPresenter<V> implements IRegisterPersonInfoPresen
         mSubscriptions.add(subscribe);
     }
 
-    private void modifiedRegisterPercentage() {
+    /**
+     * 修改寄存器的百分比
+     */
+    @Override
+    public void modifiedRegisterPercentage() {
         Subscription subscribe = mRepository.persistentData(
-                rx.Observable.create(new rx.Observable.OnSubscribe<TokenBean>() {
+               Observable.create(new rx.Observable.OnSubscribe<TokenBean>() {
                     @Override
                     public void call(Subscriber<? super TokenBean> subscriber) {
                         try {
@@ -103,30 +104,6 @@ public class RegisterPersonInfoPresenter<V> implements IRegisterPersonInfoPresen
                             }
                         });
         mSubscriptions.add(subscribe);
-    }
-
-    /**
-     * 关系列表
-     */
-    @Override
-    public void loadContactListByDoctorId() {
-        Subscription subscription = mRepository.loadContactListByDoctorId()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                        new Action1<List<ContactUserDisplayBean>>() {
-                            @Override
-                            public void call(List<ContactUserDisplayBean> beanList) {
-
-                            }
-                        },
-                        new Action1<Throwable>() {
-                            @Override
-                            public void call(Throwable throwable) {
-                                mActivity.showToast(throwable.getMessage());
-                            }
-                        });
-        mSubscriptions.add(subscription);
     }
 
     /**
