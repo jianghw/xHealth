@@ -1,0 +1,133 @@
+package com.kaurihealth.kaurihealth.conversation_v;
+
+import android.content.ActivityNotFoundException;
+import android.content.Intent;
+import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.util.Log;
+import android.view.View;
+import android.widget.ListView;
+import android.widget.TextView;
+
+import com.kaurihealth.chatlib.utils.LCIMConstants;
+import com.kaurihealth.datalib.response_bean.DoctorRelationshipBean;
+import com.kaurihealth.kaurihealth.R;
+import com.kaurihealth.kaurihealth.adapter.GroupChatDoctorAdapter;
+import com.kaurihealth.kaurihealth.base_v.BaseActivity;
+import com.kaurihealth.kaurihealth.tinker.SampleApplicationLike;
+import com.kaurihealth.mvplib.main_p.DoctorPresenter;
+import com.kaurihealth.mvplib.main_p.IPatientView;
+import com.kaurihealth.utilslib.ColorUtils;
+import com.kaurihealth.utilslib.constant.Global;
+import com.kaurihealth.utilslib.widget.ScrollChildSwipeRefreshLayout;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
+import javax.inject.Inject;
+
+import butterknife.Bind;
+import butterknife.OnClick;
+
+public class AddGroupChatActivity extends BaseActivity implements IPatientView {
+    @Inject
+    DoctorPresenter<IPatientView> mPresenter;
+
+    @Bind(R.id.tv_more)
+    TextView tv_more;
+    @Bind(R.id.LV_referral_doctor)
+    ListView LV_referral_doctor;
+    @Bind(R.id.home_referral_request_tips)
+    TextView home_referral_request_tips;
+    @Bind(R.id.swipe_refresh)
+    ScrollChildSwipeRefreshLayout mSwipeRefresh;
+
+    List<DoctorRelationshipBean> beanList = new ArrayList<>();
+    ArrayList<String> choiceIdList = new ArrayList<>();
+
+    private GroupChatDoctorAdapter adapter;
+
+    @Override
+    protected int getActivityLayoutID() {
+        return R.layout.referrcal_doctor;
+    }
+
+    @Override
+    protected void initPresenterAndView(Bundle savedInstanceState) {
+        SampleApplicationLike.getApp().getComponent().inject(this);
+        mPresenter.setPresenter(this);
+
+        initNewBackBtn("创建医生群聊");
+        tv_more.setText(getString(R.string.title_complete));
+
+        mSwipeRefresh.setColorSchemeColors(
+                ColorUtils.setSwipeRefreshColors(getApplicationContext())
+        );
+        mSwipeRefresh.setScrollUpChild(LV_referral_doctor);
+        mSwipeRefresh.setSize(SwipeRefreshLayout.DEFAULT);
+        mSwipeRefresh.setDistanceToTriggerSync(Global.Numerical.SWIPE_REFRESH);
+        mSwipeRefresh.setOnRefreshListener(() -> mPresenter.onSubscribe());
+    }
+
+    @Override
+    protected void initDelayedData() {
+        adapter = new GroupChatDoctorAdapter(this, beanList);
+        LV_referral_doctor.setAdapter(adapter);
+        mPresenter.onSubscribe();
+    }
+
+    @OnClick(R.id.tv_more)
+    public void groupOnClick() {
+        if (!choiceIdList.isEmpty()) choiceIdList.clear();
+
+        for(DoctorRelationshipBean bean:beanList){
+            if(bean.isCheck) choiceIdList.add(bean.getRelatedDoctor().getKauriHealthId());
+        }
+        if (choiceIdList.size() < 1) {
+            displayErrorDialog("请至少选择一个朋友");
+        } else {
+            try {
+                Intent intent = new Intent();
+                intent.setPackage(getApplicationContext().getPackageName());
+                intent.setAction(LCIMConstants.CONVERSATION_ITEM_CLICK_ACTION_GROUP);
+                intent.addCategory(Intent.CATEGORY_DEFAULT);
+                intent.putStringArrayListExtra(LCIMConstants.PEER_ID_GROUP, choiceIdList);
+                startActivity(intent);
+                finishCur();
+            } catch (ActivityNotFoundException exception) {
+                Log.i(LCIMConstants.LCIM_LOG_TAG, exception.toString());
+            }
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (choiceIdList.size() > 0) choiceIdList.clear();
+        if (beanList.size() > 0) beanList.clear();
+        mPresenter.unSubscribe();
+    }
+
+
+    @Override
+    public void loadingIndicator(boolean flag) {
+        if (mSwipeRefresh == null) return;
+        mSwipeRefresh.post(() -> mSwipeRefresh.setRefreshing(flag));
+    }
+
+    @Override
+    public void lazyLoadingDataSuccess(List<?> list) {
+        home_referral_request_tips.setVisibility(list != null ? !list.isEmpty() ? View.GONE : View.VISIBLE : View.VISIBLE);
+
+        if (choiceIdList.size() > 0) choiceIdList.clear();
+        if (beanList.size() > 0) beanList.clear();
+        beanList.addAll((Collection<? extends DoctorRelationshipBean>) list);
+        adapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void switchPageUI(String className) {
+
+    }
+}

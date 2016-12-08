@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/money_detail_out">
+
+    <TextView
+        android:id="@+id/tvAge"
+        style="@style/money_detail_title"
+        android:text="     提现" />
+
+    <TextView
+        android:id="@+id/tvDate"
+        style="@style/money_detail_date"
+        android:text="2016.05.01 15:06" />
+
+    <TextView
+        android:id="@+id/tvMoney"
+        style="@style/money_detail_money"
+        android:text="-100.00元" />
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.2dp"
+        android:background="#d8d5d5"
+        android:layout_alignParentBottom="true"/>
+</RelativeLayout>

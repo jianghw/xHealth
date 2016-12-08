@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@color/color_bg_gray"
+              android:orientation="vertical">
+
+    <include layout="@layout/include_bar_no_more"/>
+
+    <RelativeLayout
+        style="@style/Bg_Lay_Press"
+        android:layout_marginTop="@dimen/margin_16">
+
+        <TextView
+            style="@style/Doctor_TitleText"
+            android:text="接收系统消息推送通知"/>
+
+        <com.rey.material.widget.Switch
+            android:id="@+id/switch_system_meg"
+            style="@style/Material.Widget.Switch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:checked="true"
+            android:gravity="center"
+            app:sw_thumbColor="@color/color_green"/>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/rl_clean_msg"
+        style="@style/Bg_Lay_Press"
+        android:layout_marginTop="@dimen/margin_16">
+
+        <TextView
+            style="@style/Doctor_TitleText"
+            android:text="清空系统消息"/>
+    </RelativeLayout>
+</LinearLayout>

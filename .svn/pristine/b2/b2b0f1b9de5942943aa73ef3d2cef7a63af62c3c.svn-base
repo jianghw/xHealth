@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+       xmlns:tools="http://schemas.android.com/tools"
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content"
+       android:orientation="vertical">
+
+    <LinearLayout style="@style/Lay_Horizontal">
+
+        <TextView
+            style="@style/BodyText_Title"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:gravity="right"
+            android:text="类型:"/>
+
+        <TextView
+            android:id="@+id/tv_category"
+            style="@style/Record_BodyText"
+            android:layout_width="0dp"
+            android:layout_weight="2"
+            tools:text="临床诊疗"/>
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"/>
+    </LinearLayout>
+
+    <LinearLayout style="@style/Lay_Horizontal">
+
+        <TextView
+            android:id="@+id/tv_project"
+            style="@style/BodyText_Title"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:gravity="right"
+            android:text="项目:"/>
+
+        <TextView
+            android:id="@+id/tv_subject"
+            style="@style/Record_BodyText"
+            android:layout_width="0dp"
+            android:layout_weight="2"
+            tools:text="门诊记录电子病历"/>
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"/>
+    </LinearLayout>
+</merge>

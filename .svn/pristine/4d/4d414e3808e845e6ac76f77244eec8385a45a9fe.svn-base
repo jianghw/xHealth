@@ -1,0 +1,27 @@
+package com.kaurihealth.utilslib.bugtag;
+
+import com.kaurihealth.utilslib.constant.Global;
+
+/**
+ * Created by 张磊 on 2016/5/26.
+ * 介绍：
+ */
+public class BugTagConfig {
+    public static final String BugTagAppKeyBeta = "8b35db08dbec641fcf3b6b9ee0bc2c10";
+    public static final String BugTagAppKeyLive = "0444af17d16e3bc94281a6eaddf667ac";
+
+    public static String getBugTagAppKey(String environment) {
+        switch (environment) {
+            case Global.Environment.DEVELOP:
+                return BugTagAppKeyBeta;
+            case Global.Environment.PREVIEW:
+                return BugTagAppKeyLive;
+
+            case Global.Environment.TEST:
+                return BugTagAppKeyBeta;
+
+            default:
+                return BugTagAppKeyLive;
+        }
+    }
+}

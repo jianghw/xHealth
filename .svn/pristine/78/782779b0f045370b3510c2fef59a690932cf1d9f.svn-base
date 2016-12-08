@@ -1,0 +1,325 @@
+package com.kaurihealth.kaurihealth.patient_v.family_members;
+
+import android.app.Dialog;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import com.kaurihealth.datalib.request_bean.bean.NewFamilyMemberBean;
+import com.kaurihealth.datalib.request_bean.builder.NewFamilyMemberBeanBuilder;
+import com.kaurihealth.kaurihealth.R;
+import com.kaurihealth.kaurihealth.base_v.BaseActivity;
+import com.kaurihealth.kaurihealth.eventbus.AddFamilyMemberEvent;
+import com.kaurihealth.kaurihealth.tinker.SampleApplicationLike;
+import com.kaurihealth.mvplib.patient_p.AddFamilyMemberPresenter;
+import com.kaurihealth.mvplib.patient_p.IAddFamilyMemberView;
+import com.kaurihealth.utilslib.ValidatorUtils;
+import com.kaurihealth.utilslib.dialog.PopUpNumberPickerDialog;
+import com.kaurihealth.utilslib.dialog.SelectDateDialog;
+import com.kaurihealth.utilslib.widget.TextWatchClearError;
+import com.mobsandgeeks.saripaar.ValidationError;
+import com.mobsandgeeks.saripaar.Validator;
+import com.mobsandgeeks.saripaar.annotation.Length;
+import com.mobsandgeeks.saripaar.annotation.NotEmpty;
+import com.mobsandgeeks.saripaar.annotation.Pattern;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
+import java.util.List;
+
+import javax.inject.Inject;
+
+import butterknife.Bind;
+import butterknife.OnClick;
+
+/**
+ * Created by Garnet_Wu on 2016/11/10.
+ * 描述: 患者信息 --> 家庭成员添加家庭成员
+ */
+public class AddFamilyMemberActivity extends BaseActivity implements IAddFamilyMemberView, Validator.ValidationListener {
+    //保存
+    @Bind(R.id.tv_more)
+    TextView tv_more;
+
+    //姓
+    @Bind(R.id.et_last_name)
+    @NotEmpty(message = "家属姓不能为空")
+    @Length(max = 5, message = "家属的姓不能超过5位")
+    EditText edtLastName;
+
+    //名
+    @Bind(R.id.et_first_name)
+    @NotEmpty(message = "家属名不能为空")
+    @Length(max = 5, message = "家属的名不能超过5位")
+    EditText edtFirstName;
+
+    //性别
+    @Bind(R.id.tv_gender)
+    @NotEmpty(message = "性别不能为空")
+    TextView tvGender;
+
+    //出生日期
+    @Bind(R.id.tv_birthday)
+    @NotEmpty(message = "生日不能为空")
+    TextView tvBirthday;
+
+    //关系
+    @Bind(R.id.tv_relationship)
+    @NotEmpty(message = "请填写您与家属的关系")
+    TextView tvRelationship;
+
+
+    //手机号码
+    @Bind(R.id.edt_phone)
+    @NotEmpty(message = "手机号码不能为空")
+    @Pattern(sequence = 2, regex = "^1[3|4|5|7|8]\\d{9}$", message = "请输入正确的电话号码")
+    EditText edtPhone;
+
+    //地址
+    @Bind(R.id.edt_address)
+    @NotEmpty(message = "地址不能为空")
+    EditText edtAddress;
+
+    //删除 ,清空
+    @Bind(R.id.ivDelete1)
+    ImageView ivDelete1;
+
+    @Bind(R.id.ivDelete2)
+    ImageView ivDelete2;
+
+    @Bind(R.id.ivDelete3)
+    ImageView ivDelete3;
+
+    @Bind(R.id.ivDelete4)
+    ImageView ivDelete4;
+
+    @Bind(R.id.ivDelete5)
+    ImageView ivDelete5;
+
+    @Bind(R.id.ivDelete6)
+    ImageView ivDelete6;
+
+    @Bind(R.id.ivDelete7)
+    ImageView ivDelete7;
+
+
+    @Inject
+    AddFamilyMemberPresenter<IAddFamilyMemberView> mPresenter;
+    private Validator validator;
+    private Dialog genderDialog;    //性别Dialog
+    private Dialog relationDialog;  //关系Dialog
+    private Dialog birthDialog;   //生日Dialog
+    private int patientId;
+
+
+    //BaseActivity
+    @Override
+    protected int getActivityLayoutID() {
+        return R.layout.activity_add_family_member;
+    }
+
+    //BaseActivity
+    @Override
+    protected void initPresenterAndView(Bundle savedInstanceState) {
+        SampleApplicationLike.getApp().getComponent().inject(this);
+        mPresenter.setPresenter(this);
+        //回退键,结束当前Activity
+        initBackBtn(R.id.iv_back);
+        //性别
+        String[] genders = getResources().getStringArray(R.array.gender);
+        PopUpNumberPickerDialog genderDialogPop = new PopUpNumberPickerDialog(this, genders, new PopUpNumberPickerDialog.SetClickListener() {
+            @Override
+            public void onClick(int index) {
+                tvGender.setText(genders[index]);
+            }
+        });
+        genderDialog = genderDialogPop.getDialog();
+
+        //生日
+        SelectDateDialog selectDateDialog = new SelectDateDialog(this, new SelectDateDialog.DialogListener() {
+            @Override
+            public void onclick(String year, String month, String day) {
+                setDateOfDate(year, month, day);
+            }
+
+        });
+        birthDialog = selectDateDialog.getDataDialog();
+
+        //家属关系
+        String[] relationships = getResources().getStringArray(R.array.relationship);
+        PopUpNumberPickerDialog relationDialogPop = new PopUpNumberPickerDialog(this, relationships, new PopUpNumberPickerDialog.SetClickListener() {
+            @Override
+            public void onClick(int index) {
+                tvRelationship.setText(relationships[index]);
+            }
+        });
+        relationDialog = relationDialogPop.getDialog();
+
+        //给删除按钮设置监听
+        edtLastName.addTextChangedListener(new TextWatchClearError(edtLastName, ivDelete1));
+        edtFirstName.addTextChangedListener(new TextWatchClearError(edtFirstName, ivDelete2));
+        tvGender.addTextChangedListener(new TextWatchClearError(tvGender, ivDelete3));
+        tvBirthday.addTextChangedListener(new TextWatchClearError(tvBirthday, ivDelete4));
+        tvRelationship.addTextChangedListener(new TextWatchClearError(tvRelationship, ivDelete5));
+        edtPhone.addTextChangedListener(new TextWatchClearError(edtPhone, ivDelete6));
+        edtAddress.addTextChangedListener(new TextWatchClearError(edtAddress, ivDelete7));
+
+
+    }
+
+    //BaseActivity
+    @Override
+    protected void initDelayedData() {
+        initNewBackBtn("添加家庭成员");
+        tv_more.setText("保存");
+        tv_more.setVisibility(View.VISIBLE);
+        validator = new Validator(this);
+        validator.setValidationListener(this);
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mPresenter.unSubscribe();
+        removeStickyEvent(AddFamilyMemberEvent.class);
+        EventBus.getDefault().unregister(this);
+    }
+
+    /**
+     * 设置生日
+     *
+     * @param year
+     * @param month
+     * @param day
+     */
+    private void setDateOfDate(String year, String month, String day) {
+        StringBuilder stringBuilder = new StringBuilder(year);
+        stringBuilder.append("-");
+        stringBuilder.append(month);
+        stringBuilder.append("-");
+        stringBuilder.append(day);
+        tvBirthday.setText(stringBuilder.toString());
+        stringBuilder.append("T00:00:00");
+
+    }
+
+    //IMVPView   跳转界面
+    @Override
+    public void switchPageUI(String className) {
+
+    }
+
+
+    @Override
+    public void onValidationSucceeded() {
+        mPresenter.onSubscribe();
+
+    }
+
+    @Override
+    public void onValidationFailed(List<ValidationError> errors) {
+        String message = ValidatorUtils.validationErrorMessage(getApplicationContext(), errors);
+        displayErrorDialog(message);
+    }
+
+    //接受PatientInfoActivity传值的patientId
+    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
+    public void eventBusMain(AddFamilyMemberEvent event) {
+        int patientId = event.getPatientId();
+        this.patientId = patientId;
+    }
+
+
+    @Override
+    public NewFamilyMemberBean getNewFamilyMemberBean() {
+        //构造bean数据
+        String firstName = getTvValue(edtFirstName);
+        String lastName = getTvValue(edtLastName);
+        String gender = getTvValue(tvGender);
+        String dateOfBirth = getTvValue(tvBirthday);
+        String relationship = getTvValue(tvRelationship);
+        NewFamilyMemberBean newFamilyMemberBean = new NewFamilyMemberBeanBuilder().Build(firstName, lastName, gender, dateOfBirth, relationship, patientId);
+
+        return newFamilyMemberBean;
+    }
+
+
+    /**
+     * 帮家庭成员开户成功
+     */
+    @Override
+    public void AddFamilyMemberSuccess() {
+        showToast("帮家庭成员开户成功!");
+        tv_more.setClickable(false);
+        clearTextView(edtFirstName);
+        clearTextView(edtLastName);
+        clearTextView(tvGender);
+        clearTextView(tvBirthday);
+        clearTextView(tvRelationship);
+        clearTextView(edtPhone);
+        clearTextView(edtAddress);
+        finishCur();
+    }
+
+    //点击事件
+    @OnClick({R.id.ivDelete1, R.id.ivDelete2, R.id.ivDelete3, R.id.ivDelete4, R.id.ivDelete5, R.id.ivDelete6, R.id.ivDelete7, R.id.rlay_gender, R.id.rlay_birthday, R.id.rlay_relationship,
+            R.id.tv_more, R.id.tv_gender, R.id.tv_birthday, R.id.tv_relationship})
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.ivDelete1:
+                clearTextView(edtLastName);
+                break;
+            case R.id.ivDelete2:
+                clearTextView(edtFirstName);
+                break;
+            case R.id.ivDelete3:
+                clearTextView(tvGender);
+                break;
+            case R.id.ivDelete4:
+                clearTextView(tvBirthday);
+                break;
+            case R.id.ivDelete5:
+                clearTextView(tvRelationship);
+                break;
+            case R.id.ivDelete6:
+                clearTextView(edtPhone);  //电话
+                break;
+            case R.id.ivDelete7:
+                clearTextView(edtAddress);  //地址
+                break;
+            case R.id.rlay_gender:          //性别相对布局
+                genderDialog.show();
+                break;
+            case R.id.tv_gender:          //性别相对布局
+                genderDialog.show();
+                break;
+            case R.id.rlay_birthday:     //生日相对布局
+                birthDialog.show();
+                break;
+            case R.id.tv_birthday:
+                birthDialog.show();
+                break;
+            case R.id.rlay_relationship:    //家属相对布局
+                relationDialog.show();
+                break;
+            case R.id.tv_relationship:
+                relationDialog.show();
+                break;
+            case R.id.tv_more:      //保存
+                validator.validate();
+                break;
+            default:
+                break;
+
+        }
+
+
+    }
+
+
+}

@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_bg_gray"
+    android:orientation="vertical">
+
+    <include
+        android:id="@+id/in_title"
+        layout="@layout/include_action_bar" />
+
+    <RelativeLayout
+        style="@style/Bg_Lay_Press"
+        android:layout_marginTop="@dimen/margin_16">
+
+        <TextView
+            style="@style/Doctor_TitleText"
+            android:text="账户余额" />
+
+        <TextView
+            android:id="@+id/tv_totalCredit"
+            style="@style/Right_TitleText"
+            android:textColor="@color/color_enable_green"
+            tools:text="2000.00元" />
+    </RelativeLayout>
+
+    <TextView style="@style/Line_Gap" />
+
+    <RelativeLayout
+        style="@style/Bg_Lay_Press">
+
+        <TextView
+            style="@style/Doctor_TitleText"
+            android:text="可支取余额" />
+
+        <TextView
+            android:id="@+id/tv_availableCredit"
+            style="@style/Right_TitleText"
+            android:textColor="@color/color_enable_green"
+            tools:text="2000.00元" />
+    </RelativeLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="15dp"
+        android:text="说明:"
+        android:textColor="#666666"
+        android:textSize="14sp" />
+    <!--android:text="1.每笔服务确认结束后，3-5个工作日后可提现;现阶段只提供人工提现;\n2.平台会按照国家规定代扣代缴个人所得税;\n3.平台将针对每一笔服务收取5%手续费;"-->
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="5dp"
+        android:text="1.每笔服务确认结束后，3-5个工作日后可提现;"
+        android:textColor="@color/apptextcolormed"
+        android:textSize="12sp" />
+
+    <View
+        android:layout_width="wrap_content"
+        android:layout_height="0.5dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="5dp"
+        android:text="2.税前收入经平台代扣“个税”后为您的“可支取余额”。"
+        android:textColor="#999999"
+        android:textSize="12sp" />
+
+    <View
+        android:layout_width="wrap_content"
+        android:layout_height="0.5dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="5dp"
+        android:text="3.在您发出提现要求后，我们的客服代表会及时与您联系。"
+        android:textColor="#999999"
+        android:textSize="12sp" />
+
+    <Button
+        android:id="@+id/btn_drawCash"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/login_btn_height"
+        android:layout_margin="@dimen/margin_26"
+        android:background="@drawable/bg_btn_login"
+        android:enabled="true"
+        android:text="提现"
+        android:textColor="@color/color_white"
+        android:textSize="@dimen/textSize_16"/>
+
+</LinearLayout>

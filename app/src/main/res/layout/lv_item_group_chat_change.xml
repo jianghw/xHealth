@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.kaurihealth.utilslib.widget.CircleImageView
+        android:layout_margin="@dimen/margin_16"
+        android:id="@+id/civPhoto"
+        style="@style/Photo.Nomal.Vertical"
+        android:src="@mipmap/ic_circle_head_green" />
+
+    <TextView
+        android:id="@+id/tv_name"
+        style="@style/searchcommon_name"
+        android:layout_alignTop="@+id/civPhoto"
+        android:layout_marginLeft="@dimen/margin_16"
+        android:layout_toRightOf="@id/civPhoto"
+        android:textColor="#545252"
+        tools:text="杜江" />
+
+    <TextView
+        android:id="@+id/tv_gender"
+        style="@style/searchiteam_tv"
+        android:layout_alignBottom="@+id/civPhoto"
+        android:layout_alignLeft="@+id/tv_name"
+        tools:text="男" />
+
+    <TextView
+        android:id="@+id/tv_age"
+        style="@style/searchiteam_tv"
+        android:layout_toRightOf="@+id/tv_gender"
+        android:layout_alignBottom="@+id/civPhoto"
+        android:layout_marginLeft="@dimen/margin_16"
+        tools:text="28岁" />
+
+    <CheckBox
+        android:id="@+id/checkbox"
+        android:layout_width="wrap_content"
+        android:layout_marginRight="@dimen/margin_16"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true" />
+</RelativeLayout>

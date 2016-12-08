@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
+
+    <include layout="@layout/include_bar_no_more"/>
+
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:id="@+id/top"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#FFFFFF"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tv_common_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginTop="5dp"
+                android:text="标题"/>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="10dp">
+
+                <TextView
+                    android:id="@+id/tv_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_marginLeft="10dp"
+                    android:text="时间"
+                    android:textSize="12sp"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toLeftOf="@+id/tv_from_source"
+                    android:text="来源："
+                    android:textSize="12sp"/>
+
+                <TextView
+                    android:id="@+id/tv_from_source"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="5dp"
+                    android:layout_toLeftOf="@+id/tv_common_name_author"
+                    android:text="来源的出处"
+                    android:textColor="#50d2c2"
+                    android:textSize="12sp"/>
+
+                <TextView
+                    android:id="@+id/tv_common_name_author"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toLeftOf="@+id/tv_common_name"
+                    android:text="作者："
+                    android:textSize="12sp"/>
+
+                <TextView
+                    android:id="@+id/tv_common_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="10dp"
+                    android:text="米平"
+                    android:textColor="#50d2c2"
+                    android:textSize="12sp"/>
+
+            </RelativeLayout>
+        </LinearLayout>
+    </RelativeLayout>
+
+    <com.kaurihealth.kaurihealth.clinical_v.PairScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="none"
+        >
+
+        <com.kaurihealth.kaurihealth.clinical_v.CustomLinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <TextView
+                android:text="huahuashijie"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <!--<LinearLayout-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:orientation="vertical">-->
+
+
+            <!--<RelativeLayout-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content">-->
+
+                <!--<LinearLayout-->
+                    <!--android:id="@+id/top"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:background="#FFFFFF"-->
+                    <!--android:orientation="vertical">-->
+
+                    <!--<TextView-->
+                        <!--android:id="@+id/tv_common_title"-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:layout_gravity="center_horizontal"-->
+                        <!--android:layout_marginLeft="5dp"-->
+                        <!--android:layout_marginRight="5dp"-->
+                        <!--android:layout_marginTop="5dp"-->
+                        <!--android:text="标题"/>-->
+
+                    <!--<RelativeLayout-->
+                        <!--android:layout_width="match_parent"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:layout_marginBottom="5dp"-->
+                        <!--android:layout_marginTop="10dp">-->
+
+                        <!--<TextView-->
+                            <!--android:id="@+id/tv_time"-->
+                            <!--android:layout_width="wrap_content"-->
+                            <!--android:layout_height="wrap_content"-->
+                            <!--android:layout_alignParentLeft="true"-->
+                            <!--android:layout_marginLeft="10dp"-->
+                            <!--android:text="时间"-->
+                            <!--android:textSize="12sp"/>-->
+
+                        <!--<TextView-->
+                            <!--android:layout_width="wrap_content"-->
+                            <!--android:layout_height="wrap_content"-->
+                            <!--android:layout_toLeftOf="@+id/tv_from_source"-->
+                            <!--android:text="来源："-->
+                            <!--android:textSize="12sp"/>-->
+
+                        <!--<TextView-->
+                            <!--android:id="@+id/tv_from_source"-->
+                            <!--android:layout_width="wrap_content"-->
+                            <!--android:layout_height="wrap_content"-->
+                            <!--android:layout_marginRight="5dp"-->
+                            <!--android:layout_toLeftOf="@+id/tv_common_name_author"-->
+                            <!--android:text="来源的出处"-->
+                            <!--android:textColor="#50d2c2"-->
+                            <!--android:textSize="12sp"/>-->
+
+                        <!--<TextView-->
+                            <!--android:id="@+id/tv_common_name_author"-->
+                            <!--android:layout_width="wrap_content"-->
+                            <!--android:layout_height="wrap_content"-->
+                            <!--android:layout_toLeftOf="@+id/tv_common_name"-->
+                            <!--android:text="作者："-->
+                            <!--android:textSize="12sp"/>-->
+
+                        <!--<TextView-->
+                            <!--android:id="@+id/tv_common_name"-->
+                            <!--android:layout_width="wrap_content"-->
+                            <!--android:layout_height="wrap_content"-->
+                            <!--android:layout_alignParentRight="true"-->
+                            <!--android:layout_marginRight="10dp"-->
+                            <!--android:text="米平"-->
+                            <!--android:textColor="#50d2c2"-->
+                            <!--android:textSize="12sp"/>-->
+
+                    <!--</RelativeLayout>-->
+                <!--</LinearLayout>-->
+            <!--</RelativeLayout>-->
+
+            <!--<RelativeLayou t-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="match_parent"-->
+                <!--&gt;-->
+
+                <WebView
+                    android:id="@+id/dy_webview"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scrollbars="none"
+                    >
+                </WebView>
+            <!--</RelativeLayout>-->
+            <!--</LinearLayout>-->
+        </com.kaurihealth.kaurihealth.clinical_v.CustomLinearLayout>
+
+        <ListView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"></ListView>
+    </com.kaurihealth.kaurihealth.clinical_v.PairScrollView>
+</LinearLayout>

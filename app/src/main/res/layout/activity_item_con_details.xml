@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_bg_gray"
+    android:orientation="vertical">
+
+    <include layout="@layout/include_action_bar" />
+
+    <RelativeLayout
+        android:id="@+id/rl_details"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_white_press">
+
+        <com.kaurihealth.utilslib.widget.CircleImageView
+            android:id="@+id/civPhoto"
+            style="@style/Photo.Nomal.Vertical"
+            android:layout_margin="@dimen/margin_16"
+            android:src="@mipmap/ic_circle_head_green" />
+
+        <TextView
+            android:id="@+id/tv_name"
+            style="@style/searchcommon_name"
+            android:layout_alignTop="@+id/civPhoto"
+            android:layout_marginLeft="@dimen/margin_16"
+            android:layout_toRightOf="@id/civPhoto"
+            android:textColor="#545252"
+            tools:text="杜江" />
+
+        <TextView
+            android:id="@+id/tv_gender"
+            style="@style/searchiteam_tv"
+            android:layout_alignBottom="@+id/civPhoto"
+            android:layout_alignLeft="@+id/tv_name"
+            tools:text="男" />
+
+        <TextView
+            android:id="@+id/tv_age"
+            style="@style/searchiteam_tv"
+            android:layout_alignBottom="@+id/civPhoto"
+            android:layout_marginLeft="@dimen/margin_16"
+            android:layout_toRightOf="@+id/tv_gender"
+            tools:text="28岁" />
+
+        <ImageView
+            android:id="@+id/img_right"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/margin_16"
+            android:src="@mipmap/arrow_right" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/rl_group_top"
+        style="@style/Bg_Lay_Press"
+        android:layout_marginTop="@dimen/margin_16">
+
+        <TextView
+            style="@style/Doctor_TitleText"
+            android:text="对话置顶" />
+
+        <com.rey.material.widget.Switch
+            android:id="@+id/switch_push"
+            style="@style/Material.Widget.Switch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/margin_16"
+            android:checked="true"
+            android:gravity="center"
+            app:sw_thumbColor="@color/color_enable_green" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/rl_group_clean"
+        style="@style/Bg_Lay_Press"
+        android:layout_marginTop="@dimen/padding_4">
+
+        <TextView
+            style="@style/Doctor_TitleText"
+            android:text="清空对话记录" />
+
+    </RelativeLayout>
+</LinearLayout>

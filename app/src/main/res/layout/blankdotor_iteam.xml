@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/rlayNewPassword2"
+        style="@style/rlay_personinfo.blankdoctor">
+
+        <TextView
+            android:id="@+id/tv_blanname"
+            style="@style/tv_blankd"
+            android:layout_marginTop="12dp"
+            android:layout_weight="0.8"
+            android:text="欧阳丽" />
+
+        <TextView
+            android:id="@+id/tv_gender"
+            style="@style/tv_blankd"
+            android:layout_marginTop="12dp"
+            android:layout_weight="0.5"
+            android:text="男" />
+
+        <TextView
+            android:id="@+id/tv_departmentName"
+            style="@style/tv_blankd"
+            android:layout_marginTop="12dp"
+            android:text="血液内科" />
+
+        <TextView
+            android:id="@+id/tv_hospitalTitle"
+            style="@style/tv_blankd"
+            android:layout_marginTop="12dp"
+            android:text="副主任医师" />
+
+        <TextView
+            android:id="@+id/tv_hospitalName"
+            style="@style/tv_blankd"
+            android:layout_marginTop="12dp"
+            android:layout_weight="1.5"
+            android:text="医疗机构" />
+
+    </LinearLayout>
+
+</LinearLayout>
+

@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <include
+        android:id="@+id/in_title"
+        layout="@layout/include_action_bar" />
+
+
+    <RelativeLayout style="@style/rlay_add_family_member">
+
+        <TextView
+            android:id="@+id/tv1_last_name"
+            style="@style/tv1_add_family_member"
+            android:text=" 姓 " />
+
+        <EditText
+            android:id="@+id/et_last_name"
+            style="@style/edt1_add_family_member"
+            android:layout_toRightOf="@id/tv1_last_name"
+            android:background="@null"
+            android:hint="请输入家属的姓" />
+
+        <ImageView
+            android:id="@+id/ivDelete1"
+            style="@style/Img_Delete"
+            android:visibility="gone" />
+    </RelativeLayout>
+
+    <TextView
+        style="@style/line_mine"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="0dp" />
+
+    <RelativeLayout style="@style/rlay_add_family_member">
+
+        <TextView
+            android:id="@+id/tv2_first_name"
+            style="@style/tv1_add_family_member"
+            android:text=" 名 " />
+
+        <EditText
+            android:id="@+id/et_first_name"
+            style="@style/edt1_add_family_member"
+            android:layout_toRightOf="@id/tv2_first_name"
+            android:background="@null"
+            android:hint="请输入家属的名" />
+
+        <ImageView
+            android:id="@+id/ivDelete2"
+            style="@style/Img_Delete"
+            android:visibility="gone" />
+
+    </RelativeLayout>
+
+    <TextView
+        style="@style/line_mine"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="0dp" />
+
+    <RelativeLayout
+        android:id="@+id/rlay_gender"
+        style="@style/rlay_add_family_member">
+
+        <TextView
+            android:id="@+id/tv3_gender"
+            style="@style/tv1_add_family_member"
+            android:text=" 性     别" />
+
+
+        <ImageView
+            android:id="@+id/ivDelete3"
+            style="@style/Img_Delete"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/tv_gender"
+            style="@style/edt1_add_family_member"
+            android:layout_toRightOf="@id/tv3_gender"
+            android:background="@null"
+            android:clickable="false"
+            android:editable="false"
+            android:hint="请选择性别"
+            android:singleLine="true" />
+
+    </RelativeLayout>
+
+    <TextView
+        style="@style/line_mine"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="0dp" />
+
+    <RelativeLayout
+        android:id="@+id/rlay_birthday"
+        style="@style/rlay_add_family_member">
+
+        <TextView
+            android:id="@+id/tv4_birthday"
+            style="@style/tv1_add_family_member"
+            android:text=" 出生日期"
+            android:layout_alignBottom="@+id/tv_birthday" />
+
+        <TextView
+            android:id="@+id/tv_birthday"
+            style="@style/edt1_add_family_member"
+            android:layout_toRightOf="@id/tv4_birthday"
+            android:background="@null"
+            android:clickable="false"
+            android:editable="false"
+            android:hint="请选择出生日期" />
+
+        <ImageView
+            android:id="@+id/ivDelete4"
+            style="@style/Img_Delete"
+            android:visibility="gone" />
+
+
+    </RelativeLayout>
+
+
+    <TextView
+        style="@style/line_mine"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="0dp" />
+
+    <RelativeLayout
+        android:id="@+id/rlay_relationship"
+        style="@style/rlay_add_family_member">
+
+        <TextView
+            android:id="@+id/tv_relationship"
+            style="@style/edt1_add_family_member"
+            android:layout_toRightOf="@+id/tv5_relationship"
+            android:background="@null"
+            android:clickable="false"
+            android:editable="false"
+            android:hint="请选择关系" />
+
+        <ImageView
+            android:id="@+id/ivDelete5"
+            style="@style/Img_Delete"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/tv5_relationship"
+            style="@style/tv1_add_family_member"
+            android:text=" 关     系"
+            android:layout_alignBaseline="@+id/tv_relationship"
+            android:layout_alignBottom="@+id/tv_relationship"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginLeft="11dp"
+            android:layout_marginStart="11dp" />
+    </RelativeLayout>
+
+    <TextView
+        style="@style/line_mine"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="0dp" />
+
+    <RelativeLayout
+        android:id="@+id/rlay_phone"
+        style="@style/rlay_add_family_member">
+
+        <TextView
+            android:id="@+id/tv6_phone"
+            style="@style/tv1_add_family_member"
+            android:text=" 手机号码" />
+
+        <EditText
+            android:id="@+id/edt_phone"
+            style="@style/edt1_add_family_member"
+            android:layout_toRightOf="@id/tv6_phone"
+            android:background="@null"
+            android:hint="请填写家属手机号码"
+            android:inputType="phone" />
+
+        <ImageView
+            android:id="@+id/ivDelete6"
+            style="@style/Img_Delete"
+            android:visibility="gone" />
+    </RelativeLayout>
+
+    <TextView
+        style="@style/line_mine"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="0dp" />
+
+    <RelativeLayout
+        android:id="@+id/rlay_address"
+        style="@style/rlay_add_family_member">
+
+        <TextView
+            android:id="@+id/tv7_address"
+            style="@style/tv1_add_family_member"
+            android:text=" 地     址" />
+
+        <EditText
+            android:id="@+id/edt_address"
+            style="@style/edt1_add_family_member"
+            android:layout_toRightOf="@id/tv7_address"
+            android:background="@null"
+            android:hint="请输入家属地址" />
+
+        <ImageView
+            android:id="@+id/ivDelete7"
+            style="@style/Img_Delete"
+            android:visibility="gone" />
+
+
+    </RelativeLayout>
+    <TextView
+        style="@style/line_mine"
+        android:layout_marginRight="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="0dp"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="添加家庭成员界面"
+        android:textSize="19dp"
+        android:visibility="gone" />
+</LinearLayout>

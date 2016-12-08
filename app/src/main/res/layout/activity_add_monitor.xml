@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_bg_gray"
+    android:orientation="vertical"
+    tools:context=".patient_v.long_monitoring.AddMonitorIndexActivity">
+
+    <include layout="@layout/include_action_bar" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/activity_horizontal_margin"
+        android:background="@drawable/bg_rounded_box_white"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/input_height_48"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="@string/monitor_time" />
+
+            <TextView
+                android:id="@+id/tv_time"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="2"
+                android:gravity="center|left"
+                android:text="@string/monitor_hint_time" />
+        </LinearLayout>
+
+        <View style="@style/Line_Match" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/input_height_48"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="@string/monitor_program" />
+
+            <TextView
+                android:id="@+id/tv_program"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="2"
+                android:gravity="center|left"
+                android:text="@string/monitor_hint_program" />
+        </LinearLayout>
+
+        <View style="@style/Line_Match" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/input_height_48"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="@string/monitor_data" />
+
+            <EditText
+                android:id="@+id/edit_first"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1.5"
+                android:textSize="14sp"
+                android:paddingBottom="2dp"
+                android:paddingTop="2dp"
+                android:paddingLeft="2dp"
+                android:background="@drawable/bg_edt_login"
+                android:gravity="center|left"
+                android:hint="@string/monitor_hint_data"
+                android:inputType="number|numberDecimal" />
+
+            <TextView
+                android:id="@+id/tv_first_unit"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.5"
+                android:gravity="center"
+                tools:text="mmHg" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/lay_second"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/input_height_48"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:visibility="gone"
+           >
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center" />
+
+            <EditText
+                android:id="@+id/edit_second"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1.5"
+                android:textSize="14sp"
+                android:paddingBottom="2dp"
+                android:paddingTop="2dp"
+                android:paddingLeft="2dp"
+                android:background="@drawable/bg_edt_login"
+                android:gravity="center|left"
+                android:hint="@string/monitor_hint_data"
+                android:inputType="number|numberDecimal" />
+
+            <TextView
+                android:id="@+id/tv_second_unit"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.5"
+                android:gravity="center"
+                android:text="mmHg" />
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

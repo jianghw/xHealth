@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/lay_title_medicalhistory"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/input_height_48"
+        android:background="@color/color_enable_green">
+
+        <ImageView
+            android:id="@+id/iv_back"
+            style="@style/toptitleback" />
+
+        <TextView
+            android:id="@+id/tv_clinicalName"
+            style="@style/toptitletv"
+            android:text="我发表的文章"
+            android:textColor="@android:color/white" />
+
+    </RelativeLayout>
+
+    <ListView
+        android:id="@+id/prlv_clinical"
+        style="@style/refreshview"></ListView>
+
+</LinearLayout>

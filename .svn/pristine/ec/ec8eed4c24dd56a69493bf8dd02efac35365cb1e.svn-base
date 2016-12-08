@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@color/color_bg_gray"
+              android:orientation="vertical">
+
+    <include layout="@layout/include_action_bar"/>
+
+    <TextView
+        style="@style/TextContent.Match"
+        android:id="@+id/tv_time"
+        android:layout_height="@dimen/margin_48"
+        android:layout_margin="@dimen/margin_16"
+        android:background="@drawable/bg_text_date"
+        android:gravity="center"
+        android:text="请选择日期"
+        android:textColor="@color/holo_blue_light"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/margin_16"
+        android:background="@drawable/bg_edt_login">
+
+        <EditText
+            android:id="@+id/edt_name"
+            style="@style/EditText_Content"
+            android:hint="请输入提醒事件(必填)"/>
+
+        <TextView
+            style="@style/tv_major_strength"
+            android:text="限200字以内"/>
+    </RelativeLayout>
+</LinearLayout>

@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:id="@+id/lay_family_item"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingRight="20dp"
+        >
+
+        <com.kaurihealth.utilslib.widget.CircleImageView
+            android:id="@+id/civ_photo"
+            android:layout_width="@dimen/margin_60"
+            android:layout_height="@dimen/margin_60"
+            android:layout_gravity="center_horizontal"
+            android:layout_margin="@dimen/margin_20"
+            android:src="@mipmap/ic_circle_head_green"
+            app:civ_border_color="#4FD3C1"
+            app:civ_border_overlay="true"
+            app:civ_border_width="0.1dp" />
+
+        <TextView
+            android:id="@+id/tv_name_patient"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/civ_photo"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:layout_gravity="center_vertical"
+            android:text="家属姓名"
+            android:textColor="#3e403f"
+            android:paddingTop="30dp"
+            android:textSize="16sp"
+            />
+
+
+        <TextView
+            android:id="@+id/tv_relationship"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/civ_photo"
+            android:layout_marginTop="8dp"
+            android:layout_toRightOf="@id/civ_photo"
+            android:singleLine="true"
+            android:text="关系: 父母"
+            android:layout_below="@id/tv_name"
+            android:textColor="#808080"
+            android:textSize="14sp" />
+
+        <!--未添加患者-->
+        <Button
+            android:id="@+id/btn_addPatient"
+            android:layout_width="80dp"
+            android:layout_height="30dp"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/bg_familymemberitem"
+            android:singleLine="true"
+            android:layout_centerVertical="true"
+            android:text="添加患者"
+            android:textColor="@color/color_white"
+            android:textSize="@dimen/textSize_16"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            />
+
+
+        <!--已经是我的患者-->
+        <TextView
+            android:id="@+id/tv_already_patient"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:layout_alignParentRight="true"
+            android:layout_marginBottom="@dimen/margin_20"
+            android:layout_marginTop="@dimen/margin_10"
+            android:gravity="center_horizontal|center_vertical"
+            android:text="已经是我的患者"
+            android:textSize="@dimen/textSize_16"
+            android:textColor="#808080"
+            android:layout_centerVertical="true"
+            android:visibility="gone"
+             />
+
+
+    </RelativeLayout>
+
+
+</LinearLayout>

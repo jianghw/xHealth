@@ -1,0 +1,353 @@
+package com.kaurihealth.kaurihealth.patient_v.medical_records_only_read;
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.view.View;
+import android.widget.EditText;
+import android.widget.TextView;
+
+import com.kaurihealth.datalib.local.LocalData;
+import com.kaurihealth.datalib.response_bean.DepartmentDisplayBean;
+import com.kaurihealth.datalib.response_bean.DoctorDisplayBean;
+import com.kaurihealth.datalib.response_bean.DoctorPatientRelationshipBean;
+import com.kaurihealth.datalib.response_bean.PatientDisplayBean;
+import com.kaurihealth.datalib.response_bean.PatientRecordDisplayBean;
+import com.kaurihealth.datalib.response_bean.RecordBean;
+import com.kaurihealth.datalib.response_bean.RecordDocumentsBean;
+import com.kaurihealth.datalib.response_bean.RemoteConsultationRecordBean;
+import com.kaurihealth.kaurihealth.R;
+import com.kaurihealth.kaurihealth.adapter.StringPathViewAdapter;
+import com.kaurihealth.kaurihealth.base_v.BaseActivity;
+import com.kaurihealth.kaurihealth.eventbus.OutpatientElectronicBeanEvent;
+import com.kaurihealth.kaurihealth.eventbus.OutpatientElectronicOnlyReadEvent;
+import com.kaurihealth.kaurihealth.patient_v.medical_records.RemoteMedicalConsultationActivity;
+import com.kaurihealth.utilslib.CheckUtils;
+import com.kaurihealth.utilslib.date.DateUtils;
+import com.kaurihealth.utilslib.image.GalleryUtil;
+import com.kaurihealth.utilslib.image.PickImage;
+import com.kaurihealth.utilslib.widget.TagsGridview;
+import com.mobsandgeeks.saripaar.annotation.NotEmpty;
+import com.rey.material.widget.CheckBox;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import butterknife.Bind;
+import butterknife.OnClick;
+import butterknife.OnItemClick;
+
+/**
+ * Created by mip on 2016/11/8.
+ */
+
+public class RemoteMedicalConsultationOnlyReadActivity extends BaseActivity {
+
+
+    //添加
+    @Bind(R.id.tv_more)
+    TextView mTvMore;
+    //姓名
+    @Bind(R.id.tv_name)
+    TextView mTvName;
+    //性别
+    @Bind(R.id.tv_gendar)
+    TextView mTvGendar;
+    //年龄
+    @Bind(R.id.tv_age)
+    TextView mTvAge;
+    //类型
+    @Bind(R.id.tv_category)
+    TextView mTvCategory;
+    //项目
+    @Bind(R.id.tv_subject)
+    TextView mTvSubject;
+    //医生
+    @NotEmpty(message = "医生不能为空")
+    @Bind(R.id.et_doctor)
+    EditText mEtDoctor;
+    //科室
+    @NotEmpty(message = "科室不能为空")
+    @Bind(R.id.et_department)
+    TextView mEtDepartment;
+    //机构
+    @NotEmpty(message = "机构不能为空")
+    @Bind(R.id.et_institutions)
+    TextView mEtInstitutions;
+    //就诊时间
+    @NotEmpty(message = "就诊时间不能为空")
+    @Bind(R.id.et_clinical_time)
+    TextView mEtClinicalTime;
+    //主诉/现病史
+    @NotEmpty(message = "主诉/现病史不能为空")
+    @Bind(R.id.et_main_tell)
+    TextView mEtMainTell;
+    //目前主要问题
+    @NotEmpty(message = "目前主要问题不能为空")
+    @Bind(R.id.et_main_problem)
+    EditText mEtMainProblem;
+    //目前接受治疗
+    @NotEmpty(message = "目前接受治疗不能为空")
+    @Bind(R.id.et_current_treatment)
+    EditText mEtTreatment;
+    //患者医疗记录 checkbox
+    @Bind(R.id.cb_record_fir)
+    CheckBox mCbRecordFir;
+    //印象/咨询建议
+    @NotEmpty(message = "印象/咨询建议不能为空")
+    @Bind(R.id.et_impression_advice)
+    EditText mEtImpressionAdvice;
+    //上传附件  -- 放上传图片缩略图的地方
+    @Bind(R.id.gv_image)
+    TagsGridview mGvImage;
+    //备注：
+    @Bind(R.id.et_note)
+    EditText mEtNote;
+
+    /*图片地址集合,含本地及网路*/
+    private ArrayList<String> paths = new ArrayList<>();
+
+    private PickImage pickImages; //图片选择操作对象
+    private StringPathViewAdapter adapter;
+    private String kauriHealthId;  //上传图片对应id
+    private PatientRecordDisplayBean mPatientRecordDisplayBean;
+    private DoctorPatientRelationshipBean relationshipBean;
+    private final static int EditHospitalName = 10;
+    private DepartmentDisplayBean bean;
+    private int departmentId = 0;
+    private int DoctorPatientId;
+    private DoctorDisplayBean myself;
+    private static final int REMOTEMEDICALCONSULTATION = 5;
+
+
+    @Override
+    protected int getActivityLayoutID() {
+        return R.layout.activity_remote_medical_consultation;
+    }
+
+    @Override
+    protected void initPresenterAndView(Bundle savedInstanceState) {
+        adapter = new StringPathViewAdapter(getApplicationContext(), paths);
+        mGvImage.setAdapter(adapter);
+    }
+
+    @Override
+    protected void initDelayedData() {
+        myself = LocalData.getLocalData().getMyself();
+        //发送消息界面:注册
+        EventBus.getDefault().register(this);
+    }
+
+    @OnClick(R.id.tv_more)
+    public void onMoreClick() {
+        if (mTvMore.getText().equals("编辑")) {  // 已存在病例
+            EventBus.getDefault().postSticky(new OutpatientElectronicBeanEvent(mPatientRecordDisplayBean, relationshipBean));
+            skipToForResult(RemoteMedicalConsultationActivity.class, null, REMOTEMEDICALCONSULTATION);
+        }
+    }
+
+    /**
+     * ----------------------------订阅事件----------------------------------
+     * 点击事件，跳转 编辑项目
+     **/
+    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
+    public void eventBusMain(OutpatientElectronicOnlyReadEvent event) {
+        mTvMore.setText("编辑");
+        //RemoteMedicaklActivity 里面的view不可操作
+        setAllViewsEnable(false, this);
+        mTvMore.setEnabled(true);
+        mPatientRecordDisplayBean = event.getPatientRecordDisplayBean();
+        List<RecordDocumentsBean> list = mPatientRecordDisplayBean.getRecordDocuments();
+        if (!paths.isEmpty()) {
+            paths.clear();
+        }
+        if ((list != null && list.size() > 0)) {
+            for (RecordDocumentsBean documentBean : list) {
+                if (!documentBean.isIsDeleted()) {
+                    paths.add(documentBean.getDocumentUrl());
+
+                }
+            }
+        }
+        relationshipBean = event.getDoctorPatientRelationshipBean();
+        PatientDisplayBean patient = relationshipBean.getPatient();
+        kauriHealthId = patient.getKauriHealthId();
+        pickImages = new PickImage(paths, this, () -> adapter.notifyDataSetChanged());
+
+        displayDataByBean(mPatientRecordDisplayBean, relationshipBean);
+    }
+
+    //数据显示处理
+    private void displayDataByBean(PatientRecordDisplayBean bean, DoctorPatientRelationshipBean relationshipBean) {
+        personalOfInformation(relationshipBean); //个人信息
+        projectByInformation(bean); //类型，项目
+        fillAllCases(bean);
+        setEtNote(bean.getComment());//备注
+    }
+
+    //数据显示处理(已改)
+    private void fillAllCases(PatientRecordDisplayBean bean) {
+        //病例的参数
+        RemoteConsultationRecordBean remoteConsultationRecordBean = getRemoteConsultationRecordBean(bean);
+        setEtMainTell(remoteConsultationRecordBean.getPresentIllness()); //主诉/现病史
+        setEtMainProblem(remoteConsultationRecordBean.getCurrentHealthIssues());   //目前只要问题
+        setEtCurrentTreatment(remoteConsultationRecordBean.getCurrentTreatment());              //目前接受治疗
+
+        setCbRecordFir(remoteConsultationRecordBean.isIsPatientHealthRecordReviewed());  //患者系统医疗记录是否已阅
+        setEtImpressionAdvice(remoteConsultationRecordBean.getRemoteConsultationDoctorComment()); //印象/咨询建议
+        setNote(bean.getComment()); //备注
+    }
+
+
+    @NonNull
+    private RemoteConsultationRecordBean getRemoteConsultationRecordBean(PatientRecordDisplayBean bean) {
+        RecordBean recordBean = bean.getRecord();
+        CheckUtils.checkNullArgument(recordBean, "recordBean is null");
+        RemoteConsultationRecordBean remoteConsultationRecord = recordBean.getRemoteConsultationRecord();
+        CheckUtils.checkNullArgument(remoteConsultationRecord, "remoteConsultationRecord is null");
+        return remoteConsultationRecord;
+
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REMOTEMEDICALCONSULTATION && resultCode ==RESULT_OK){
+            finishCur();
+        }
+    }
+
+    //备注
+    private void setNote(String comment) {
+        mEtNote.setText(comment);
+    }
+
+    //设置 备注
+    public void setEtNote(String etNote) {
+        mEtNote.setText(etNote);
+    }
+
+    //印象，咨询建议
+    private void setEtImpressionAdvice(String remoteConsultationDoctorComment) {
+        mEtImpressionAdvice.setText(remoteConsultationDoctorComment);
+    }
+
+    //患者医疗系统医疗记录是否已阅
+    private void setCbRecordFir(boolean cbRecordFir) {
+        mCbRecordFir.setChecked(cbRecordFir);
+    }
+
+
+    //目前接受治疗
+    private void setEtCurrentTreatment(String currentTreatment) {
+        mEtTreatment.setText(currentTreatment);
+    }
+
+    //目前主要问题
+    private void setEtMainProblem(String currentHealthIssues) {
+        mEtMainProblem.setText(currentHealthIssues);
+    }
+
+    //主诉/现病史
+    private void setEtMainTell(String etMainTell) {
+        mEtMainTell.setText(etMainTell);
+    }
+
+    private void projectByInformation(PatientRecordDisplayBean bean) {
+        //判断是否是自己写的记录
+        if (bean.getCreatedBy() != myself.getUserId()) {
+            mTvMore.setVisibility(View.GONE);
+        }
+        String subject = bean.getSubject();
+        initNewBackBtn(subject);
+        setTvCategory(bean.getCategory()); //类型
+        setTvSubject(subject); //项目
+        setEtDoctor(bean.getDoctor()); //医生
+        setEtDepartment(bean.getDepartment() != null ? bean.getDepartment().getDepartmentName() : "暂无");
+        setEtInstitutions(bean.getHospital()); //机构
+        setEtClinicalTime(DateUtils.getFormatDate(bean.getRecordDate())); //就诊时间
+    }
+
+    private void setEtClinicalTime(String etClinicalTime) {
+        mEtClinicalTime.setText(etClinicalTime);
+    }
+
+    private void setEtInstitutions(String etHospital) {
+        mEtInstitutions.setText(etHospital);
+    }
+
+
+    private void setEtDepartment(String etDepartment) {
+        mEtDepartment.setText(etDepartment);
+    }
+
+    private void setEtDoctor(String etDoctor) {
+        mEtDoctor.setText(etDoctor);
+    }
+
+    private void setTvSubject(String tvSubject) {
+        mTvSubject.setText(tvSubject);
+    }
+
+    private void setTvCategory(String tvCategory) {
+        mTvCategory.setText(tvCategory);
+    }
+
+
+    //个人信息栏设置
+    private void personalOfInformation(DoctorPatientRelationshipBean relationshipBean) {
+        Date endDate = relationshipBean.getEndDate();
+        boolean isActivie = DateUtils.isActive(relationshipBean.isIsActive(), endDate);
+        //"添加"按钮
+        mTvMore.setVisibility(isActivie ? View.VISIBLE : View.GONE);
+        PatientDisplayBean patient = relationshipBean.getPatient();
+        //姓名
+        setTvName(patient.getFullName());
+        //性别
+        setTvGender(patient.getGender());
+        //年龄
+        int age = DateUtils.getAge(patient.getDateOfBirth());
+        setTvAge(age + "岁");
+    }
+
+    //年龄设置
+    private void setTvAge(String age) {
+        mTvAge.setText(age);
+    }
+
+    //性别设置
+    private void setTvGender(String gender) {
+        mTvGendar.setText(gender);
+    }
+
+    //姓名：全名
+    private void setTvName(String fullName) {
+        mTvName.setText(fullName);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        //发送消息界面：取消消息
+        EventBus.getDefault().unregister(this);
+    }
+
+    /**
+     * #附件 -- 放缩略图的地方  GridView
+     * 点击方法图片
+     */
+    @OnItemClick(R.id.gv_image)
+    public void picture(int position) {
+        GalleryUtil.toGallery(this, new GalleryUtil.GetUrlsInterface() {
+            @Override
+            public ArrayList<String> getUrls() {
+                return paths;
+            }
+        }, position);
+    }
+}

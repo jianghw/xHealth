@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/welcome_bg_cl"
+                tools:context=".welcome_v.WelcomeActivity">
+
+    <ImageView
+        android:id="@+id/image_logout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="@dimen/welcome_img_marginBottom"
+        android:scaleType="center"
+        android:src="@mipmap/ic_logo_top"/>
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/welcome_img_marginTop"
+        android:scaleType="center"
+        android:src="@mipmap/ic_logo_bottom"/>
+
+</RelativeLayout>

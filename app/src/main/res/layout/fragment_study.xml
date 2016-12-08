@@ -1,0 +1,36 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_bg_gray"
+    tools:context="com.kaurihealth.kaurihealth.clinical_v.activity.DynamicActivity">
+
+    <TextView
+        android:id="@+id/tvTemp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="此功能正在开发,敬请期待"
+        android:layout_gravity="center"
+        android:textSize="20dp" />
+
+    <com.kaurihealth.utilslib.widget.ScrollChildSwipeRefreshLayout
+        android:id="@+id/swipe_refresh"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/color_bg_gray">
+
+        <de.halfbit.pinnedsection.PinnedSectionListView
+            android:id="@+id/lv_content"
+            android:scrollbars="none"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:horizontalSpacing="10dp"
+            android:numColumns="2"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:verticalSpacing="10dp">
+
+        </de.halfbit.pinnedsection.PinnedSectionListView>
+    </com.kaurihealth.utilslib.widget.ScrollChildSwipeRefreshLayout>
+</FrameLayout>

@@ -1,0 +1,19 @@
+package com.kaurihealth.mvplib.login_p;
+
+import com.kaurihealth.datalib.response_bean.TokenBean;
+import com.kaurihealth.mvplib.base_p.IMvpPresenter;
+
+/**
+ * Created by jianghw on 2016/8/12.
+ * <p>
+ * 描述：
+ */
+public interface ILoginPresenter<V> extends IMvpPresenter<V> {
+    void percentageOfJudgment(TokenBean tokenBean);
+
+    //我 医生详情
+    void loadDoctorDetail();
+
+    void tokenBeanValidation(TokenBean bean);
+
+}

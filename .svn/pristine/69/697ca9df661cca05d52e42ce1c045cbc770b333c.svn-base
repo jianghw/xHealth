@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFF2F2F2"
+    android:orientation="vertical">
+
+    <include layout="@layout/include_bar_no_more" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.kaurihealth.utilslib.widget.ScrollChildSwipeRefreshLayout
+            android:id="@+id/swipe_refresh"
+            style="@style/lay_refresh"
+            android:layout_marginTop="5dp"
+            android:paddingBottom="0dp">
+
+            <ListView
+                android:id="@+id/lv_content"
+                style="@style/lv_refresh"
+                android:background="@drawable/patient_request_item"
+                android:layout_marginTop="0dp"
+                android:divider="#ffff"
+                android:verticalSpacing="0dp">
+
+            </ListView>
+
+
+        </com.kaurihealth.utilslib.widget.ScrollChildSwipeRefreshLayout>
+
+        <TextView
+            android:id="@+id/patient_tips"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="暂无候诊患者请求~"
+            android:textColor="@color/color_gold"
+            android:visibility="gone" />
+    </RelativeLayout>
+</LinearLayout>

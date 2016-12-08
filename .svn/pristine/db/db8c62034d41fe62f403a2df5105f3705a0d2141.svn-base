@@ -1,0 +1,142 @@
+package com.kaurihealth.kaurihealth.adapter;
+
+import android.content.Context;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import com.daimajia.swipe.SwipeLayout;
+import com.daimajia.swipe.adapters.BaseSwipeAdapter;
+import com.kaurihealth.chatlib.cache.GroupMessageBean;
+import com.kaurihealth.chatlib.cache.LCIMProfileCache;
+import com.kaurihealth.chatlib.event.LCIMConversationItemLongClickEvent;
+import com.kaurihealth.chatlib.event.LCIMIMTypeMessageEvent;
+import com.kaurihealth.datalib.request_bean.bean.ConversationItemBean;
+import com.kaurihealth.kaurihealth.R;
+import com.kaurihealth.utilslib.CheckUtils;
+import com.kaurihealth.utilslib.image.NineGridImageView;
+import com.kaurihealth.utilslib.image.NineGridImageViewAdapter;
+import com.squareup.picasso.Picasso;
+
+import org.greenrobot.eventbus.EventBus;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
+
+/**
+ * Created by jianghw on 2016/9/2.
+ * <p>
+ * 描述：编辑、删除adapter
+ */
+public class ConversationGroupSwipeAdapter extends BaseSwipeAdapter {
+    private final Context mContext;
+    private final List<ConversationItemBean> mList;
+
+    public ConversationGroupSwipeAdapter(Context context, List<ConversationItemBean> list) {
+        mContext = context.getApplicationContext();
+        mList = list;
+    }
+
+    @Override
+    public int getCount() {
+        return mList.size();
+    }
+
+    @Override
+    public Object getItem(int i) {
+        return mList.get(i);
+    }
+
+    @Override
+    public long getItemId(int i) {
+        return i;
+    }
+
+    @Override
+    public int getSwipeLayoutResourceId(int i) {
+        return R.id.swipe;
+    }
+
+    @Override
+    public View generateView(final int i, ViewGroup viewGroup) {
+        return LayoutInflater.from(mContext).inflate(R.layout.listview_item_conver_swipe_group, null);
+    }
+
+    @Override
+    public void fillValues(int i, View view) {
+        SwipeLayout swipeLayout = (SwipeLayout) view.findViewById(getSwipeLayoutResourceId(i));
+
+        ConversationItemBean bean = mList.get(i);
+        String conversationId = bean.getConversationId();
+        GroupMessageBean groupMessageBean = (GroupMessageBean) bean.getBean();
+
+        boolean isStick = LCIMProfileCache.getInstance().hasCachedUser(conversationId)
+                && (LCIMProfileCache.getInstance().getContactUserMap().get(conversationId).isTop());
+
+        TextView compile = (TextView) view.findViewById(R.id.tv_compile);
+        TextView stick = (TextView) view.findViewById(R.id.tv_stick);
+        stick.setVisibility(isStick ? View.VISIBLE : View.GONE);
+        compile.setText(isStick ? mContext.getResources().getString(R.string.swipe_tv_unstick) : mContext.getResources().getString(R.string.swipe_tv_stick));
+
+        compile.setOnClickListener(v -> {
+            swipeLayout.close();
+            LCIMProfileCache.getInstance().changGroupStickType(conversationId, isStick);
+            EventBus.getDefault().post(new LCIMIMTypeMessageEvent());
+        });
+        //删除
+        view.findViewById(R.id.tv_delete).setOnClickListener(v -> {
+            swipeLayout.close();
+            EventBus.getDefault().post(new LCIMConversationItemLongClickEvent(conversationId));
+        });
+
+        NineGridImageView imgHead = (NineGridImageView) view.findViewById(R.id.civ_head);
+        TextView unread = (TextView) view.findViewById(R.id.tv_unread);
+        TextView name = (TextView) view.findViewById(R.id.tv_name);
+        TextView time = (TextView) view.findViewById(R.id.tv_time);
+        TextView message = (TextView) view.findViewById(R.id.tv_message);
+
+        NineGridImageViewAdapter<String> imageViewAdapter = new NineGridImageViewAdapter<String>() {
+            @Override
+            protected void onDisplayImage(Context context, ImageView imageView, String kauriHealthId) {
+                if (LCIMProfileCache.getInstance().hasCachedUser(kauriHealthId)) {
+                    String url = LCIMProfileCache.getInstance().getContactUserMap().get(kauriHealthId).getAvatar();
+                    if (CheckUtils.checkUrlNotNull(url)) {
+                        Picasso.with(context).load(url+"@90w_90h.jpg")
+                                .placeholder(R.mipmap.ic_circle_head_green)
+                                .error(R.mipmap.ic_circle_error_gray).into(imageView);
+                    } else {
+                        Picasso.with(context).load(R.mipmap.ic_circle_head_green).into(imageView);
+                    }
+                } else {
+                    Picasso.with(context).load(R.mipmap.ic_circle_head_green).into(imageView);
+                }
+            }
+
+            @Override
+            protected ImageView generateImageView(Context context) {
+                return super.generateImageView(context);
+            }
+        };
+
+        List<String> members = groupMessageBean.getMembers();
+        imgHead.setAdapter(imageViewAdapter);
+        imgHead.setImagesData(members);
+
+
+        int num = bean.getNum();
+        unread.setText(String.valueOf(num));
+        unread.setVisibility(num > 0 ? View.VISIBLE : View.GONE);
+
+        name.setText(groupMessageBean.getName());
+
+        Date date = new Date(bean.getTime());
+        SimpleDateFormat format = new SimpleDateFormat("MM-dd HH:mm", Locale.SIMPLIFIED_CHINESE);
+        time.setText(format.format(date));
+
+        message.setText(String.valueOf(bean.getMessage()));
+    }
+}

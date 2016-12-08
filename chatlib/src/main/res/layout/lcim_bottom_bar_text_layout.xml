@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical"
+    android:minHeight="50dp"
+    android:orientation="horizontal">
+
+
+    <FrameLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1">
+
+        <com.kaurihealth.chatlib.custom.LCIMRecordButton
+            android:id="@+id/input_bar_btn_record"
+            android:gravity="center"
+            style="@style/lcim_input_bar_record_button_style"
+            android:text="按住录音"
+            android:visibility="gone"
+            />
+
+        <!--<EditText-->
+        <!--android:id="@+id/input_bar_et_content"-->
+        <!--style="@style/lcim_input_bar_edittext_style"/>-->
+
+        <EditText
+            android:id="@+id/input_bar_et_content"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            />
+
+    </FrameLayout>
+
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:gravity="center">
+
+        <!--<Button-->
+            <!--android:id="@+id/input_bar_btn_keyboard"-->
+            <!--android:layout_width="30dp"-->
+            <!--android:layout_height="30dp"-->
+            <!--android:layout_gravity="center"-->
+            <!--android:background="@drawable/bg_bottom_bar_keyboard_button"-->
+            <!--android:visibility="gone" />-->
+
+        <!--<Button-->
+            <!--android:id="@+id/input_bar_btn_send_text"-->
+            <!--android:layout_width="30dp"-->
+            <!--android:layout_height="30dp"-->
+            <!--android:layout_gravity="center"-->
+            <!--android:background="@drawable/bg_bottom_bar_send_button"-->
+            <!--android:visibility="gone" />-->
+
+        <!--<Button-->
+        <!--android:id="@+id/input_bar_btn_voice"-->
+        <!--android:layout_width="30dp"-->
+        <!--android:layout_height="30dp"-->
+        <!--android:layout_gravity="center"-->
+        <!--android:background="@drawable/bg_bottom_bar_voice_button"/>-->
+
+    </FrameLayout>
+
+    <!--<FrameLayout-->
+        <!--android:layout_width="0dp"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_weight="1">-->
+
+        <!--<com.kaurihealth.chatlib.custom.LCIMRecordButton-->
+            <!--android:id="@+id/input_bar_btn_record"-->
+            <!--style="@style/lcim_input_bar_record_button_style"-->
+            <!--android:text="按住录音"-->
+            <!--android:visibility="gone" />-->
+
+        <!--<EditText-->
+            <!--android:id="@+id/input_bar_et_content"-->
+            <!--style="@style/lcim_input_bar_edittext_style"/>-->
+
+    <!--</FrameLayout>-->
+</LinearLayout>

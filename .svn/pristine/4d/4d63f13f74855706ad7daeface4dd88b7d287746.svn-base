@@ -1,0 +1,347 @@
+package com.kaurihealth.kaurihealth.mine_v.personal;
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.TextView;
+
+import com.kaurihealth.datalib.local.LocalData;
+import com.kaurihealth.datalib.response_bean.DepartmentDisplayBean;
+import com.kaurihealth.datalib.response_bean.DoctorDisplayBean;
+import com.kaurihealth.datalib.response_bean.DoctorEducationDisplayBean;
+import com.kaurihealth.datalib.response_bean.DoctorInformationDisplayBean;
+import com.kaurihealth.kaurihealth.R;
+import com.kaurihealth.kaurihealth.base_v.BaseActivity;
+import com.kaurihealth.kaurihealth.department_v.SelectDepartmentLevel1Activity;
+import com.kaurihealth.kaurihealth.eventbus.MineFragmentEvent;
+import com.kaurihealth.kaurihealth.tinker.SampleApplicationLike;
+import com.kaurihealth.mvplib.mine_p.DoctorDetailsPresenter;
+import com.kaurihealth.mvplib.mine_p.IDoctorDetailsView;
+import com.kaurihealth.utilslib.constant.Global;
+import com.kaurihealth.utilslib.date.DateUtils;
+import com.kaurihealth.utilslib.dialog.DialogUtils;
+import com.kaurihealth.utilslib.image.IPickImages;
+import com.kaurihealth.utilslib.image.ImageUrlUtils;
+import com.kaurihealth.utilslib.image.PickImage;
+import com.kaurihealth.utilslib.widget.CircleImageView;
+
+import org.greenrobot.eventbus.EventBus;
+
+import java.util.ArrayList;
+
+import javax.inject.Inject;
+
+import butterknife.Bind;
+import butterknife.OnClick;
+
+
+/**
+ * 医生个人信息界面
+ */
+public class DoctorDetailsActivity extends BaseActivity implements IDoctorDetailsView {
+    //个人照片
+    @Bind(R.id.photo_personinfo)
+    CircleImageView ivPhoto;
+    //个人姓名
+    @Bind(R.id.tv_name)
+    TextView tvName;
+    //性别
+    @Bind(R.id.tv_gender)
+    TextView tvGendar;
+    //年龄
+    @Bind(R.id.tv_age)
+    TextView tvAge;
+    //职称
+    @Bind(R.id.tv_job)
+    TextView tvJob;
+    //科室
+    @Bind(R.id.tv_department)
+    TextView tvDepartmentName;
+    //执业编号
+    @Bind(R.id.tv_num)
+    TextView tvNum;
+    //学历
+    @Bind(R.id.tv_educationLevel)
+    TextView tv_educationLevel;
+    //机构名称
+    @Bind(R.id.tv_organization)
+    TextView tvOrganization;
+    //学习与工作经历
+    @Bind(R.id.tv_study_experience)
+    TextView tvStudyExperience;
+    //专业特长
+    @Bind(R.id.tv_goodat)
+    TextView tvPracticeField;
+    //毕业院校
+    @Bind(R.id.tv_education)
+    TextView tvEducationHistory;
+
+    @Inject
+    DoctorDetailsPresenter<IDoctorDetailsView> mPresenter;
+
+    private ArrayList<String> paths = new ArrayList<>();
+
+    private IPickImages pickImages;
+
+    @Override
+    protected int getActivityLayoutID() {
+        return R.layout.activity_doctor_details;
+    }
+
+    @Override
+    protected void initPresenterAndView(Bundle savedInstanceState) {
+        SampleApplicationLike.getApp().getComponent().inject(this);
+        mPresenter.setPresenter(this);
+    }
+
+
+    @Override
+    protected void initDelayedData() {
+        initNewBackBtn(getString(R.string.details_tv_title));
+
+        //初始化对象
+        renderView();
+
+        pickImages = new PickImage(paths, this, new PickImage.SuccessInterface() {
+            @Override
+            public void success() {
+                mPresenter.updateAvatarDoctor(paths);
+            }
+        }, 1);
+    }
+
+    @Override
+    public void renderView() {
+        DoctorDisplayBean doctorDisplayBean = LocalData.getLocalData().getMyself();
+
+        ImageUrlUtils.picassoBySmallUrlCircle(this, doctorDisplayBean.getAvatar(), ivPhoto);
+
+        setTvName(setDefaultText(doctorDisplayBean.getFullName()));
+        setTvGendar(setDefaultText(doctorDisplayBean.getGender()));
+        setTvAge(String.format("%d岁", DateUtils.calculateAge(doctorDisplayBean.getDateOfBirth())));
+
+        setTvJob(setDefaultText(doctorDisplayBean.getHospitalTitle()));
+        setTvNum(setDefaultText(doctorDisplayBean.getCertificationNumber()));
+        setTvStudyExperience(setDefaultText(doctorDisplayBean.getWorkingExperience()));
+        setTvPracticeField(setDefaultText(doctorDisplayBean.getPracticeField()));
+
+        setDoctorEducationRender(doctorDisplayBean);
+        setDoctorInformationRender(doctorDisplayBean);
+
+    }
+
+    /**
+     * 教育
+     */
+    private void setDoctorEducationRender(DoctorDisplayBean doctorDisplayBean) {
+        DoctorEducationDisplayBean doctorEducation = doctorDisplayBean.getDoctorEducation();
+        if (doctorEducation != null) {
+            setTv_educationLevel(setDefaultText(doctorEducation.getEducationLevel()));
+            setTvEducationHistory(setDefaultText(doctorEducation.getEducationHistory()));
+        }
+    }
+
+    /**
+     * 机构，科室
+     */
+    private void setDoctorInformationRender(DoctorDisplayBean doctorDisplayBean) {
+        DoctorInformationDisplayBean doctorInformations = doctorDisplayBean.getDoctorInformations();
+        if (doctorInformations != null) {
+            setTvOrganization(setDefaultText(doctorInformations.getHospitalName()));
+            DepartmentDisplayBean departmentDisplayBean = doctorInformations.getDepartment();
+            if (departmentDisplayBean != null) {
+                setTvDepartmentName(setDefaultText(departmentDisplayBean.getDepartmentName()));
+            } else {
+                setTvDepartmentName("暂无");
+            }
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        pickImages.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    }
+
+    @OnClick({R.id.iv_back, R.id.rlay_school, R.id.rlay_photo, R.id.rlay_post, R.id.rlay_department, R.id.rlay_num, R.id.rlay_organization, R.id.rlay_EducationLevel, R.id.rlay_studyexperience, R.id.rlay_good})
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.rlay_photo:
+                pickImages.pickImage();
+                break;
+            case R.id.rlay_post://修改职称
+                int selectTitle = 8;
+                skipToForResult(SelectTitleActivity.class, null, selectTitle);
+                break;
+            case R.id.rlay_department://科室
+                int departmentRequest = 14;
+                Bundle bundle = new Bundle();
+                bundle.putString(Global.Environment.BUNDLE, Global.Environment.UPDATE);
+                skipToForResult(SelectDepartmentLevel1Activity.class, bundle, departmentRequest);
+                break;
+            case R.id.rlay_num://修改职业编号
+                int certificationNumberRequest = 13;
+                skipToForResult(EnterCertificationNumberActivity.class, null, certificationNumberRequest);
+                break;
+            case R.id.rlay_EducationLevel://修改学历
+                rlayEducationLevel();
+                break;
+            case R.id.rlay_organization://修改机构
+               int hospitalNameRequest = 12;
+                Bundle bundleOrganization = new Bundle();
+                bundleOrganization.putString(Global.Environment.BUNDLE, Global.Environment.UPDATE);
+                skipToForResult(EnterHospitalActivity.class, bundleOrganization, hospitalNameRequest);
+             //   EventBus.getDefault().postSticky(new HospitalNameEvent(Global.Environment.UPDATE));
+               // skipTo(EnterHospitalActivity.class);
+
+                break;
+            case R.id.rlay_studyexperience://修改学习与工作经历
+                int workingExperienceRequest = 10;
+                skipToForResult(EnterStudyExperienceActivity.class, null, workingExperienceRequest);
+                break;
+            case R.id.rlay_good://修改专业特长
+                int practiceFieldRequest = 9;
+                skipToForResult(EnterPracticeFieldActivity.class, null, practiceFieldRequest);
+                break;
+            case R.id.rlay_school://毕业院校
+                int educationHistoryRequest = 11;
+                skipToForResult(EnterGraduateSchoolActivity.class, null, educationHistoryRequest);
+                break;
+            default:
+                break;
+        }
+    }
+
+    /**
+     * 学历选择
+     */
+    private void rlayEducationLevel() {
+        String[] strings = getResources().getStringArray(R.array.educationLevel);
+        DialogUtils.showStringDialog(this, strings, index -> {
+            if (!strings[index].equals(getTv_educationLeve())) {
+                setTv_educationLevel(setDefaultText(strings[index]));
+                mPresenter.onSubscribe();
+            }
+        });
+    }
+
+    /**
+     * ----------------------------继承基础mvpView方法-----------------------------------
+     */
+    @Override
+    public void switchPageUI(String className) {
+        EventBus.getDefault().post(new MineFragmentEvent());
+    }
+
+    @Override
+    public DoctorDisplayBean getDoctorDisplayBean() {
+        DoctorDisplayBean bean = (DoctorDisplayBean) LocalData.getLocalData().getMyself().clone();
+        DoctorEducationDisplayBean doctorEducation = bean.getDoctorEducation();
+        if (doctorEducation != null) {
+            doctorEducation.setEducationLevel(getTv_educationLeve());//学历
+            bean.setDoctorEducation(doctorEducation);
+        }
+        return bean;
+    }
+     //回调方法
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        renderView();
+        pickImages.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
+
+    public String getTvPracticeField() {
+        return tvPracticeField.getText().toString().trim();
+    }
+
+    public String getTvStudyExperience() {
+        return tvStudyExperience.getText().toString().trim();
+    }
+
+    public String getTvEducationHistory() {
+        return tvEducationHistory.getText().toString().trim();
+    }
+
+    public String getTvJob() {
+        return tvJob.getText().toString().trim();
+    }
+
+    public String getTvDepartmentName() {
+        return tvDepartmentName.getText().toString().trim();
+    }
+
+    public String getTvNum() {
+        return tvNum.getText().toString().trim();
+    }
+
+    public String getTv_educationLevel() {
+        return tv_educationLevel.getText().toString().trim();
+    }
+
+    public String getTvOrganization() {
+        return tvOrganization.getText().toString().trim();
+    }
+
+    public void setTvName(String tvName) {
+        this.tvName.setText(tvName);
+    }
+
+    public void setTvGendar(String tvGendar) {
+        this.tvGendar.setText(tvGendar);
+    }
+
+    public void setTvAge(String tvAge) {
+        this.tvAge.setText(tvAge);
+    }
+
+    public void setTvJob(String tvJob) {
+        this.tvJob.setText(tvJob);
+    }
+
+    public void setTvDepartmentName(String tvDepartmentName) {
+        this.tvDepartmentName.setText(tvDepartmentName);
+    }
+
+    public void setTvNum(String tvNum) {
+        this.tvNum.setText(tvNum);
+    }
+
+    public void setTv_educationLevel(String tv_educationLevel) {
+        this.tv_educationLevel.setText(tv_educationLevel);
+    }
+
+    public String getTv_educationLeve() {
+        return tv_educationLevel.getText().toString().trim();
+    }
+
+    public void setTvOrganization(String tvOrganization) {
+        this.tvOrganization.setText(tvOrganization);
+    }
+
+    public void setTvStudyExperience(String tvStudyExperience) {
+        this.tvStudyExperience.setText(tvStudyExperience);
+    }
+
+    public void setTvPracticeField(String tvPracticeField) {
+        this.tvPracticeField.setText(tvPracticeField);
+    }
+
+    public void setTvEducationHistory(String tvEducationHistory) {
+        this.tvEducationHistory.setText(tvEducationHistory);
+    }
+}

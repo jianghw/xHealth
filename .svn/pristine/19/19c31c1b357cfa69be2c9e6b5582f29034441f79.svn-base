@@ -1,0 +1,277 @@
+package com.kaurihealth.kaurihealth.conversation_v;
+
+import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.text.TextUtils;
+import android.view.View;
+import android.widget.ListView;
+import android.widget.TextView;
+
+import com.avos.avoscloud.im.v2.AVIMClient;
+import com.avos.avoscloud.im.v2.AVIMConversation;
+import com.avos.avoscloud.im.v2.AVIMException;
+import com.avos.avoscloud.im.v2.callback.AVIMConversationCallback;
+import com.kaurihealth.chatlib.LCChatKit;
+import com.kaurihealth.chatlib.cache.LCIMProfileCache;
+import com.kaurihealth.datalib.response_bean.ContactUserDisplayBean;
+import com.kaurihealth.datalib.response_bean.DoctorDisplayBean;
+import com.kaurihealth.datalib.response_bean.DoctorRelationshipBean;
+import com.kaurihealth.kaurihealth.R;
+import com.kaurihealth.kaurihealth.adapter.GroupChatChangeAdapter;
+import com.kaurihealth.kaurihealth.base_v.BaseActivity;
+import com.kaurihealth.kaurihealth.tinker.SampleApplicationLike;
+import com.kaurihealth.mvplib.main_p.DoctorPresenter;
+import com.kaurihealth.mvplib.main_p.IPatientView;
+import com.kaurihealth.utilslib.ColorUtils;
+import com.kaurihealth.utilslib.constant.Global;
+import com.kaurihealth.utilslib.log.LogUtils;
+import com.kaurihealth.utilslib.widget.ScrollChildSwipeRefreshLayout;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.inject.Inject;
+
+import butterknife.Bind;
+import butterknife.OnClick;
+import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
+import rx.functions.Func1;
+import rx.schedulers.Schedulers;
+
+/**
+ * 修改群聊成员
+ */
+public class ChangeGroupChatActivity extends BaseActivity implements IPatientView {
+    @Inject
+    DoctorPresenter<IPatientView> mPresenter;
+
+    @Bind(R.id.tv_more)
+    TextView tv_more;
+    @Bind(R.id.LV_referral_doctor)
+    ListView LV_referral_doctor;
+    @Bind(R.id.home_referral_request_tips)
+    TextView home_referral_request_tips;
+    @Bind(R.id.swipe_refresh)
+    ScrollChildSwipeRefreshLayout mSwipeRefresh;
+
+    private List<ContactUserDisplayBean> paths = new ArrayList<>();//将显示
+    ArrayList<String> choiceIdList = new ArrayList<>();//选择的
+    private GroupChatChangeAdapter adapter;
+    private String conversationId;
+    private ArrayList<String> memberList;//初始值
+
+    @Override
+    protected int getActivityLayoutID() {
+        return R.layout.referrcal_doctor;
+    }
+
+    @Override
+    protected void initPresenterAndView(Bundle savedInstanceState) {
+        SampleApplicationLike.getApp().getComponent().inject(this);
+        mPresenter.setPresenter(this);
+
+        mSwipeRefresh.setColorSchemeColors(
+                ColorUtils.setSwipeRefreshColors(getApplicationContext())
+        );
+        mSwipeRefresh.setScrollUpChild(LV_referral_doctor);
+        mSwipeRefresh.setSize(SwipeRefreshLayout.DEFAULT);
+        mSwipeRefresh.setDistanceToTriggerSync(Global.Numerical.SWIPE_REFRESH);
+    }
+
+    @Override
+    protected void initDelayedData() {
+        adapter = new GroupChatChangeAdapter(this, paths, choiceIdList);
+        LV_referral_doctor.setAdapter(adapter);
+
+        Bundle bundle = getBundle();
+        if (bundle != null) {
+            int intTitle = bundle.getInt(Global.Bundle.LEANCLOUD_GROUP_NAME);
+            initNewBackBtn("选择群聊成员");
+            conversationId = bundle.getString(Global.Bundle.LEANCLOUD_GROUP_CONID);
+            memberList = bundle.getStringArrayList(Global.Bundle.LEANCLOUD_GROUP_MEMBES);
+
+            if (intTitle == Global.RequestCode.ACCEPT) {
+                tv_more.setText(getString(R.string.more_add));
+                mPresenter.onSubscribe();
+            } else if (intTitle == Global.RequestCode.REJECT) {
+                tv_more.setText(getString(R.string.swipe_tv_delete));
+                imageLoaderByMemberList(memberList);
+            }
+        }
+    }
+
+    private void imageLoaderByMemberList(ArrayList<String> memberList) {
+        Observable.from(memberList)
+                .filter(new Func1<String, Boolean>() {
+                    @Override
+                    public Boolean call(String kauriId) {
+                        return LCIMProfileCache.getInstance().hasCachedUser(kauriId);
+                    }
+                })
+                .map(new Func1<String, ContactUserDisplayBean>() {
+                    @Override
+                    public ContactUserDisplayBean call(String memberId) {
+                        return LCIMProfileCache.getInstance().getContactUserMap().get(memberId);
+                    }
+                })
+                .toList()
+                .subscribeOn(Schedulers.computation())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Action1<List<ContactUserDisplayBean>>() {
+                    @Override
+                    public void call(List<ContactUserDisplayBean> been) {
+                        home_referral_request_tips.setVisibility(been != null ? !been.isEmpty() ? View.GONE : View.VISIBLE : View.VISIBLE);
+                        if (!paths.isEmpty()) paths.clear();
+                        paths.addAll(been);
+                        adapter.notifyDataSetChanged();
+                    }
+                }, new Action1<Throwable>() {
+                    @Override
+                    public void call(Throwable throwable) {
+                        LogUtils.e(throwable.getMessage());
+                    }
+                });
+    }
+
+    @OnClick(R.id.tv_more)
+    public void groupOnClick() {
+        if (choiceIdList.size() < 1) {
+            displayErrorDialog("请至少选择一个朋友");
+        } else {
+            String title = tv_more.getText().toString().trim();
+            if (getString(R.string.more_add).equals(title)) {
+                addMembersWithClientIds();
+            } else if (getString(R.string.swipe_tv_delete).equals(title)) {
+                removeMembersWithClientIds();
+            }
+        }
+    }
+
+    /**
+     * 添加人
+     */
+    private void addMembersWithClientIds() {
+        AVIMClient client = LCChatKit.getInstance().getClient();
+        if (!TextUtils.isEmpty(conversationId) && client != null) {
+            final AVIMConversation conv = client.getConversation(conversationId);
+            conv.addMembers(choiceIdList, new AVIMConversationCallback() {
+                @Override
+                public void done(AVIMException e) {
+                    if (e == null) {
+                        showToast("添加成功");
+                        setResult(RESULT_OK);
+                        finishCur();
+                    } else {
+                        showToast(e.getMessage());
+                    }
+                }
+            });
+        }
+    }
+
+    /**
+     * 剔除人
+     */
+    private void removeMembersWithClientIds() {
+        AVIMClient client = LCChatKit.getInstance().getClient();
+        if (!TextUtils.isEmpty(conversationId) && client != null) {
+            final AVIMConversation conv = client.getConversation(conversationId);
+            conv.kickMembers(choiceIdList, new AVIMConversationCallback() {
+                @Override
+                public void done(AVIMException e) {
+                    if (e == null) {
+                        showToast("剔除成功");
+                        setResult(RESULT_OK);
+                        finishCur();
+                    } else {
+                        showToast(e.getMessage());
+                    }
+                }
+            });
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (choiceIdList.size() > 0) choiceIdList.clear();
+        if (paths.size() > 0) paths.clear();
+    }
+
+    @Override
+    public void loadingIndicator(boolean flag) {
+        if (mSwipeRefresh == null) return;
+        mSwipeRefresh.post(() -> mSwipeRefresh.setRefreshing(flag));
+    }
+
+    @Override
+    public void lazyLoadingDataSuccess(List<?> list) {
+        if (list != null) {
+            Observable.from(list)
+                    .map(new Func1<Object, DoctorRelationshipBean>() {
+                        @Override
+                        public DoctorRelationshipBean call(Object o) {
+                            return (DoctorRelationshipBean) o;
+                        }
+                    })
+                    .filter(new Func1<DoctorRelationshipBean, Boolean>() {
+                        @Override
+                        public Boolean call(DoctorRelationshipBean doctorRelationshipBean) {
+                            return null != doctorRelationshipBean;
+                        }
+                    })
+                    .map(new Func1<DoctorRelationshipBean, DoctorDisplayBean>() {
+                        @Override
+                        public DoctorDisplayBean call(DoctorRelationshipBean doctorRelationshipBean) {
+                            return doctorRelationshipBean.getRelatedDoctor();
+                        }
+                    })
+                    .filter(new Func1<DoctorDisplayBean, Boolean>() {
+                        @Override
+                        public Boolean call(DoctorDisplayBean doctorDisplayBean) {
+                            return null != doctorDisplayBean;
+                        }
+                    })
+                    .filter(new Func1<DoctorDisplayBean, Boolean>() {
+                        @Override
+                        public Boolean call(DoctorDisplayBean doctorDisplayBean) {
+                            return !memberList.contains(doctorDisplayBean.getKauriHealthId());
+                        }
+                    })
+                    .map(new Func1<DoctorDisplayBean, ContactUserDisplayBean>() {
+                        @Override
+                        public ContactUserDisplayBean call(DoctorDisplayBean doctorDisplayBean) {
+                            return new ContactUserDisplayBean(
+                                    doctorDisplayBean.getKauriHealthId(), doctorDisplayBean.getGender(), "",
+                                    doctorDisplayBean.getAvatar(), doctorDisplayBean.getFullName(), doctorDisplayBean.getDateOfBirth(),
+                                    false, doctorDisplayBean.getDoctorId());
+                        }
+                    })
+                    .toList()
+                    .subscribeOn(Schedulers.computation())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Action1<List<ContactUserDisplayBean>>() {
+                        @Override
+                        public void call(List<ContactUserDisplayBean> been) {
+                            home_referral_request_tips.setVisibility(been != null ? !been.isEmpty() ? View.GONE : View.VISIBLE : View.VISIBLE);
+                            home_referral_request_tips.setText("你的好友都已经添加进群");
+                            if (!paths.isEmpty()) paths.clear();
+                            paths.addAll(been);
+                            adapter.notifyDataSetChanged();
+                        }
+                    }, new Action1<Throwable>() {
+                        @Override
+                        public void call(Throwable throwable) {
+                            LogUtils.e(throwable.getMessage());
+                        }
+                    });
+        }
+    }
+
+    @Override
+    public void switchPageUI(String className) {
+
+    }
+}

@@ -1,0 +1,384 @@
+package com.kaurihealth.mvplib.patient_p.medical_records;
+
+import com.kaurihealth.datalib.repository.IDataSource;
+import com.kaurihealth.datalib.repository.RepositoryFactory;
+import com.kaurihealth.datalib.request_bean.bean.NewPathologyPatientRecordDisplayBean;
+import com.kaurihealth.datalib.request_bean.bean.NewSupplementaryTestPatientRecordDisplayBean;
+import com.kaurihealth.datalib.response_bean.DocumentDisplayBean;
+import com.kaurihealth.datalib.response_bean.PatientRecordDisplayBean;
+import com.kaurihealth.datalib.response_bean.RecordDocumentsBean;
+import com.kaurihealth.datalib.response_bean.ResponseDisplayBean;
+import com.kaurihealth.utilslib.log.LogUtils;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.inject.Inject;
+
+import rx.Observable;
+import rx.Subscriber;
+import rx.Subscription;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action0;
+import rx.functions.Action1;
+import rx.functions.Func1;
+import rx.schedulers.Schedulers;
+import rx.subscriptions.CompositeSubscription;
+
+/**
+ * Created by mip on 2016/9/27.
+ */
+public class AddCommonMedicalRecordPresenter<V> implements IAddCommonMedicalRecordPresenter<V> {
+    private final IDataSource mRepository;
+    private CompositeSubscription mSubscriptions;
+    private IAddCommonMedicalRecordView mActivity;
+
+    @Inject
+    public AddCommonMedicalRecordPresenter(IDataSource mRepository) {
+        this.mRepository = mRepository;
+        mSubscriptions = new CompositeSubscription();
+    }
+
+    @Override
+    public void setPresenter(V view) {
+        mActivity = (IAddCommonMedicalRecordView) view;
+    }
+
+    /**
+     * 编辑辅助检查记录
+     */
+    @Override
+    public void onSubscribe() {
+        uploadHandlingCases(new RepositoryFactory.UploadCaseSucceed() {
+            @Override
+            public void imageSucceed(List<DocumentDisplayBean> beanList, ArrayList<String> paths) {
+                editDataProcessing(beanList, paths);
+            }
+        });
+    }
+
+    /**
+     * 编辑病理记录
+     */
+    @Override
+    public void EditPathologyRecord() {
+        uploadHandlingCases(new RepositoryFactory.UploadCaseSucceed() {
+            @Override
+            public void imageSucceed(List<DocumentDisplayBean> beanList, ArrayList<String> paths) {
+                editDataProcessingForPathologyRecord(beanList, paths);
+            }
+        });
+    }
+
+    /**
+     * 图片文件上传
+     */
+    private void uploadHandlingCases(RepositoryFactory.UploadCaseSucceed uploadSucceed) {
+        ArrayList<String> paths = mActivity.getPathsList();//编辑后的地址集合
+        Subscription subscription = mRepository.getUploadListObservable(paths, mActivity.getKauriHealthId())
+                .doOnSubscribe(new Action0() {
+                    @Override
+                    public void call() {
+                        mActivity.dataInteractionDialog(); //正在加载中...
+                    }
+                })
+                .subscribeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Action1<List<DocumentDisplayBean>>() {
+                    @Override
+                    public void call(List<DocumentDisplayBean> beanList) {
+                        uploadSucceed.imageSucceed(beanList, paths);
+                    }
+                }, new Action1<Throwable>() {
+                    @Override
+                    public void call(Throwable throwable) {
+                        mActivity.displayErrorDialog(throwable.getMessage());
+                    }
+                });
+        mSubscriptions.add(subscription);
+    }
+
+    /**
+     * 编辑操作
+     */
+    private void editDataProcessingForPathologyRecord(List<DocumentDisplayBean> beanList, ArrayList<String> paths) {
+        PatientRecordDisplayBean patientRecordDisplayBean = mActivity.getRequestPatientRecordBean();
+        List<RecordDocumentsBean> list = patientRecordDisplayBean.getRecordDocuments();
+        //标记已删除的网络图片
+        if (list != null && list.size() > 0)
+            markDeleteImages(paths, patientRecordDisplayBean, list);
+        //添加本地图片
+        if (beanList.size() > 0)
+            addDocumentDisplayBeanToList(beanList, patientRecordDisplayBean);
+        //更新bean
+        updatePathologyPatientRecord(patientRecordDisplayBean);
+    }
+
+    /**
+     * 编辑操作
+     */
+    private void editDataProcessing(List<DocumentDisplayBean> beanList, ArrayList<String> paths) {
+        PatientRecordDisplayBean patientRecordDisplayBean = mActivity.getRequestPatientRecordBean();
+        List<RecordDocumentsBean> list = patientRecordDisplayBean.getRecordDocuments();
+        //标记已删除的网络图片
+        if (list != null && list.size() > 0)
+            markDeleteImages(paths, patientRecordDisplayBean, list);
+        //添加本地图片
+        if (beanList.size() > 0)
+            addDocumentDisplayBeanToList(beanList, patientRecordDisplayBean);
+        //更新bean
+        updatePatientRecord(patientRecordDisplayBean);
+    }
+
+    /**
+     * 构建编辑中添加图片对应bean id设置0
+     */
+    private void addDocumentDisplayBeanToList(List<DocumentDisplayBean> beanList, PatientRecordDisplayBean patientRecordDisplayBean) {
+        List<RecordDocumentsBean> list = patientRecordDisplayBean.getRecordDocuments();
+        if (list == null) list = new ArrayList<>();
+        for (DocumentDisplayBean documentDisplayBean : beanList) {
+            RecordDocumentsBean recordDocumentsBean = new RecordDocumentsBean();
+            recordDocumentsBean.setRecordDocumentId(0);
+            recordDocumentsBean.setDocumentUrl(documentDisplayBean.getDocumentUrl());
+            recordDocumentsBean.setFileName(documentDisplayBean.getFileName());
+            recordDocumentsBean.setDocumentFormat(documentDisplayBean.getDocumentFormat());
+            recordDocumentsBean.setDisplayName(documentDisplayBean.getDisplayName());
+            recordDocumentsBean.setPatientRecordId(patientRecordDisplayBean.getPatientRecordId());
+            recordDocumentsBean.setIsDeleted(false);
+            list.add(recordDocumentsBean);
+        }
+    }
+
+    /**
+     * 标记已经删除的图片，改为true，更新内部bean
+     * 1、原list有地址集时，把paths中不存在相同的地址 标记为删除 true
+     * 2、转集合
+     * 3、改原bean
+     */
+    private void markDeleteImages(final ArrayList<String> paths, PatientRecordDisplayBean patientRecordDisplayBean, List<RecordDocumentsBean> list) {
+        Observable.from(list)
+                .map(new Func1<RecordDocumentsBean, RecordDocumentsBean>() {
+                    @Override
+                    public RecordDocumentsBean call(RecordDocumentsBean recordDocumentsBean) {
+                        if (!paths.contains(recordDocumentsBean.getDocumentUrl()))
+                            recordDocumentsBean.setIsDeleted(true);
+                        return recordDocumentsBean;
+                    }
+                })
+                .toList()
+                .subscribe(new Action1<List<RecordDocumentsBean>>() {
+                    @Override
+                    public void call(List<RecordDocumentsBean> recordDocumentsBeen) {
+                        patientRecordDisplayBean.setRecordDocuments(recordDocumentsBeen);
+                    }
+                });
+    }
+
+    /**
+     * 提交病理更新
+     */
+    private void updatePathologyPatientRecord(PatientRecordDisplayBean patientRecordDisplayBean) {
+        Subscription subscription = mRepository.UpdatePathologyRecord(patientRecordDisplayBean)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<PatientRecordDisplayBean>() {
+                    @Override
+                    public void onCompleted() {
+                        mActivity.dismissInteractionDialog();
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        mActivity.displayErrorDialog(e.getMessage());
+                    }
+
+                    @Override
+                    public void onNext(PatientRecordDisplayBean patientRecordDisplayBean1) {
+                        LogUtils.jsonDate(patientRecordDisplayBean1);
+                        mActivity.updateSucceed(patientRecordDisplayBean1);
+                    }
+                });
+        mSubscriptions.add(subscription);
+    }
+
+    /**
+     * 提交辅助检查更新
+     */
+    private void updatePatientRecord(PatientRecordDisplayBean patientRecordDisplayBean) {
+        Subscription subscription = mRepository.UpdateSupplementaryTest(patientRecordDisplayBean)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<PatientRecordDisplayBean>() {
+                    @Override
+                    public void onCompleted() {
+                        mActivity.dismissInteractionDialog();
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        mActivity.displayErrorDialog(e.getMessage());
+                    }
+
+                    @Override
+                    public void onNext(PatientRecordDisplayBean patientRecordDisplayBean1) {
+                        LogUtils.jsonDate(patientRecordDisplayBean1);
+                        mActivity.updateSucceed(patientRecordDisplayBean1);
+                    }
+                });
+        mSubscriptions.add(subscription);
+    }
+
+    @Override
+    public void unSubscribe() {
+        mSubscriptions.clear();
+        mActivity = null;
+    }
+
+    /**
+     * 重写：IOutpatientElectronicPresenter
+     * 插入新的"辅助检查"诊疗记录 医生和患者的token都可以
+     */
+    @Override
+    public void addNewPatientRecord() {
+        uploadHandlingCases(new RepositoryFactory.UploadCaseSucceed() {
+            @Override
+            public void imageSucceed(List<DocumentDisplayBean> beanList, ArrayList<String> paths) {
+                addDataProcessing(beanList, paths);
+            }
+        });
+    }
+
+    @Override
+    public void addNewPathologyRecord() {
+        uploadHandlingCases(new RepositoryFactory.UploadCaseSucceed() {
+            @Override
+            public void imageSucceed(List<DocumentDisplayBean> beanList, ArrayList<String> paths) {
+                addDataProcessingForPathology(beanList, paths);
+            }
+        });
+    }
+
+
+
+    private void addDataProcessingForPathology(List<DocumentDisplayBean> beanList, ArrayList<String> paths) {
+        NewPathologyPatientRecordDisplayBean newPatientRecordDisplayBean = mActivity.getNewPathologyPatientRecordDisplayBean();
+        LogUtils.jsonDate(newPatientRecordDisplayBean);
+        List<NewPathologyPatientRecordDisplayBean.RecordDocumentsBean> list = new ArrayList<>();
+        //添加本地图片
+        if (beanList != null && beanList.size() > 0) {
+            for (DocumentDisplayBean documentDisplayBean : beanList) {
+                NewPathologyPatientRecordDisplayBean.RecordDocumentsBean newDocumentDisplayBean =
+                        new NewPathologyPatientRecordDisplayBean.RecordDocumentsBean();
+
+                newDocumentDisplayBean.setDocumentUrl(documentDisplayBean.getDocumentUrl());
+                newDocumentDisplayBean.setDocumentFormat(documentDisplayBean.getDocumentFormat());
+                newDocumentDisplayBean.setDisplayName(documentDisplayBean.getDisplayName());
+                newDocumentDisplayBean.setFileName(documentDisplayBean.getFileName());
+                list.add(newDocumentDisplayBean);
+            }
+            newPatientRecordDisplayBean.setRecordDocuments(list);
+        }
+        addNewPathologyRecord(newPatientRecordDisplayBean);
+    }
+
+    /**
+     *  插入新的病理记录
+     */
+    private void addNewPathologyRecord(NewPathologyPatientRecordDisplayBean newPatientRecordDisplayBean) {
+        Subscription subscription = mRepository.InsertPathologyRecord(newPatientRecordDisplayBean)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<PatientRecordDisplayBean>() {
+                    @Override
+                    public void onCompleted() {
+                        mActivity.showToast("保存成功！");
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        LogUtils.e(e.getMessage());
+                        mActivity.displayErrorDialog(e.getMessage());
+                    }
+
+                    @Override
+                    public void onNext(PatientRecordDisplayBean patientRecordDisplayBean) {
+                        LogUtils.jsonDate(patientRecordDisplayBean);
+                        mActivity.updateSucceed(patientRecordDisplayBean);
+                    }
+                });
+        mSubscriptions.add(subscription);
+    }
+
+    private void addDataProcessing(List<DocumentDisplayBean> beanList, ArrayList<String> paths) {
+        NewSupplementaryTestPatientRecordDisplayBean newPatientRecordDisplayBean = mActivity.getNewSupplementaryTestPatientRecordDisplayBean();
+        LogUtils.jsonDate(newPatientRecordDisplayBean);
+        List<NewSupplementaryTestPatientRecordDisplayBean.RecordDocumentsBean> list = new ArrayList<>();
+        //添加本地图片
+        if (beanList != null && beanList.size() > 0) {
+            for (DocumentDisplayBean documentDisplayBean : beanList) {
+                NewSupplementaryTestPatientRecordDisplayBean.RecordDocumentsBean newDocumentDisplayBean =
+                        new NewSupplementaryTestPatientRecordDisplayBean.RecordDocumentsBean();
+
+                newDocumentDisplayBean.setDocumentUrl(documentDisplayBean.getDocumentUrl());
+                newDocumentDisplayBean.setDocumentFormat(documentDisplayBean.getDocumentFormat());
+                newDocumentDisplayBean.setDisplayName(documentDisplayBean.getDisplayName());
+                newDocumentDisplayBean.setFileName(documentDisplayBean.getFileName());
+                list.add(newDocumentDisplayBean);
+            }
+            newPatientRecordDisplayBean.setRecordDocuments(list);
+        }
+        addNewRecord(newPatientRecordDisplayBean);
+    }
+
+    private void addNewRecord(NewSupplementaryTestPatientRecordDisplayBean newPatientRecordDisplayBean) {
+        Subscription subscription = mRepository.InsertSupplementaryTest(newPatientRecordDisplayBean)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<PatientRecordDisplayBean>() {
+                    @Override
+                    public void onCompleted() {
+                        mActivity.showToast("保存成功！");
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        LogUtils.e(e.getMessage());
+                        mActivity.displayErrorDialog(e.getMessage());
+                    }
+
+                    @Override
+                    public void onNext(PatientRecordDisplayBean patientRecordDisplayBean) {
+                        LogUtils.jsonDate(patientRecordDisplayBean);
+                        mActivity.updateSucceed(patientRecordDisplayBean);
+                    }
+                });
+        mSubscriptions.add(subscription);
+    }
+
+    public void RequestEndDoctorPatientRelationship() {
+        int doctorPatientReplationshipId = mActivity.getDoctorPatientId();
+        Subscription subscription = mRepository.RequestEndDoctorPatientRelationship(doctorPatientReplationshipId)   //申请结束医患关系
+                .subscribeOn(Schedulers.io())
+                .doOnSubscribe(() -> {
+                })
+                .subscribeOn(AndroidSchedulers.mainThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<ResponseDisplayBean>() {
+                    @Override
+                    public void onCompleted() {
+                        mActivity.dismissInteractionDialog();
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        LogUtils.e(e.getMessage());
+                        mActivity.displayErrorDialog(e.getMessage());
+                    }
+
+                    @Override
+                    public void onNext(ResponseDisplayBean responseDisplayBean) {
+                        mActivity.finishPage();
+                    }
+                });
+        mSubscriptions.add(subscription);
+    }
+}

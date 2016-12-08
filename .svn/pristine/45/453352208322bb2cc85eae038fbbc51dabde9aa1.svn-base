@@ -1,0 +1,749 @@
+package com.kaurihealth.kaurihealth.conversation_v;
+
+import android.content.ActivityNotFoundException;
+import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.support.annotation.NonNull;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.text.TextUtils;
+import android.util.Log;
+import android.view.View;
+import android.widget.ListView;
+import android.widget.TextView;
+
+import com.avos.avoscloud.AVCallback;
+import com.avos.avoscloud.AVException;
+import com.avos.avoscloud.AVObject;
+import com.avos.avoscloud.AVQuery;
+import com.avos.avoscloud.GetCallback;
+import com.avos.avoscloud.im.v2.AVIMClient;
+import com.avos.avoscloud.im.v2.AVIMConversation;
+import com.avos.avoscloud.im.v2.AVIMException;
+import com.avos.avoscloud.im.v2.AVIMMessage;
+import com.avos.avoscloud.im.v2.AVIMReservedMessageType;
+import com.avos.avoscloud.im.v2.AVIMTypedMessage;
+import com.avos.avoscloud.im.v2.callback.AVIMConversationCallback;
+import com.avos.avoscloud.im.v2.callback.AVIMMessagesQueryCallback;
+import com.avos.avoscloud.im.v2.messages.AVIMTextMessage;
+import com.kaurihealth.chatlib.LCChatKit;
+import com.kaurihealth.chatlib.cache.GroupMessageBean;
+import com.kaurihealth.chatlib.cache.LCIMConversationItemCache;
+import com.kaurihealth.chatlib.cache.LCIMProfileCache;
+import com.kaurihealth.chatlib.custom.LCChatMessageInterface;
+import com.kaurihealth.chatlib.event.LCIMConversationItemLongClickEvent;
+import com.kaurihealth.chatlib.event.LCIMIMTypeMessageEvent;
+import com.kaurihealth.chatlib.utils.LCIMConstants;
+import com.kaurihealth.datalib.local.LocalData;
+import com.kaurihealth.datalib.request_bean.bean.ConversationItemBean;
+import com.kaurihealth.datalib.response_bean.ContactUserDisplayBean;
+import com.kaurihealth.kaurihealth.R;
+import com.kaurihealth.kaurihealth.adapter.ConversationGroupSwipeAdapter;
+import com.kaurihealth.kaurihealth.base_v.BaseActivity;
+import com.kaurihealth.utilslib.ColorUtils;
+import com.kaurihealth.utilslib.constant.Global;
+import com.kaurihealth.utilslib.log.LogUtils;
+import com.kaurihealth.utilslib.widget.ScrollChildSwipeRefreshLayout;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+import org.json.JSONObject;
+
+import java.lang.ref.WeakReference;
+import java.util.ArrayList;
+import java.util.List;
+
+import butterknife.Bind;
+import butterknife.OnClick;
+import butterknife.OnItemClick;
+import rx.Observable;
+import rx.Subscriber;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
+import rx.functions.Func1;
+import rx.functions.Func2;
+import rx.schedulers.Schedulers;
+
+import static rx.Observable.from;
+
+/**
+ * Created by jianghw on 2016/11/2.
+ * <p/>
+ * Describe: 医生或者患者 历史消息
+ */
+
+public class ConversationGroupItemActivity extends BaseActivity {
+    @Bind(R.id.tv_no_date)
+    TextView mTextView;
+
+    @Bind(R.id.rv_conversation)
+    ListView mRvConversation;
+
+    @Bind(R.id.swipe_refresh)
+    ScrollChildSwipeRefreshLayout mSwipeRefresh;
+
+    @Bind(R.id.tv_more)
+    TextView mTvMore;
+
+    protected ConversationGroupSwipeAdapter itemAdapter;
+    List<ConversationItemBean> beanList = new ArrayList<>();
+
+    @Override
+    protected int getActivityLayoutID() {
+        return R.layout.activity_conversation_items;
+    }
+
+    static class SwipeRefreshHandler extends Handler {
+        private WeakReference<ConversationGroupItemActivity> weakReference = null;
+
+        SwipeRefreshHandler(ConversationGroupItemActivity activity) {
+            weakReference = new WeakReference<>(activity);
+        }
+
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            ConversationGroupItemActivity activity = weakReference.get();
+            if (null == weakReference || null == activity) return;
+            activity.loadingIndicator(false);
+        }
+    }
+
+    @Override
+    protected void initPresenterAndView(Bundle savedInstanceState) {
+        initNewBackBtn("群聊对话");
+        mTvMore.setText(getString(R.string.more_add));
+
+        itemAdapter = new ConversationGroupSwipeAdapter(getApplication(), beanList);
+        mRvConversation.setAdapter(itemAdapter);
+    }
+
+    @Override
+    protected void initDelayedData() {
+        mSwipeRefresh.setColorSchemeColors(
+                ColorUtils.setSwipeRefreshColors(getApplicationContext())
+        );
+        mSwipeRefresh.setSize(SwipeRefreshLayout.DEFAULT);
+        mSwipeRefresh.setDistanceToTriggerSync(Global.Numerical.SWIPE_REFRESH);
+        mSwipeRefresh.setOnRefreshListener(this::loadConversationItemList);
+
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (!beanList.isEmpty()) beanList.clear();
+        removeStickyEvent(LCIMConversationItemLongClickEvent.class);
+        EventBus.getDefault().unregister(this);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        loadConversationItemList();
+    }
+
+    public void loadingIndicator(boolean flag) {
+        if (mSwipeRefresh == null) return;
+        mSwipeRefresh.post(() -> mSwipeRefresh.setRefreshing(flag));
+    }
+
+    public void showToolTip(boolean flag) {
+        mTextView.setVisibility(flag ? View.VISIBLE : View.GONE);
+    }
+
+    @OnClick(R.id.tv_more)
+    public void groupOnClick() {
+        skipTo(AddGroupChatActivity.class);
+    }
+
+    @OnItemClick(R.id.rv_conversation)
+    public void onItemClick(int position) {
+        String conversationId = beanList.get(position).getConversationId();
+        try {
+            Intent intent = new Intent();
+            intent.setPackage(getApplication().getApplicationContext().getPackageName());
+            intent.setAction(LCIMConstants.CONVERSATION_ITEM_CLICK_ACTION_GROUP);
+            intent.addCategory(Intent.CATEGORY_DEFAULT);
+            intent.putExtra(LCIMConstants.CONVERSATION_ID_GROUP, conversationId);
+            startActivity(intent);
+        } catch (ActivityNotFoundException exception) {
+            Log.i(LCIMConstants.LCIM_LOG_TAG, exception.toString());
+        }
+    }
+
+    /**
+     * 收到对方消息时响应此事件
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void eventBusMain(LCIMIMTypeMessageEvent event) {
+        loadConversationItemList();
+    }
+
+    /**
+     * 删除会话列表中的某个 item
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void eventBusMain(LCIMConversationItemLongClickEvent event) {
+        if (null != event) {
+            String conversationId = event.conversation;
+            LCIMConversationItemCache.getInstance().deleteConversation(conversationId);
+            loadConversationItemList();
+        }
+    }
+
+    /**
+     * 开始加载...
+     */
+    private void loadConversationItemList() {
+        loadingIndicator(true);
+        List<String> conIdList = LCIMConversationItemCache.getInstance().getSortedConversationList();
+        if (conIdList == null || conIdList.size() < 1) {
+            loadingIndicator(false);
+            showToolTip(true);
+        } else {
+            handleGroupMessages(conIdList);
+            new SwipeRefreshHandler(ConversationGroupItemActivity.this).sendEmptyMessageDelayed(100, 4000);
+        }
+    }
+
+    /**
+     * 群聊过滤
+     * 1、id-->conversation
+     * 2、手动刷新conversation，过滤type==1
+     * 3、刷新conversation
+     * 4、手动刷新conversation-->list
+     * 5、是否需要刷新个人信息
+     */
+    private void handleGroupMessages(List<String> conversationIdItems) {
+        AVIMClient client = LCChatKit.getInstance().getClient();
+        from(conversationIdItems)
+                .map(new Func1<String, AVIMConversation>() {
+                    @Override
+                    public AVIMConversation call(String conversationId) {
+                        return client != null ? client.getConversation(conversationId) : null;
+                    }
+                })
+                .filter(new Func1<AVIMConversation, Boolean>() {
+                    @Override
+                    public Boolean call(AVIMConversation conversation) {
+                        return conversation != null;
+                    }
+                })
+                .flatMap(new Func1<AVIMConversation, Observable<AVIMConversation>>() {
+                    @Override
+                    public Observable<AVIMConversation> call(AVIMConversation conversation) {
+                        return getConversationObservable(conversation);
+                    }
+                })
+                .filter(new Func1<AVIMConversation, Boolean>() {
+                    @Override
+                    public Boolean call(AVIMConversation conversation) {
+                        return conversation.getMembers() != null && conversation.getMembers().size() > 0;
+                    }
+                })
+                .flatMap(new Func1<AVIMConversation, Observable<AVIMConversation>>() {
+                    @Override
+                    public Observable<AVIMConversation> call(AVIMConversation conversation) {
+                        return obtainDistributionDataManually(conversation);
+                    }
+                })
+                .toList()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<List<AVIMConversation>>() {
+                    @Override
+                    public void onCompleted() {
+                        if (!conversationIdItems.isEmpty()) conversationIdItems.clear();
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        LogUtils.e(e.getMessage());
+                    }
+
+                    @Override
+                    public void onNext(List<AVIMConversation> lists) {
+                        HauntedByUnCache(lists);
+
+                    }
+                });
+    }
+
+    private void HauntedByUnCache(List<AVIMConversation> lists) {
+        from(lists)
+                .filter(new Func1<AVIMConversation, Boolean>() {
+                    @Override
+                    public Boolean call(AVIMConversation conversation) {
+                        return null != conversation;
+                    }
+                })
+                .map(new Func1<AVIMConversation, List<String>>() {
+                    @Override
+                    public List<String> call(AVIMConversation conversation) {
+                        return conversation.getMembers();
+                    }
+                })
+                .filter(new Func1<List<String>, Boolean>() {
+                    @Override
+                    public Boolean call(List<String> strings) {
+                        return strings != null && strings.size() > 0;
+                    }
+                })
+                .flatMap(new Func1<List<String>, Observable<String>>() {
+                    @Override
+                    public Observable<String> call(List<String> kauriIdList) {
+                        return from(kauriIdList)
+                                .filter(new Func1<String, Boolean>() {
+                                    @Override
+                                    public Boolean call(String kauriId) {
+                                        return !LCIMProfileCache.getInstance().hasCachedUser(kauriId);
+                                    }
+                                });
+                    }
+                })
+                .toList()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Action1<List<String>>() {
+                    @Override
+                    public void call(List<String> membersList) {
+                        refreshCharacterInformation(membersList, lists);
+                    }
+                }, new Action1<Throwable>() {
+                    @Override
+                    public void call(Throwable throwable) {
+                        LogUtils.e(throwable.getMessage());
+                    }
+                });
+    }
+
+    /**
+     * 刷新人物信息
+     *
+     * @param membersList
+     * @param conversationList
+     */
+    private void refreshCharacterInformation(List<String> membersList, final List<AVIMConversation> conversationList) {
+        if (membersList != null && membersList.size() > 0) {
+            LCIMProfileCache.getInstance().getCachedUsers(membersList, new AVCallback<List<ContactUserDisplayBean>>() {
+                @Override
+                protected void internalDone0(List<ContactUserDisplayBean> beanList, AVException e) {
+                    if (beanList != null) adapterItemProcessing(conversationList);
+                    if (e != null) LogUtils.e(e.getMessage());
+                }
+            });
+        } else {
+            adapterItemProcessing(conversationList);
+        }
+    }
+
+    /**
+     * adapter item 值处理
+     *
+     * @param conversationList
+     */
+    private void adapterItemProcessing(List<AVIMConversation> conversationList) {
+        showToolTip(conversationList.isEmpty());
+        Observable
+                .from(conversationList)
+                .filter(new Func1<AVIMConversation, Boolean>() {
+                    @Override
+                    public Boolean call(AVIMConversation conversation) {
+                        return null != conversation;
+                    }
+                })
+                .filter(new Func1<AVIMConversation, Boolean>() {
+                    @Override
+                    public Boolean call(AVIMConversation conversation) {
+                        return conversation.getMembers() != null && conversation.getMembers().size() > 0;
+                    }
+                })
+                .filter(new Func1<AVIMConversation, Boolean>() {
+                    @Override
+                    public Boolean call(AVIMConversation conversation) {
+                        return conversation.getMembers().contains(LocalData.getLocalData().getMyself().getKauriHealthId());
+                    }
+                })
+                .flatMap(new Func1<AVIMConversation, Observable<ConversationItemBean>>() {
+                    @Override
+                    public Observable<ConversationItemBean> call(AVIMConversation conversation) {
+                        return getQueryMessageObservable(conversation);
+                    }
+                })
+                .toList()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<List<ConversationItemBean>>() {
+                    @Override
+                    public void onCompleted() {
+                        if (!conversationList.isEmpty()) conversationList.clear();
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        LogUtils.e(e.getMessage());
+                    }
+
+                    @Override
+                    public void onNext(List<ConversationItemBean> beanList) {
+                        filterOutPedals(beanList);
+                    }
+                });
+    }
+
+    /**
+     * 有置顶的
+     *
+     * @param list
+     */
+    private void filterOutPedals(List<ConversationItemBean> list) {
+        Observable
+                .from(list)
+                .filter(new Func1<ConversationItemBean, Boolean>() {
+                    @Override
+                    public Boolean call(ConversationItemBean bean) {
+                        return bean != null;
+                    }
+                })
+                .filter(new Func1<ConversationItemBean, Boolean>() {
+                    @Override
+                    public Boolean call(ConversationItemBean bean) {
+                        return LCIMProfileCache.getInstance().hasCachedUser(bean.getConversationId())
+                                && LCIMProfileCache.getInstance().getContactUserMap().get(bean.getConversationId()).isTop();
+                    }
+                })
+                .toSortedList(new Func2<ConversationItemBean, ConversationItemBean, Integer>() {
+                    @Override
+                    public Integer call(ConversationItemBean bean, ConversationItemBean bean2) {
+                        long mLong = bean.getTime() - bean2.getTime();
+                        return mLong < 0 ? 1 : mLong > 0 ? -1 : 0;
+                    }
+                })
+                .subscribeOn(Schedulers.computation())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Action1<List<ConversationItemBean>>() {
+                    @Override
+                    public void call(List<ConversationItemBean> been) {
+                        filterOutUnPedals(been, list);
+                    }
+                }, new Action1<Throwable>() {
+                    @Override
+                    public void call(Throwable throwable) {
+                        LogUtils.e(throwable.getMessage());
+                    }
+                });
+    }
+
+    /**
+     * 无置顶
+     *
+     * @param beenList
+     * @param list
+     */
+    private void filterOutUnPedals(List<ConversationItemBean> beenList, List<ConversationItemBean> list) {
+        Observable
+                .from(list)
+                .filter(new Func1<ConversationItemBean, Boolean>() {
+                    @Override
+                    public Boolean call(ConversationItemBean bean) {
+                        return bean != null;
+                    }
+                })
+                .filter(new Func1<ConversationItemBean, Boolean>() {
+                    @Override
+                    public Boolean call(ConversationItemBean bean) {
+                        return !LCIMProfileCache.getInstance().hasCachedUser(bean.getConversationId())
+                                || (!LCIMProfileCache.getInstance().getContactUserMap().get(bean.getConversationId()).isTop());
+                    }
+                })
+                .toSortedList(new Func2<ConversationItemBean, ConversationItemBean, Integer>() {
+                    @Override
+                    public Integer call(ConversationItemBean bean, ConversationItemBean bean2) {
+                        long mLong = bean.getTime() - bean2.getTime();
+                        return mLong < 0 ? 1 : mLong > 0 ? -1 : 0;
+                    }
+                })
+                .map(new Func1<List<ConversationItemBean>, List<ConversationItemBean>>() {
+                    @Override
+                    public List<ConversationItemBean> call(List<ConversationItemBean> been) {
+                        beenList.addAll(beenList.size(), been);//置顶在前
+                        return beenList;
+                    }
+                })
+                .subscribeOn(Schedulers.computation())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Action1<List<ConversationItemBean>>() {
+                    @Override
+                    public void call(List<ConversationItemBean> been) {
+                        if (!beanList.isEmpty()) beanList.clear();
+                        showToolTip(been.isEmpty());
+                        beanList.addAll(been);
+                        itemAdapter.notifyDataSetChanged();
+                    }
+                }, new Action1<Throwable>() {
+                    @Override
+                    public void call(Throwable throwable) {
+                        LogUtils.e(throwable.getMessage());
+                    }
+                });
+    }
+
+    /**
+     * 查询最后一条消息
+     *
+     * @param conversation
+     * @return
+     */
+    @NonNull
+    private Observable<ConversationItemBean> getQueryMessageObservable(final AVIMConversation conversation) {
+        return Observable.create(new Observable.OnSubscribe<ConversationItemBean>() {
+            @Override
+            public void call(Subscriber<? super ConversationItemBean> subscriber) {
+                String groupName = conversation.getName();
+                int num = LCIMConversationItemCache.getInstance().getUnreadCount(conversation.getConversationId());
+                conversation.queryMessages(1, new AVIMMessagesQueryCallback() {
+                    @Override
+                    public void done(List<AVIMMessage> messageList, AVIMException e) {
+                        if (null != e) {
+                            subscriber.onError(e);
+                        }
+                        if (null != messageList && !messageList.isEmpty()) {
+                            long time = messageList.get(0).getTimestamp();
+                            CharSequence lastMessage = getMessageShorthand(getApplicationContext(), messageList.get(0));
+                            GroupMessageBean groupMessageBean = new GroupMessageBean(groupName, null, conversation.getMembers());
+                            subscriber.onNext(new ConversationItemBean<>(conversation.getConversationId(), lastMessage, time, num, groupMessageBean));
+                            subscriber.onCompleted();
+                        } else {
+                            GroupMessageBean groupMessageBean = new GroupMessageBean(groupName, null, conversation.getMembers());
+                            subscriber.onNext(new ConversationItemBean<>(conversation.getConversationId(), "没有会话记录", System.currentTimeMillis(), num, groupMessageBean));
+                            subscriber.onCompleted();
+                        }
+                    }
+                });
+            }
+        });
+    }
+
+    /**
+     * attr 过滤
+     *
+     * @param conversation
+     * @return
+     */
+    private Observable<AVIMConversation> obtainDistributionDataManually(AVIMConversation conversation) {
+        return Observable
+                .create(new Observable.OnSubscribe<AVObject>() {
+                    @Override
+                    public void call(Subscriber<? super AVObject> subscriber) {
+                        AVQuery conversationQuery = new AVQuery("_Conversation");
+                        AVQuery avQuery = conversationQuery.whereEqualTo("objectId", conversation.getConversationId());
+                        avQuery.getFirstInBackground(new GetCallback<AVObject>() {
+                            public void done(AVObject object, AVException e) {
+                                if (e != null) subscriber.onError(e);
+                                subscriber.onNext(object);
+                                subscriber.onCompleted();
+                            }
+                        });
+                    }
+                })
+                .map(new Func1<AVObject, Integer>() {
+                    @Override
+                    public Integer call(AVObject object) {
+                        if (object.get("attr") != null) {
+                            JSONObject attr = object.getJSONObject("attr");
+                            if (attr != null) {
+                                try {
+                                    return attr.getInt(Global.LeanCloud.ATTR_TYPE);
+                                } catch (Exception e) {
+                                    return 0;
+                                }
+                            } else {
+                                return 0;
+                            }
+                        }
+                        return 0;
+                    }
+                })
+                .filter(new Func1<Integer, Boolean>() {
+                    @Override
+                    public Boolean call(Integer integer) {
+                        return integer == 1;
+                    }
+                })
+                .map(new Func1<Integer, AVIMConversation>() {
+                    @Override
+                    public AVIMConversation call(Integer integer) {
+                        return conversation;
+                    }
+                });
+    }
+
+    /**
+     * 解决getMember()--null问题
+     */
+    @NonNull
+    private Observable<AVIMConversation> getConversationObservable(final AVIMConversation conversation) {
+        return Observable.create(new Observable.OnSubscribe<AVIMConversation>() {
+            @Override
+            public void call(Subscriber<? super AVIMConversation> subscriber) {
+                if (conversation.getCreatedAt() == null) {
+                    conversation.fetchInfoInBackground(new AVIMConversationCallback() {
+                        @Override
+                        public void done(AVIMException e) {
+                            if (e != null) subscriber.onError(e);
+                            subscriber.onNext(conversation);
+                            subscriber.onCompleted();
+                        }
+                    });
+                } else {
+                    try {
+                        subscriber.onNext(conversation);
+                        subscriber.onCompleted();
+                    } catch (Exception e) {
+                        subscriber.onError(e);
+                    }
+                }
+            }
+        });
+    }
+
+    /**
+     * 时间排序
+     * 1、ConversationId
+     * 2、是否有缓存,istop
+     * 3、有缓存,istop=false,||否缓存
+     */
+    private Observable<List<ConversationItemBean>> sortProcessList(ConversationItemBean bean) {
+        return Observable
+                .just(bean)
+                .filter(new Func1<ConversationItemBean, Boolean>() {
+                    @Override
+                    public Boolean call(ConversationItemBean bean) {
+                        return bean != null;
+                    }
+                })
+                .flatMap(new Func1<ConversationItemBean, Observable<List<ConversationItemBean>>>() {
+                    @Override
+                    public Observable<List<ConversationItemBean>> call(ConversationItemBean itemBean) {
+                        return Observable
+                                .just(itemBean)
+                                .map(new Func1<ConversationItemBean, String>() {
+                                    @Override
+                                    public String call(ConversationItemBean bean) {
+                                        return bean.getConversationId();
+                                    }
+                                })
+                                .filter(new Func1<String, Boolean>() {
+                                    @Override
+                                    public Boolean call(String conversationId) {
+                                        return LCIMProfileCache.getInstance().hasCachedUser(conversationId)
+                                                && LCIMProfileCache.getInstance().getContactUserMap().get(conversationId).isTop();
+                                    }
+                                })
+                                .map(new Func1<String, ConversationItemBean>() {
+                                    @Override
+                                    public ConversationItemBean call(String id) {
+                                        return itemBean;
+                                    }
+                                })
+                                .toSortedList(new Func2<ConversationItemBean, ConversationItemBean, Integer>() {
+                                    @Override
+                                    public Integer call(ConversationItemBean bean, ConversationItemBean bean2) {
+                                        long mLong = bean.getTime() - bean2.getTime();
+                                        return mLong < 0 ? 1 : mLong > 0 ? -1 : 0;
+                                    }
+                                });
+                    }
+                })
+                .flatMap(new Func1<List<ConversationItemBean>, Observable<List<ConversationItemBean>>>() {
+                    @Override
+                    public Observable<List<ConversationItemBean>> call(List<ConversationItemBean> beenList) {
+                        LogUtils.jsonDate(beanList);
+                        return Observable
+                                .just(bean)
+                                .filter(new Func1<ConversationItemBean, Boolean>() {
+                                    @Override
+                                    public Boolean call(ConversationItemBean bean) {
+                                        return bean != null;
+                                    }
+                                })
+                                .flatMap(new Func1<ConversationItemBean, Observable<List<ConversationItemBean>>>() {
+                                    @Override
+                                    public Observable<List<ConversationItemBean>> call(ConversationItemBean itemBean) {
+                                        return Observable
+                                                .just(itemBean)
+                                                .map(new Func1<ConversationItemBean, String>() {
+                                                    @Override
+                                                    public String call(ConversationItemBean bean) {
+                                                        return bean.getConversationId();
+                                                    }
+                                                })
+                                                .filter(new Func1<String, Boolean>() {
+                                                    @Override
+                                                    public Boolean call(String conversationId) {
+                                                        return !LCIMProfileCache.getInstance().hasCachedUser(conversationId)
+                                                                || (!LCIMProfileCache.getInstance().getContactUserMap().get(conversationId).isTop());
+                                                    }
+                                                })
+                                                .map(new Func1<String, ConversationItemBean>() {
+                                                    @Override
+                                                    public ConversationItemBean call(String id) {
+                                                        return itemBean;
+                                                    }
+                                                })
+                                                .toSortedList(new Func2<ConversationItemBean, ConversationItemBean, Integer>() {
+                                                    @Override
+                                                    public Integer call(ConversationItemBean bean, ConversationItemBean bean2) {
+                                                        long mLong = bean.getTime() - bean2.getTime();
+                                                        return mLong < 0 ? 1 : mLong > 0 ? -1 : 0;
+                                                    }
+                                                });
+                                    }
+                                })
+                                .map(new Func1<List<ConversationItemBean>, List<ConversationItemBean>>() {
+                                    @Override
+                                    public List<ConversationItemBean> call(List<ConversationItemBean> been) {
+                                        beenList.addAll(beenList.size(), been);
+                                        return beenList;
+                                    }
+                                });
+                    }
+                });
+    }
+
+    private static CharSequence getMessageShorthand(Context context, AVIMMessage message) {
+        if (message instanceof AVIMTypedMessage) {
+            AVIMReservedMessageType type = AVIMReservedMessageType.getAVIMReservedMessageType(
+                    ((AVIMTypedMessage) message).getMessageType());
+            switch (type) {
+                case TextMessageType:
+                    return ((AVIMTextMessage) message).getText();
+                case ImageMessageType:
+                    return context.getString(com.kaurihealth.chatlib.R.string.lcim_message_shorthand_image);
+                case LocationMessageType:
+                    return context.getString(com.kaurihealth.chatlib.R.string.lcim_message_shorthand_location);
+                case AudioMessageType:
+                    return context.getString(com.kaurihealth.chatlib.R.string.lcim_message_shorthand_audio);
+                default:
+                    CharSequence shortHand = "";
+                    if (message instanceof LCChatMessageInterface) {
+                        LCChatMessageInterface messageInterface = (LCChatMessageInterface) message;
+                        shortHand = messageInterface.getShorthand();
+                    }
+                    if (TextUtils.isEmpty(shortHand)) {
+                        shortHand = context.getString(com.kaurihealth.chatlib.R.string.lcim_message_shorthand_unknown);
+                    }
+                    return shortHand;
+            }
+        } else {
+            return message.getContent();
+        }
+    }
+
+
+}

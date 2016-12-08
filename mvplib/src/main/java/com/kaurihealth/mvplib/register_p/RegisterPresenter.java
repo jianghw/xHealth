@@ -1,0 +1,164 @@
+package com.kaurihealth.mvplib.register_p;
+
+import com.kaurihealth.datalib.local.LocalData;
+import com.kaurihealth.datalib.repository.Repository;
+import com.kaurihealth.datalib.request_bean.bean.InitiateVerificationBean;
+import com.kaurihealth.datalib.request_bean.bean.NewRegisterBean;
+import com.kaurihealth.datalib.request_bean.builder.InitiateVerificationBeanBuilder;
+import com.kaurihealth.datalib.response_bean.InitiateVerificationResponse;
+import com.kaurihealth.datalib.response_bean.RegisterResponse;
+import com.kaurihealth.datalib.response_bean.TokenBean;
+import com.kaurihealth.utilslib.RegularUtils;
+import com.kaurihealth.utilslib.constant.Global;
+
+import javax.inject.Inject;
+
+import rx.Observable;
+import rx.Observer;
+import rx.Subscriber;
+import rx.Subscription;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
+import rx.schedulers.Schedulers;
+import rx.subscriptions.CompositeSubscription;
+
+
+public class RegisterPresenter<V> implements IRegisterPresenter<V> {
+
+    private Repository mRepository;
+    private IRegisterView mActivity;
+    private CompositeSubscription mSubscriptions;
+
+    @Inject
+    public RegisterPresenter(Repository repository) {
+        mRepository = repository;
+        mSubscriptions = new CompositeSubscription();
+    }
+
+    @Override
+    public void setPresenter(Object view) {
+        mActivity = (IRegisterView) view;
+    }
+
+    /**
+     * 发送请求码并得到验证码
+     */
+    public void sendVerificationCodeRequest() {
+        String phoneNumber = mActivity.getPhoneNumber();
+        if (RegularUtils.matcherMyContent("^1[3|4|5|7|8]\\d{9}$", phoneNumber)) {
+            InitiateVerificationBean initiateVerificationBean = new InitiateVerificationBeanBuilder().BuildRegisterInitiateVerification(phoneNumber);
+            //发送请求
+            getVerificationCode(initiateVerificationBean);
+            mActivity.startCountDown();
+        } else {
+            mActivity.showPhoneNumberErrorMessage();
+        }
+    }
+
+    /**
+     * 发送请求
+     */
+    private void getVerificationCode(InitiateVerificationBean bean) {
+        Subscription subscribe = mRepository.InitiateVerification(bean)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<InitiateVerificationResponse>() {
+                    @Override
+                    public void onCompleted() {
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        mActivity.showToast("短信验证码发送失败" + e.getMessage());
+                    }
+
+                    @Override
+                    public void onNext(InitiateVerificationResponse response) {
+                        mActivity.showToast(response.getMessage());
+                    }
+                });
+        mSubscriptions.add(subscribe);
+    }
+
+    /**
+     * 注册
+     */
+    @Override
+    public void onSubscribe() {
+        NewRegisterBean newRegisterBean = mActivity.getNewRegisterBean();
+
+        Subscription subscribe = mRepository.userRegister(newRegisterBean)
+                .subscribeOn(Schedulers.io())
+                .doOnSubscribe(() -> mActivity.dataInteractionDialog())
+                .subscribeOn(AndroidSchedulers.mainThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<RegisterResponse>() {
+                    @Override
+                    public void onCompleted() {
+                        mActivity.dismissInteractionDialog();
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        mActivity.displayErrorDialog("注册失败" + e.getMessage());
+                    }
+
+                    @Override
+                    public void onNext(RegisterResponse response) {
+                        if (response.isSuccessful()) {
+                            saveTokenToDatabase(response);
+                        } else {
+                            mActivity.showToast(response.getMessage());
+                        }
+                    }
+                });
+        mSubscriptions.add(subscribe);
+    }
+
+    /**
+     * Token 保存
+     *
+     * @param response
+     */
+    @Override
+    public void saveTokenToDatabase(RegisterResponse response) {
+        TokenBean tokenBean = response.getToken();
+        if (tokenBean == null) return;
+        Observable<TokenBean> observable = Observable.create(new Observable.OnSubscribe<TokenBean>() {
+            @Override
+            public void call(Subscriber<? super TokenBean> subscriber) {
+                try {
+                    subscriber.onNext(tokenBean);
+                    subscriber.onCompleted();
+                } catch (Exception e) {
+                    subscriber.onError(e);
+                }
+            }
+        });
+        Subscription subscribe = mRepository.persistentData(observable)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        new Action1<TokenBean>() {
+                            @Override
+                            public void call(TokenBean tokenBean) {
+                                LocalData.getLocalData().setTokenBean(tokenBean);
+                                mActivity.switchPageUI(Global.Jump.RegisterPersonInfoActivity);
+                                mActivity.manualFinishCurrent();
+                            }
+                        },
+                        new Action1<Throwable>() {
+                            @Override
+                            public void call(Throwable throwable) {
+                                mActivity.showToast(throwable.getMessage());
+                            }
+                        });
+        mSubscriptions.add(subscribe);
+    }
+
+    @Override
+    public void unSubscribe() {
+        mSubscriptions.clear();
+        mActivity = null;
+    }
+}

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" 
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <LinearLayout style="@style/Lay_Horizontal">
+        <TextView
+            style="@style/BodyText_Title"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:gravity="right"
+            android:singleLine="true"
+            android:text="患者医疗记录"
+             />
+        
+        <TextView
+            android:id="@+id/tv_record_fin"
+            style="@style/Record_BodyText"
+            android:layout_width="0dp"
+            android:layout_weight="2"
+            android:text="患者系统医疗记录已阅"/>
+
+        <com.rey.material.widget.CheckBox
+            android:id="@+id/cb_record_fir"
+            style="@style/Material.Drawable.CheckBox"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:gravity="center"/>
+
+    </LinearLayout>
+    
+</LinearLayout>

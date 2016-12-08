@@ -1,0 +1,66 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_bg_gray"
+    tools:context="com.kaurihealth.kaurihealth.clinical_v.activity.DynamicActivity">
+
+    <TextView
+        android:id="@+id/tvTemp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="此功能正在开发,敬请期待"
+        android:textSize="20dp" />
+
+    <!--<in.srain.cube.views.ptr.PtrClassicFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
+        <!--xmlns:cube_ptr="http://schemas.android.com/apk/res-auto"-->
+        <!--android:id="@+id/rotate_header_grid_view_frame"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:background="#FFF2F2F2"-->
+        <!--android:paddingBottom="10dp"-->
+        <!--cube_ptr:ptr_duration_to_close="200"-->
+        <!--cube_ptr:ptr_duration_to_close_header="1000"-->
+        <!--cube_ptr:ptr_keep_header_when_refresh="true"-->
+        <!--cube_ptr:ptr_pull_to_fresh="false"-->
+        <!--cube_ptr:ptr_ratio_of_header_height_to_refresh="1.2"-->
+        <!--cube_ptr:ptr_resistance="1.7">-->
+
+        <!--<ListView-->
+            <!--android:id="@+id/lvContent"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginLeft="10dp"-->
+            <!--android:layout_marginRight="10dp"-->
+            <!--android:layout_marginTop="10dp"-->
+            <!--android:horizontalSpacing="10dp"-->
+            <!--android:numColumns="2"-->
+            <!--android:verticalSpacing="10dp">-->
+
+        <!--</ListView>-->
+    <!--</in.srain.cube.views.ptr.PtrClassicFrameLayout>-->
+
+    <com.kaurihealth.utilslib.widget.ScrollChildSwipeRefreshLayout
+        android:id="@+id/swipe_refresh"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/color_bg_gray"
+
+        >
+        <de.halfbit.pinnedsection.PinnedSectionListView
+            android:id="@+id/lv_content"
+            android:scrollbars="none"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="10dp"
+            android:horizontalSpacing="10dp"
+            android:numColumns="2"
+            android:verticalSpacing="10dp">
+
+        </de.halfbit.pinnedsection.PinnedSectionListView>
+
+    </com.kaurihealth.utilslib.widget.ScrollChildSwipeRefreshLayout>
+</FrameLayout>

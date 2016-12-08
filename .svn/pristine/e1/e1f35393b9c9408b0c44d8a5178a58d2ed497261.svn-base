@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/color_bg_gray"
+        android:orientation="vertical">
+
+        <include
+            android:id="@+id/in_title"
+            layout="@layout/include_action_bar" />
+
+        <com.kaurihealth.utilslib.widget.ScrollChildSwipeRefreshLayout
+            android:id="@+id/swipe_refresh"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <!--存在数据的列表-->
+            <ListView
+                android:id="@+id/lv_content"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:scrollbars="none">
+
+            </ListView>
+
+
+        </com.kaurihealth.utilslib.widget.ScrollChildSwipeRefreshLayout>
+
+        <!--没有数据的时候显示-->
+        <TextView
+            android:id="@+id/tv_note"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="暂无记录,待添加"
+            android:textColor="@color/color_gold"
+            android:visibility="gone" />
+
+    </LinearLayout>
+
+</RelativeLayout>

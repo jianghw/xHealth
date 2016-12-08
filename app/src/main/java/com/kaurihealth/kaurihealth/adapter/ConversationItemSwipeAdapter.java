@@ -1,0 +1,115 @@
+package com.kaurihealth.kaurihealth.adapter;
+
+import android.content.Context;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
+
+import com.daimajia.swipe.SwipeLayout;
+import com.daimajia.swipe.adapters.BaseSwipeAdapter;
+import com.kaurihealth.chatlib.cache.LCIMProfileCache;
+import com.kaurihealth.chatlib.event.LCIMConversationItemLongClickEvent;
+import com.kaurihealth.chatlib.event.LCIMIMTypeMessageEvent;
+import com.kaurihealth.datalib.request_bean.bean.ConversationItemBean;
+import com.kaurihealth.datalib.response_bean.ContactUserDisplayBean;
+import com.kaurihealth.kaurihealth.R;
+import com.kaurihealth.utilslib.CheckUtils;
+import com.kaurihealth.utilslib.image.ImageUrlUtils;
+import com.kaurihealth.utilslib.widget.CircleImageView;
+
+import org.greenrobot.eventbus.EventBus;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
+
+/**
+ * Created by jianghw on 2016/9/2.
+ * <p>
+ * 描述：编辑、删除adapter
+ */
+public class ConversationItemSwipeAdapter extends BaseSwipeAdapter {
+    private final Context mContext;
+    private final List<ConversationItemBean> mList;
+
+    public ConversationItemSwipeAdapter(Context context, List<ConversationItemBean> list) {
+        mContext = context.getApplicationContext();
+        mList = list;
+    }
+
+    @Override
+    public int getCount() {
+        return mList.size();
+    }
+
+    @Override
+    public Object getItem(int i) {
+        return mList.get(i);
+    }
+
+    @Override
+    public long getItemId(int i) {
+        return i;
+    }
+
+    @Override
+    public int getSwipeLayoutResourceId(int i) {
+        return R.id.swipe;
+    }
+
+    @Override
+    public View generateView(final int i, ViewGroup viewGroup) {
+        return LayoutInflater.from(mContext).inflate(R.layout.listview_item_conver_swipe, null);
+    }
+
+    @Override
+    public void fillValues(int position, View view) {
+        SwipeLayout swipeLayout = (SwipeLayout) view.findViewById(getSwipeLayoutResourceId(position));
+
+        ConversationItemBean conversationItemBean = mList.get(position);
+        ContactUserDisplayBean userDisplayBean = (ContactUserDisplayBean) conversationItemBean.getBean();
+
+        TextView compile = (TextView) view.findViewById(R.id.tv_compile);
+        TextView stick = (TextView) view.findViewById(R.id.tv_stick);
+
+        stick.setVisibility(userDisplayBean.isTop() ? View.VISIBLE : View.GONE);
+        compile.setText(userDisplayBean.isTop() ? mContext.getResources().getString(R.string.swipe_tv_unstick) : mContext.getResources().getString(R.string.swipe_tv_stick));
+
+        compile.setOnClickListener(v -> {
+            swipeLayout.close();
+            LCIMProfileCache.getInstance().changStickType(userDisplayBean);
+            EventBus.getDefault().post(new LCIMIMTypeMessageEvent());
+        });
+        //删除
+        view.findViewById(R.id.tv_delete).setOnClickListener(v -> {
+            swipeLayout.close();
+            EventBus.getDefault().post(new LCIMConversationItemLongClickEvent(conversationItemBean.getConversationId()));
+        });
+
+        CircleImageView imgHead = (CircleImageView) view.findViewById(R.id.civ_head);
+        TextView unread = (TextView) view.findViewById(R.id.tv_unread);
+        TextView name = (TextView) view.findViewById(R.id.tv_name);
+        TextView time = (TextView) view.findViewById(R.id.tv_time);
+        TextView message = (TextView) view.findViewById(R.id.tv_message);
+
+        if (CheckUtils.checkUrlNotNull(userDisplayBean.getAvatar())) {
+            ImageUrlUtils.picassoBySmallUrlCircle(mContext, userDisplayBean.getAvatar(), imgHead);
+        } else {
+            ImageUrlUtils.picassoBySmallUrlCircle(mContext, imgHead);
+        }
+
+        int num = conversationItemBean.getNum();
+        unread.setText(String.valueOf(num));
+        unread.setVisibility(num > 0 ? View.VISIBLE : View.GONE);
+
+        name.setText(userDisplayBean.getFullName());
+
+        Date date = new Date(conversationItemBean.getTime());
+        SimpleDateFormat format = new SimpleDateFormat("MM-dd HH:mm", Locale.SIMPLIFIED_CHINESE);
+        time.setText(format.format(date));
+
+        message.setText(String.valueOf(conversationItemBean.getMessage()));
+    }
+}

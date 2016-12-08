@@ -1,0 +1,272 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_bg_gray"
+    android:orientation="vertical">
+
+    <include
+        android:id="@+id/in_title"
+        layout="@layout/include_bar_no_more" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:id="@+id/rlay_photo"
+                style="@style/Bg_Lay_Press"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/margin_60">
+
+                <TextView
+                    style="@style/Doctor_TitleText"
+                    android:text="头像" />
+
+                <ImageView
+                    android:id="@+id/iv_arrow_right"
+                    style="@style/Image_Arrow_Right"
+                    android:src="@mipmap/arrow_right" />
+
+                <com.kaurihealth.utilslib.widget.CircleImageView
+                    android:id="@+id/photo_personinfo"
+                    android:layout_width="@dimen/input_height_48"
+                    android:layout_height="@dimen/input_height_48"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="@dimen/margin_10"
+                    android:layout_toLeftOf="@id/iv_arrow_right"
+                    android:src="@mipmap/ic_circle_head_green"
+                    app:civ_border_color="@color/color_enable_green"
+                    app:civ_border_overlay="true"
+                    app:civ_border_width="0.5dp" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/rlay_name"
+                style="@style/Bg_Lay_Press"
+                android:layout_marginTop="@dimen/margin_16">
+
+                <TextView
+                    style="@style/Doctor_TitleText"
+                    android:text="姓名" />
+
+                <TextView
+                    android:id="@+id/tv_name"
+                    style="@style/Doctor_BodyText"
+                    tools:text="xxxxxxxxxxx" />
+            </RelativeLayout>
+
+            <TextView style="@style/Line_Gap" />
+
+            <RelativeLayout
+                android:id="@+id/rlay_sex"
+                style="@style/Bg_Lay_Press">
+
+                <TextView
+                    style="@style/Doctor_TitleText"
+                    android:text="性别" />
+
+                <TextView
+                    android:id="@+id/tv_gender"
+                    style="@style/Doctor_BodyText"
+                    tools:text="xxxxxxxxxxx" />
+            </RelativeLayout>
+
+            <TextView style="@style/Line_Gap" />
+
+            <RelativeLayout
+                android:id="@+id/rlay_age"
+                style="@style/Bg_Lay_Press">
+
+                <TextView
+                    style="@style/Doctor_TitleText"
+                    android:text="年龄" />
+
+                <TextView
+                    android:id="@+id/tv_age"
+                    style="@style/Doctor_BodyText"
+                    tools:text="xxxxxxxxxxx" />
+            </RelativeLayout>
+
+            <TextView style="@style/Line_Gap" />
+
+            <RelativeLayout
+                android:id="@+id/rlay_post"
+                style="@style/Bg_Lay_Press">
+
+                <TextView
+                    style="@style/Doctor_TitleText"
+                    android:text="职称" />
+
+                <ImageView style="@style/Image_Arrow_Right" />
+
+                <TextView
+                    android:id="@+id/tv_job"
+                    style="@style/Doctor_BodyText"
+                    tools:text="xxxxxxxxxxx" />
+            </RelativeLayout>
+
+            <TextView style="@style/Line_Gap" />
+
+            <RelativeLayout
+                android:id="@+id/rlay_department"
+                style="@style/Bg_Lay_Press">
+
+                <TextView
+                    style="@style/Doctor_TitleText"
+                    android:text="科室" />
+
+                <ImageView style="@style/Image_Arrow_Right" />
+
+                <TextView
+                    android:id="@+id/tv_department"
+                    style="@style/Doctor_BodyText"
+                    android:singleLine="true"
+                    tools:text="xxxxxxxxxxxxxxxxxxxxxxx" />
+            </RelativeLayout>
+
+            <TextView style="@style/Line_Gap" />
+
+            <RelativeLayout
+                android:id="@+id/rlay_num"
+                style="@style/Bg_Lay_Press">
+
+                <TextView
+                    style="@style/Doctor_TitleText"
+                    android:text="执业证号" />
+
+                <ImageView
+                    style="@style/Image_Arrow_Right"
+                    android:src="@mipmap/arrow_right" />
+
+                <TextView
+                    android:id="@+id/tv_num"
+                    style="@style/Doctor_BodyText"
+                    android:singleLine="true"
+                    tools:text="11111111111111111" />
+            </RelativeLayout>
+
+            <TextView style="@style/Line_Gap" />
+
+            <RelativeLayout
+                android:id="@+id/rlay_EducationLevel"
+                style="@style/Bg_Lay_Press">
+
+                <TextView
+                    android:id="@+id/textView2"
+                    style="@style/Doctor_TitleText"
+                    android:text="学历" />
+
+                <ImageView
+                    android:id="@+id/imageView2"
+                    style="@style/Image_Arrow_Right"
+                    android:src="@mipmap/arrow_right" />
+
+                <TextView
+                    android:id="@+id/tv_educationLevel"
+                    style="@style/Doctor_BodyText"
+                    android:maxEms="10"
+                    android:singleLine="true"
+                    tools:text="ssssdddddsssssssdddddddddddd" />
+            </RelativeLayout>
+
+
+            <RelativeLayout
+                android:id="@+id/rlay_organization"
+                style="@style/Bg_Lay_Press"
+                android:layout_marginTop="@dimen/margin_16">
+
+                <TextView
+                    style="@style/Doctor_TitleText"
+                    android:text="机构" />
+
+                <ImageView
+                    style="@style/Image_Arrow_Right"
+                    android:src="@mipmap/arrow_right" />
+
+                <TextView
+                    android:id="@+id/tv_organization"
+                    style="@style/Doctor_BodyText"
+                    android:paddingLeft="20dp"
+                    android:maxEms="10"
+                    android:singleLine="true"
+                    tools:text="ssssssssssssssssssssssssssssssssssssssssss" />
+            </RelativeLayout>
+
+            <TextView style="@style/Line_Gap" />
+
+            <RelativeLayout
+                android:id="@+id/rlay_school"
+                style="@style/Bg_Lay_Press">
+
+                <TextView
+                    style="@style/Doctor_TitleText"
+                    android:text="毕业院校" />
+
+                <ImageView style="@style/Image_Arrow_Right" />
+
+                <TextView
+                    android:id="@+id/tv_education"
+                    style="@style/Doctor_BodyText"
+                    android:maxEms="10"
+                    android:paddingLeft="20dp"
+                    android:singleLine="true"
+                    tools:text="ssssssssssssssssssssssssssssssssssssssssss" />
+            </RelativeLayout>
+
+
+            <RelativeLayout
+                android:id="@+id/rlay_studyexperience"
+                style="@style/Bg_Lay_Press"
+                android:layout_marginTop="@dimen/margin_16">
+
+                <TextView
+                    style="@style/Doctor_TitleText"
+                    android:text="学习与工作经历" />
+
+                <ImageView
+                    style="@style/Image_Arrow_Right"
+                    android:src="@mipmap/arrow_right" />
+
+                <TextView
+                    android:id="@+id/tv_study_experience"
+                    android:paddingLeft="15dp"
+                    style="@style/Doctor_BodyText"
+                    android:maxEms="10"
+                    android:singleLine="true"
+                    tools:text="ssssssssssssssssssssssssssssssssssssssssss" />
+            </RelativeLayout>
+
+            <TextView style="@style/Line_Gap" />
+
+            <RelativeLayout
+                android:id="@+id/rlay_good"
+                style="@style/Bg_Lay_Press">
+
+                <TextView
+                    style="@style/Doctor_TitleText"
+                    android:text="专业特长" />
+
+                <ImageView
+                    style="@style/Image_Arrow_Right"
+                    android:src="@mipmap/arrow_right" />
+
+                <TextView
+                    android:id="@+id/tv_goodat"
+                    android:paddingLeft="13dp"
+                    style="@style/Doctor_BodyText"
+                    android:maxEms="10"
+                    android:singleLine="true"
+                    tools:text="ssssssssssssssssssssssssssssssssssssssssss" />
+            </RelativeLayout>
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

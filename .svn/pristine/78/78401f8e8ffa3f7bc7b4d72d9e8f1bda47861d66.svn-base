@@ -1,0 +1,143 @@
+package com.kaurihealth.kaurihealth.mine_v.feedback;
+
+import android.os.Bundle;
+import android.view.View;
+import android.widget.EditText;
+import android.widget.TextView;
+
+import com.kaurihealth.datalib.local.LocalData;
+import com.kaurihealth.datalib.response_bean.DoctorDisplayBean;
+import com.kaurihealth.kaurihealth.R;
+import com.kaurihealth.kaurihealth.base_v.BaseActivity;
+import com.kaurihealth.kaurihealth.tinker.SampleApplicationLike;
+import com.kaurihealth.mvplib.mine_p.FeedbackPresenter;
+import com.kaurihealth.mvplib.mine_p.IFeedbackView;
+import com.kaurihealth.utilslib.OnClickUtils;
+import com.kaurihealth.utilslib.ValidatorUtils;
+import com.mobsandgeeks.saripaar.ValidationError;
+import com.mobsandgeeks.saripaar.Validator;
+import com.mobsandgeeks.saripaar.annotation.Length;
+import com.mobsandgeeks.saripaar.annotation.NotEmpty;
+
+import java.util.List;
+
+import javax.inject.Inject;
+
+import butterknife.Bind;
+import butterknife.OnClick;
+
+
+/**
+ * Created by Garnet_Wu on 2016/11/28.
+ * 我的->设置-> 意见反馈
+ */
+
+public class FeedbackActivity  extends BaseActivity implements IFeedbackView , Validator.ValidationListener {
+    @Inject
+    FeedbackPresenter<IFeedbackView> mPresenter;
+
+    //意见反馈编辑框
+    @NotEmpty(message = "你不写点什么么?")
+    @Length(max = 500,message = "意见请不要超过500字哦~")
+    @Bind(R.id.edt_feedback)
+    EditText  edtFeedback;
+
+    //"提交" 按钮
+    @Bind(R.id.tv_more)
+    TextView tv_more;
+    //字数限制
+    @Bind(R.id.words_limit)
+    TextView wordsCountLimit;
+
+    private Validator validator;
+
+    //BaseActivity
+    @Override
+    protected int getActivityLayoutID() {
+        return R.layout.activity_feedback;
+    }
+
+    @Override
+    protected void initPresenterAndView(Bundle savedInstanceState) {
+        SampleApplicationLike.getApp().getComponent().inject(this);
+        mPresenter.setPresenter(this);
+
+        initNewBackBtn("意见反馈");
+        tv_more.setText("提交");
+        wordsCountLimit.setText("意见限500字");
+    }
+
+    //BaseActivity
+    @Override
+    protected void initDelayedData() {
+        validator = new Validator(this);
+        validator.setValidationListener(this);
+    }
+
+
+    /**
+     * ``````````````点击事件```````````````
+     */
+    @OnClick({R.id.tv_more})
+    public  void  OnClick(View view){
+        if (OnClickUtils.onNoDoubleClick()) {
+            return;
+        }
+        switch (view.getId()){
+            case R.id.tv_more:
+                if (judgeEdtTextEmpty()){
+                    validator.validate();  //开启表单验证
+                }
+                break;
+            default:
+                break;
+            }
+        }
+
+    //判断编辑框是否为空
+    private boolean judgeEdtTextEmpty() {
+        if (getEditText() == null || getEditText().isEmpty() || getEditText().length() < 1){
+            displayErrorDialog("你不写点什么么?");
+            return false;
+        }
+        return  true;
+    }
+
+    @Override
+    public String getEditText() {
+        return edtFeedback.getText().toString().trim();
+    }
+
+    //Bugtag指明用户信息
+    @Override
+    public DoctorDisplayBean getDoctorDisplayBean() {
+        return LocalData.getLocalData().getMyself();
+    }
+
+    //跳转界面
+    @Override
+    public void switchPageUI(String className) {
+        tv_more.setClickable(false);
+        finishCur();
+    }
+
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mPresenter.unSubscribe();
+    }
+
+    //表单验证成功
+    @Override
+    public void onValidationSucceeded() {
+        mPresenter.onSubscribe();  //将意见提交到bugtag
+    }
+
+    //表单验证失败
+    @Override
+    public void onValidationFailed(List<ValidationError> errors) {
+        String message = ValidatorUtils.validationErrorMessage(getApplicationContext(), errors);
+        displayErrorDialog(message);
+    }
+}

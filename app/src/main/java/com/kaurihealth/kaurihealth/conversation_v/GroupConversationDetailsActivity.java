@@ -1,0 +1,366 @@
+package com.kaurihealth.kaurihealth.conversation_v;
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.text.TextUtils;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+
+import com.avos.avoscloud.im.v2.AVIMClient;
+import com.avos.avoscloud.im.v2.AVIMConversation;
+import com.avos.avoscloud.im.v2.AVIMException;
+import com.avos.avoscloud.im.v2.callback.AVIMConversationCallback;
+import com.kaurihealth.chatlib.LCChatKit;
+import com.kaurihealth.chatlib.cache.LCIMConversationItemCache;
+import com.kaurihealth.chatlib.cache.LCIMProfileCache;
+import com.kaurihealth.chatlib.utils.LCIMConstants;
+import com.kaurihealth.datalib.response_bean.ContactUserDisplayBean;
+import com.kaurihealth.datalib.response_bean.DoctorRelationshipBean;
+import com.kaurihealth.kaurihealth.R;
+import com.kaurihealth.kaurihealth.adapter.HeaderFooterGridAdapter;
+import com.kaurihealth.kaurihealth.base_v.BaseActivity;
+import com.kaurihealth.kaurihealth.doctor_v.DoctorInfoActivity;
+import com.kaurihealth.kaurihealth.eventbus.DoctorRelationshipBeanEvent;
+import com.kaurihealth.kaurihealth.tinker.SampleApplicationLike;
+import com.kaurihealth.mvplib.patient_p.GroupDetailsPresenter;
+import com.kaurihealth.mvplib.patient_p.IGroupDatailsView;
+import com.kaurihealth.utilslib.constant.Global;
+import com.kaurihealth.utilslib.dialog.DialogUtils;
+import com.kaurihealth.utilslib.dialog.PopUpNumberPickerDialog;
+import com.kaurihealth.utilslib.log.LogUtils;
+import com.kaurihealth.utilslib.widget.HeaderFooterGridView;
+import com.rey.material.widget.Switch;
+
+import org.greenrobot.eventbus.EventBus;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.inject.Inject;
+
+import butterknife.Bind;
+import butterknife.OnItemClick;
+import cn.pedant.SweetAlert.SweetAlertDialog;
+import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
+import rx.functions.Func1;
+import rx.schedulers.Schedulers;
+
+/**
+ * Created by jianghw on 2016/11/9.
+ * <p/>
+ * Describe:群聊详情
+ */
+
+public class GroupConversationDetailsActivity extends BaseActivity implements IGroupDatailsView {
+
+    @Bind(R.id.gv_head)
+    HeaderFooterGridView mGvHead;
+
+    RelativeLayout mRlGroupName;
+    TextView tvName;
+    Switch mSwitchPush;
+    RelativeLayout mRlGroupClean;
+    Button mBtnGroupDissolution;
+
+    private AVIMConversation mConversation;
+    private String mKauriHealthId;
+    int doctorId;
+    /**
+     * 图片地址集合，含本地及网络
+     */
+    private List<ContactUserDisplayBean> paths = new ArrayList<>();
+    private HeaderFooterGridAdapter adapter;
+
+    @Inject
+    public GroupDetailsPresenter<IGroupDatailsView> mPresenter;
+
+    @Override
+    protected int getActivityLayoutID() {
+        return R.layout.activity_group_con_details;
+    }
+
+    @Override
+    protected void initPresenterAndView(Bundle savedInstanceState) {
+        SampleApplicationLike.getApp().getComponent().inject(this);
+        mPresenter.setPresenter(this);
+
+        initNewBackBtn("群聊信息");
+
+        addFooterItem();
+
+        addFooterView();
+
+        adapter = new HeaderFooterGridAdapter(getApplicationContext(), paths);
+        mGvHead.setAdapter(adapter);
+    }
+
+    /**
+     * 点击事件
+     */
+    @OnItemClick(R.id.gv_head)
+    public void gridViewItem(int position) {
+        mKauriHealthId = paths.get(position).getKauriHealthId();
+        doctorId = paths.get(position).getPrimaryId();
+
+        mPresenter.onSubscribe();//根据kauriHealthId进行过滤
+    }
+
+    private void addFooterView() {
+        RelativeLayout view = (RelativeLayout) LayoutInflater.from(getApplicationContext()).inflate(R.layout.include_group_gv_footer, null, false);
+        mRlGroupName = (RelativeLayout) view.findViewById(R.id.rl_group_name);
+        tvName = (TextView) view.findViewById(R.id.tv_name);
+        mSwitchPush = (Switch) view.findViewById(R.id.switch_push);
+        mRlGroupClean = (RelativeLayout) view.findViewById(R.id.rl_group_clean);
+        mBtnGroupDissolution = (Button) view.findViewById(R.id.btn_group_dissolution);
+
+        initLinLayoutListener();
+        mGvHead.addFooterView(view);
+    }
+
+    private void initLinLayoutListener() {
+//修改群聊名字
+        mRlGroupName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Bundle bundle = new Bundle();
+                bundle.putString(Global.Bundle.LEANCLOUD_GROUP_NAME, tvName.getText().toString());
+                bundle.putString(Global.Bundle.LEANCLOUD_GROUP_CONID, mConversation.getConversationId());
+                skipToForResult(ChangGroupChatTitleActivity.class, bundle, Global.RequestCode.REFERRAL);
+            }
+        });
+//置顶
+        mSwitchPush.setOnCheckedChangeListener(new Switch.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(Switch view, boolean checked) {
+                LCIMProfileCache.getInstance().changGroupStickType(mConversation.getConversationId(), !checked);
+            }
+        });
+//清空会话
+        mRlGroupClean.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String[] messages = getResources().getStringArray(R.array.message_clean);
+                DialogUtils.showStringDialog(GroupConversationDetailsActivity.this, messages, new PopUpNumberPickerDialog.SetClickListener() {
+                    @Override
+                    public void onClick(int index) {
+                        if (index == 0) {
+                            LCIMConversationItemCache.getInstance().deleteConversation(mConversation.getConversationId());
+                            setResult(RESULT_OK);
+                        }
+                    }
+                });
+            }
+        });
+//解散群组
+        mBtnGroupDissolution.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                SweetAlertDialog dialogAccept = new SweetAlertDialog(GroupConversationDetailsActivity.this, SweetAlertDialog.WARNING_TYPE)
+                        .setTitleText("您确定要解散该群?")
+                        .setConfirmText("确定")
+                        .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                            @Override
+                            public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                sweetAlertDialog.dismiss();
+                                removeMembersWithClientIds();
+                            }
+                        })
+                        .showCancelButton(true)
+                        .setCancelText("取消");
+                dialogAccept.show();
+            }
+        });
+    }
+
+    /**
+     * 剔除人
+     */
+    private void removeMembersWithClientIds() {
+        AVIMClient client = LCChatKit.getInstance().getClient();
+        if (!TextUtils.isEmpty(mConversation.getConversationId()) && client != null) {
+            final AVIMConversation conv = client.getConversation(mConversation.getConversationId());
+            conv.kickMembers(mConversation.getMembers(), new AVIMConversationCallback() {
+                @Override
+                public void done(AVIMException e) {
+                    if (e == null) {
+                        showToast("解散成功");
+                        LCIMConversationItemCache.getInstance().deleteConversation(mConversation.getConversationId());
+                        setResult(RESULT_OK);
+                        finishCur();
+                    } else {
+                        showToast(e.getMessage());
+                    }
+                }
+            });
+        }
+    }
+
+    private void addFooterItem() {
+        LinearLayout addItem = (LinearLayout) LayoutInflater.from(getApplicationContext()).inflate(R.layout.include_group_gv_item_add, null, false);
+        addItem.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Bundle bundle = new Bundle();
+                ArrayList<String> list = makeListToArrayList(mConversation.getMembers());
+                bundle.putStringArrayList(Global.Bundle.LEANCLOUD_GROUP_MEMBES, list);
+                bundle.putInt(Global.Bundle.LEANCLOUD_GROUP_NAME, Global.RequestCode.ACCEPT);
+                bundle.putString(Global.Bundle.LEANCLOUD_GROUP_CONID, mConversation.getConversationId());
+                skipToForResult(ChangeGroupChatActivity.class, bundle, Global.RequestCode.ACCEPT);
+            }
+        });
+        mGvHead.addFooterItem(addItem);
+        LinearLayout subtractionItem = (LinearLayout) LayoutInflater.from(getApplicationContext()).inflate(R.layout.include_group_gv_item_add, null, false);
+        subtractionItem.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Bundle bundle = new Bundle();
+                ArrayList<String> list = makeListToArrayList(mConversation.getMembers());
+                bundle.putStringArrayList(Global.Bundle.LEANCLOUD_GROUP_MEMBES, list);
+                bundle.putInt(Global.Bundle.LEANCLOUD_GROUP_NAME, Global.RequestCode.REJECT);
+                bundle.putString(Global.Bundle.LEANCLOUD_GROUP_CONID, mConversation.getConversationId());
+                skipToForResult(ChangeGroupChatActivity.class, bundle, Global.RequestCode.REJECT);
+            }
+        });
+        mGvHead.addFooterItem(subtractionItem);
+    }
+
+    private ArrayList<String> makeListToArrayList(List<String> members) {
+        ArrayList<String> list = new ArrayList<>();
+        list.addAll(members);
+        return list;
+    }
+
+    @Override
+    protected void initDelayedData() {
+        Bundle extras = getIntent().getExtras();
+        if (null != extras) {
+            if (extras.containsKey(LCIMConstants.CONVERSATION_ID_DETAIL_GROUP)) {
+                String conversationId = extras.getString(LCIMConstants.CONVERSATION_ID_DETAIL_GROUP);
+                AVIMClient client = LCChatKit.getInstance().getClient();
+                updateConversation(client != null ? client.getConversation(conversationId) : null);
+
+                mSwitchPush.setChecked(LCIMProfileCache.getInstance().hasCachedUser(mConversation.getConversationId())
+                        && (LCIMProfileCache.getInstance().getContactUserMap().get(mConversation.getConversationId()).isTop()));
+            } else {
+                showToast("memberId or conversationId is needed");
+                finish();
+            }
+        }
+    }
+
+    /**
+     * 主动刷新 UI
+     */
+    protected void updateConversation(AVIMConversation conversation) {
+        if (null != conversation) {
+            if (conversation.getCreatedAt() == null) {
+                conversation.fetchInfoInBackground(new AVIMConversationCallback() {
+                    @Override
+                    public void done(AVIMException e) {
+                        mConversation = conversation;
+                        imageLoaderByConversation();
+                    }
+                });
+            } else {
+                mConversation = conversation;
+                imageLoaderByConversation();
+            }
+        }
+    }
+
+    private void imageLoaderByConversation() {
+        tvName.setText(mConversation.getName() != null ? mConversation.getName() : "未命名");
+
+        List<String> members = mConversation.getMembers();
+        Observable.from(members)
+                .filter(new Func1<String, Boolean>() {
+                    @Override
+                    public Boolean call(String kauriId) {
+                        return LCIMProfileCache.getInstance().hasCachedUser(kauriId);
+                    }
+                })
+                .map(new Func1<String, ContactUserDisplayBean>() {
+                    @Override
+                    public ContactUserDisplayBean call(String memberId) {
+                        return LCIMProfileCache.getInstance().getContactUserMap().get(memberId);
+                    }
+                })
+                .toList()
+                .subscribeOn(Schedulers.computation())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Action1<List<ContactUserDisplayBean>>() {
+                    @Override
+                    public void call(List<ContactUserDisplayBean> been) {
+                        if (!paths.isEmpty()) paths.clear();
+                        paths.addAll(been);
+                        adapter.notifyDataSetChanged();
+                    }
+                }, new Action1<Throwable>() {
+                    @Override
+                    public void call(Throwable throwable) {
+                        LogUtils.e(throwable.getMessage());
+                    }
+                });
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mPresenter.unSubscribe();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == Global.RequestCode.REFERRAL && resultCode == RESULT_OK && data != null) {
+            String mName = data.getStringExtra(Global.Bundle.LEANCLOUD_GROUP_NAME);
+            tvName.setText(mName != null ? mName : "未命名");
+        } else if (resultCode == RESULT_OK && (requestCode == Global.RequestCode.ACCEPT || requestCode == Global.RequestCode.REJECT)) {
+            mConversation.fetchInfoInBackground(new AVIMConversationCallback() {
+                @Override
+                public void done(AVIMException e) {
+                    updateConversation(mConversation);
+                }
+            });
+        }
+    }
+
+    /**
+     * 跳转到医生详情页
+     */
+    @Override
+    public void switchPageUI(String className) {
+        skipTo(DoctorInfoActivity.class);
+    }
+
+    /**
+     * 得到当前的id
+     */
+    @Override
+    public String getCurKuariHealthId() {
+        return mKauriHealthId;
+    }
+
+    /**
+     * 得到经过处理的bean
+     */
+    @Override
+    public void getResult(DoctorRelationshipBean relationshipBean, boolean b) {
+        EventBus.getDefault().postSticky(new DoctorRelationshipBeanEvent(relationshipBean, b, "mark"));
+        switchPageUI("跳转DoctorInfoActivity");
+    }
+
+    /**
+     * 得到当前被点击的doctorId
+     */
+    @Override
+    public int getDoctorId() {
+        return doctorId;
+    }
+}

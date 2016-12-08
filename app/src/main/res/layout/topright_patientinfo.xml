@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fadingEdge="none"
+            android:fillViewport="false"
+            android:overScrollMode="never"
+            android:scrollbars="none">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingLeft="@dimen/pationinfoadapter_paddingleft"
+        android:paddingRight="@dimen/pationinfoadapter_paddingright">
+
+        <TextView
+            android:id="@+id/tv1_topleft_patientinfo"
+            style="@style/patientrelleft_tv"
+            android:text="联系电话："/>
+
+        <TextView
+            android:id="@+id/request_patient_phone"
+            style="@style/patientrelleft_tv"
+            android:layout_marginLeft="70dp"
+            tools:text="ddddddddddddddddddddddddddddddd"/>
+
+        <TextView
+            android:id="@+id/tv_remark_topleft_patientinfo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/request_patient_phone"
+            android:layout_marginLeft="5dp"
+            android:layout_toRightOf="@id/request_patient_phone"
+            android:text="(语音/视频)"
+            android:textColor="@android:color/white"
+            android:textSize="13sp"/>
+
+        <TextView
+            android:id="@+id/tv2_topleft_patientinfo"
+            style="@style/normaltext_topleft_patientinfo"
+            android:layout_below="@id/request_patient_phone"
+            android:text="联系地址："/>
+
+        <TextView
+            android:id="@+id/request_patient_adress"
+            style="@style/normaltext_topleft_patientinfo"
+            android:layout_alignLeft="@id/request_patient_phone"
+            android:layout_below="@id/request_patient_phone"
+            android:singleLine="true"
+            tools:text="ddddddddddddddffffffffffffffffffffffffffffffffffffffffddddddd"/>
+
+        <TextView
+            android:id="@+id/tv_time_patientinfo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@id/request_patient_adress"
+            android:layout_marginLeft="5dp"
+            android:layout_toRightOf="@id/request_patient_adress"
+            android:text="10:30"
+            android:textColor="@android:color/white"
+            android:textSize="23sp"/>
+
+        <TextView
+            android:id="@+id/tv_isam_patientinfo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@id/tv_time_patientinfo"
+            android:layout_marginLeft="5dp"
+            android:layout_toRightOf="@id/tv_time_patientinfo"
+            android:text="AM"
+            android:textColor="@android:color/white"
+            android:textSize="13sp"/>
+
+    </RelativeLayout>
+</ScrollView>

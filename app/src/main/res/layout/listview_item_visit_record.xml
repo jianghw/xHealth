@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:paddingBottom="@dimen/margin_16"
+        android:layout_margin="@dimen/padding_8"
+        android:background="@drawable/bg_item_patient">
+
+        <TextView
+            android:id="@+id/tv_time_title"
+            style="@style/TextContent.Wrap"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/margin_16"
+            android:layout_marginTop="@dimen/margin_16"
+            android:text="复诊时间:"/>
+
+        <TextView
+            android:id="@+id/tv_delete"
+            style="@style/TextContent.Wrap"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignTop="@+id/tv_time_title"
+            android:layout_marginRight="@dimen/margin_16"
+            android:text="删除"
+            android:textColor="@color/color_gold"/>
+
+        <TextView
+            android:id="@+id/tv_time"
+            style="@style/TextContent.Wrap"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tv_time_title"
+            android:layout_marginBottom="@dimen/padding_4"
+            android:layout_marginLeft="@dimen/margin_48"
+            android:layout_marginTop="@dimen/padding_4"
+            tools:text="2015-02-01 15:45"/>
+
+        <TextView
+            android:id="@+id/tv_event_title"
+            style="@style/TextContent.Wrap"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tv_time"
+            android:layout_marginLeft="@dimen/margin_16"
+            android:text="复诊事件:"/>
+
+        <TextView
+            android:id="@+id/tv_event"
+            style="@style/TextContent.Wrap"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tv_event_title"
+            android:layout_marginBottom="@dimen/padding_4"
+            android:layout_marginLeft="@dimen/margin_48"
+            android:layout_marginRight="@dimen/margin_16"
+            android:layout_marginTop="@dimen/padding_4"
+            tools:text="就防守反击第三季分集的飞机迪斯科发大师傅大师傅"/>
+
+        <TextView
+            android:id="@+id/tv_found_time"
+            style="@style/TextContent.Wrap"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/tv_event"
+            android:layout_marginRight="@dimen/margin_16"
+            tools:text="2015-02-01 15:45"/>
+    </RelativeLayout>
+</RelativeLayout>

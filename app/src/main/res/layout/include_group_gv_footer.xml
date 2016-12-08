@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_bg_gray">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:id="@+id/rl_group_name"
+            style="@style/Bg_Lay_Press"
+            android:layout_marginTop="@dimen/padding_8">
+
+            <TextView
+                style="@style/Doctor_TitleText"
+                android:text="群聊名称" />
+
+            <TextView
+                android:id="@+id/tv_name"
+                style="@style/Right_TitleText"
+                android:layout_marginRight="@dimen/margin_16"
+                android:text="未命名" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/rl_group_top"
+            style="@style/Bg_Lay_Press"
+            android:layout_marginTop="@dimen/padding_4">
+
+            <TextView
+                style="@style/Doctor_TitleText"
+                android:text="群聊置顶" />
+
+            <com.rey.material.widget.Switch
+                android:id="@+id/switch_push"
+                style="@style/Material.Widget.Switch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="@dimen/margin_16"
+                android:checked="true"
+                android:gravity="center"
+                app:sw_thumbColor="@color/color_enable_green" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/rl_group_clean"
+            style="@style/Bg_Lay_Press"
+            android:layout_marginTop="@dimen/padding_4">
+
+            <TextView
+                style="@style/Doctor_TitleText"
+                android:text="清空群聊记录" />
+
+        </RelativeLayout>
+
+        <Button
+            android:id="@+id/btn_group_dissolution"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/login_btn_height"
+            android:layout_margin="@dimen/margin_48"
+            android:background="@drawable/bg_btn_login"
+            android:enabled="true"
+            android:text="解散该群聊"
+            android:textColor="@color/color_white"
+            android:textSize="@dimen/textSize_16" />
+    </LinearLayout>
+</RelativeLayout>

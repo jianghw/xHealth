@@ -1,0 +1,117 @@
+package com.kaurihealth.kaurihealth.search_v;
+
+import android.os.Bundle;
+import android.view.View;
+import android.widget.EditText;
+import android.widget.TextView;
+
+import com.kaurihealth.datalib.request_bean.bean.NewDoctorRelationshipBean;
+import com.kaurihealth.datalib.response_bean.ResponseDisplayBean;
+import com.kaurihealth.kaurihealth.R;
+import com.kaurihealth.kaurihealth.base_v.BaseActivity;
+import com.kaurihealth.kaurihealth.tinker.SampleApplicationLike;
+import com.kaurihealth.mvplib.home_p.IVerificationView;
+import com.kaurihealth.mvplib.home_p.VerificationPresenter;
+import com.kaurihealth.utilslib.OnClickUtils;
+
+import javax.inject.Inject;
+
+import butterknife.Bind;
+import butterknife.OnClick;
+
+/**
+ * Created by mip on 2016/9/19.
+ * 验证消息界面
+ */
+public class VerificationActivity extends BaseActivity implements IVerificationView {
+    @Inject
+    VerificationPresenter<IVerificationView> mPresenter;
+
+    @Bind(R.id.edtVerification)
+    EditText edtVerification;
+    @Bind(R.id.tv_more)
+    TextView tvMore;
+
+    private int relatedDoctorId;
+
+    @Override
+    protected int getActivityLayoutID() {
+        return R.layout.verification_activity;
+    }
+
+    @Override
+    protected void initPresenterAndView(Bundle savedInstanceState) {
+        SampleApplicationLike.getApp().getComponent().inject(this);
+        mPresenter.setPresenter(this);
+
+        initNewBackBtn("验证信息");
+        tvMore.setText("发送");
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mPresenter.unSubscribe();
+    }
+
+    @Override
+    protected void initDelayedData() {
+        Bundle bundle = getBundle();
+        if (bundle != null) {
+            relatedDoctorId = bundle.getInt("relatedDoctorId");
+        }
+    }
+
+    /**
+     * ``````````````点击事件```````````````
+     */
+    @OnClick({R.id.tv_more})
+    public void onClick(View view) {
+        if (OnClickUtils.onNoDoubleClick()) return;
+        switch (view.getId()) {
+            case R.id.tv_more:
+                if (editTextIsEmpty()) mPresenter.onSubscribe();
+                break;
+            default:
+                break;
+        }
+    }
+
+    public boolean editTextIsEmpty() {
+        if (getEditText() == null || getEditText().isEmpty() || getEditText().length() < 1) {
+            displayErrorDialog("你不写点什么吗?");
+            return false;
+        }
+        return true;
+    }
+
+    public String getEditText() {
+        return edtVerification.getText().toString().trim();
+    }
+
+    @Override
+    public void switchPageUI(String className) {
+//TODO
+    }
+
+    /**
+     * 得到当前的请求bean
+     */
+    @Override
+    public NewDoctorRelationshipBean getCurrentNewDoctorRelationshipBean() {
+        NewDoctorRelationshipBean requestBean = new NewDoctorRelationshipBean();
+        requestBean.relatedDoctorId = relatedDoctorId;
+        requestBean.description = getEditText();
+        return requestBean;
+    }
+
+    /**
+     * 得到的请求返回的结果
+     */
+    @Override
+    public void getRequestResult(ResponseDisplayBean bean) {
+        showToast("请求成功发送");
+        setResult(RESULT_OK);
+        finishCur();
+    }
+}

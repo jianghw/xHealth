@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:background="#FFFFFF"
+        android:layout_centerInParent="true">
+
+        <TextView
+            android:id="@+id/tv_contentBrief"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="12dp"
+            android:layout_marginRight="12dp"
+            android:layout_marginTop="@dimen/padding_6"
+            android:layout_toRightOf="@+id/iv_titleImage"
+            android:ellipsize="end"
+            android:lines="3"
+            android:textSize="15sp"
+            tools:text="和覅大煞风景覅的设计方法封建时代覅哦的设计费设计费的说法就是破封建士大夫但是皮肤的视频防抖技术的时间视频副教授副教授皮肤" />
+
+        <TextView
+            android:id="@+id/tv_creatTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@+id/tv_browse"
+            android:layout_alignParentBottom="true"
+            android:layout_marginRight="12dp"
+            android:textColor="#ACACAC"
+            android:textSize="12sp"
+            tools:text="2015-5254-78" />
+
+        <ImageView
+            android:id="@+id/iv_titleImage"
+            android:layout_width="80dp"
+            android:layout_height="60dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="16dp"
+            android:layout_marginStart="16dp"
+            android:src="@mipmap/ic_clinical_rectangle" />
+
+        <TextView
+            android:id="@+id/tv_browse"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="12dp"
+            android:textColor="#ACACAC"
+            android:textSize="12sp"
+            tools:text="33阅读" />
+    </RelativeLayout>
+
+</RelativeLayout>
+
+

@@ -1,0 +1,66 @@
+package com.kaurihealth.datalib.service;
+
+
+import com.kaurihealth.datalib.response_bean.DoctorPatientRelationshipBean;
+import com.kaurihealth.datalib.response_bean.ResponseDisplayBean;
+
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.http.Body;
+import retrofit2.http.GET;
+import retrofit2.http.POST;
+import retrofit2.http.Query;
+import rx.Observable;
+
+/**
+ * Created by Nick on 21/04/2016.
+ * 为现医生查询所有医患关系
+ */
+public interface IDoctorPatientRelationshipService {
+
+    /**
+     * 为现医生查询所有医患关系
+     */
+    @GET("api/DoctorPatientRelationship/LoadDoctorPatientRelationshipForDoctor")
+    Observable<List<DoctorPatientRelationshipBean>> loadDoctorPatientRelationshipForDoctor();
+
+    /**
+     * 医生创建普通病人关系(复诊)
+     *
+     * @param patientId
+     * @return
+     */
+    @POST("api/DoctorPatientRelationship/InsertNewRelationshipByDoctor")
+    Observable<DoctorPatientRelationshipBean> insertNewRelationshipByDoctor(@Body int patientId);
+
+    /**
+     * 申请结束医患关系
+     *
+     * @param doctorPatientReplationshipId
+     * @return
+     */
+    @POST("api/DoctorPatientRelationship/RequestEndDoctorPatientRelationship")
+    Call<ResponseDisplayBean> RequestEndDoctorPatientRelationship(@Body int doctorPatientReplationshipId);
+
+    @POST("api/DoctorPatientRelationship/RequestEndDoctorPatientRelationship")
+    Observable<ResponseDisplayBean> requestEndDoctorPatientRelationship(@Body int doctorPatientReplationshipId);
+
+    /**
+     * 使用患者id查询医患关系
+     *
+     * @param patientId
+     * @return
+     */
+
+    @GET("api/DoctorPatientRelationship/LoadDoctorPatientRelationshipForPatientId")
+    Observable<List<DoctorPatientRelationshipBean>> loadDoctorPatientRelationshipForPatientId(@Query("patientId") int patientId);
+
+
+    /**
+     * 使用患者id查询医疗团队，查询者必须为医生
+     */
+    @GET("api/DoctorPatientRelationship/LoadDoctorTeamForPatient")
+    Observable<List<DoctorPatientRelationshipBean>> LoadDoctorTeamForPatient(@Query("patientId") int patientId);
+
+}

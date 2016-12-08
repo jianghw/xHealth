@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="@dimen/input_height_48"
+              android:gravity="center_vertical"
+              android:orientation="horizontal">
+
+    <TextView
+        style="@style/BodyText_Title"
+        android:layout_marginLeft="@dimen/margin_26"
+        android:text="患者:"/>
+
+    <TextView
+        android:id="@+id/tv_name"
+        style="@style/BodyText_Body"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        tools:text="尹双小次郎"/>
+
+    <TextView
+        style="@style/BodyText_Title"
+        android:text="性别:"/>
+
+    <TextView
+        android:id="@+id/tv_gendar"
+        style="@style/BodyText_Body"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        tools:text="女"/>
+
+    <TextView
+        style="@style/BodyText_Title"
+        android:text="年龄:"/>
+
+    <TextView
+        android:id="@+id/tv_age"
+        style="@style/BodyText_Body"
+        android:layout_width="0dp"
+        android:layout_marginRight="@dimen/margin_16"
+        android:layout_weight="1"
+        tools:text="28"/>
+</LinearLayout>

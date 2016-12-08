@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--控件按下时的字体颜色-->
+    <color name="tv_nor_color">#666666</color>
+    <color name="tv_press_color">#cccccc</color>
+
+    <color name="bg_tv_gray">#c9c3c3</color>
+
+    <!--页面底部背景色-->
+    <color name="color_bg_gray">#f2f2f2</color>
+
+    <!--颜色-->
+    <color name="color_white">#ffffff</color>
+    <color name="color_theme_green">#50d2c2</color>
+    <color name="color_gray">#666666</color>
+    <color name="color_light_gray">#c9c3c3</color>
+
+</resources>

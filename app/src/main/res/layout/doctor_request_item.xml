@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="8dp">
+
+        <com.kaurihealth.utilslib.widget.CircleImageView
+            android:id="@+id/civPhoto"
+            style="@style/Photo.Nomal.Vertical"
+            android:src="@mipmap/ic_circle_head_green" />
+
+        <TextView
+            android:id="@+id/tv_doctor_request_name"
+            style="@style/searchcommon_name"
+            android:layout_marginLeft="8dp"
+            android:layout_toRightOf="@id/civPhoto"
+            android:textColor="#545252"
+            tools:text="杜江" />
+
+
+        <TextView
+            android:id="@+id/tv_doctor_request_comment"
+            style="@style/searchiteam_tv"
+            android:layout_below="@id/tv_doctor_request_name"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="50dp"
+            android:layout_marginTop="10dp"
+            android:layout_toRightOf="@id/civPhoto"
+            android:ellipsize="end"
+            tools:text="北京协和医院" />
+
+
+        <TextView
+            android:id="@+id/tv_doctor_request_action"
+            style="@style/commonsearch_btnadd"
+            android:text="同意" />
+
+        <TextView
+            android:id="@+id/tv_doctor_request_action_gray"
+            style="@style/commonsearch_btnadd_new"
+            android:text="已拒绝" />
+    </RelativeLayout>
+</LinearLayout>

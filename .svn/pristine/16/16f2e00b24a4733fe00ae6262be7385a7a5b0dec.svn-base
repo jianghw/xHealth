@@ -1,0 +1,179 @@
+package com.kaurihealth.utilslib.widget;
+
+import android.content.Context;
+import android.graphics.Canvas;
+import android.util.AttributeSet;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+
+import com.kaurihealth.utilslib.R;
+
+import java.util.HashMap;
+
+/**
+ * Created by jianghw on 2016/8/22.
+ * <p/>
+ * 描述：
+ */
+public class UiTableBottom extends LinearLayout implements View.OnClickListener {
+    private Context context;
+    private int colorClick;
+    private int colorUnClick;
+    //子控件
+    private HashMap<Integer, UITableItem> itemHashMap;
+
+    private int index = 100;
+    private int currentPosition;
+    private OnUITabChangListener changeListener; //ui Tab 改变监听器
+
+    public UiTableBottom(Context context) {
+        this(context, null, 0);
+    }
+
+    public UiTableBottom(Context context, AttributeSet attrs) {
+        this(context, attrs, 0);
+    }
+
+    public UiTableBottom(Context context, AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
+        this.context = context;
+    }
+
+    public void setUiViewPager(OnUITabChangListener changeListener, int currentPosition, HashMap<Integer, Integer[]> hashMap) {
+        this.changeListener = changeListener;
+        this.currentPosition = currentPosition;
+        init(hashMap);
+        invalidate();
+    }
+
+    public void setTipOfNumber(int position, int number) {
+        for (int j = 0; j < itemHashMap.size(); j++) {
+            if (j == position) {
+                itemHashMap.get(j).tipView.setText(number + "");
+                itemHashMap.get(j).tipView.setVisibility(number > 0 ? View.VISIBLE : View.INVISIBLE);
+            }
+        }
+        invalidate();
+    }
+
+    /**
+     * UITab 改变监听器
+     */
+    private void init(HashMap<Integer, Integer[]> hashMap) {
+        colorClick = getResources().getColor(R.color.color_theme_green);
+        colorUnClick = getResources().getColor(R.color.color_gray);
+        /**拿控件的高度*/
+        int tableBottomHeight = ViewGroup.LayoutParams.MATCH_PARENT;
+        //设置父类控件的方向
+        setOrientation(LinearLayout.HORIZONTAL);
+        /**创建子控件，并标记*/
+        itemHashMap = new HashMap<>();
+        for (int i = 0; i < hashMap.size(); i++) {
+            UITableItem item = getChileItem(tableBottomHeight, i, hashMap);
+            itemHashMap.put(i, item);
+        }
+        selectTab(currentPosition);
+    }
+
+    /**
+     * 建立布局子控件Item
+     *
+     * @param tableBottomHeight 父类控件高度
+     * @param i                 子控件位号
+     * @param hashMap
+     * @return zi控件对象
+     */
+    private UITableItem getChileItem(int tableBottomHeight, int i, HashMap<Integer, Integer[]> hashMap) {
+        UITableItem table = newChildItem(i);
+        //用于建立控件，所用参数
+        LayoutParams layoutParams = new LayoutParams(0, tableBottomHeight);
+        layoutParams.weight = 1;
+        if (i == currentPosition) {
+            table.labelView.setTextColor(colorClick);
+        } else {
+            table.labelView.setTextColor(colorUnClick);
+        }
+        table.labelView.setText(context.getString(hashMap.get(i)[2]));
+        table.iconView.initBitmap(hashMap.get(i)[0], hashMap.get(i)[1]);
+        /**
+         *加入到父控件中
+         */
+        addView(table.parent, layoutParams);
+        return table;
+    }
+
+    /**
+     * Button控件 子item包含组件
+     *
+     * @param i 标记位号
+     * @return
+     */
+    private UITableItem newChildItem(int i) {
+        UITableItem tableItem = new UITableItem();
+        tableItem.parent = LayoutInflater.from(context).inflate(R.layout.ui_table_bottom, null);
+        tableItem.iconView = (UiItemImg) tableItem.parent.findViewById(R.id.img_ui_item);
+        tableItem.labelView = (TextView) tableItem.parent.findViewById(R.id.tv_ui_item);
+        tableItem.tipView = (TextView) tableItem.parent.findViewById(R.id.iv_ui_item);
+        tableItem.parent.setTag(i);
+        tableItem.parent.setOnClickListener(this);
+        return tableItem;
+    }
+
+    private class UITableItem {
+        View parent; //父控件
+        UiItemImg iconView; //图片
+        TextView labelView; //标签
+        TextView tipView; //红点
+    }
+
+    /**
+     * OnPagerChangListener 时会被调用
+     *
+     * @param i
+     */
+    public void selectTab(int i) {
+        if (index == i) {
+            return;
+        }
+        index = i;
+        //页面
+        if (changeListener != null) {
+            changeListener.onTabChang(index);
+        }
+        //图像颜色
+        for (int j = 0; j < itemHashMap.size(); j++) {
+            itemHashMap.get(j).iconView.setUiAlpha(0);
+            itemHashMap.get(j).labelView.setTextColor(colorUnClick);
+        }
+        itemHashMap.get(i).iconView.setUiAlpha(255);
+        itemHashMap.get(i).labelView.setTextColor(colorClick);
+    }
+
+    @Override
+    public void onClick(View v) {
+        int i = (Integer) v.getTag();
+        //跳转到ViewPager的指定页面
+        selectTab(i);
+    }
+
+    public interface OnUITabChangListener {
+        void onTabChang(int index);
+    }
+
+    public OnUITabChangListener getChangeListener() {
+        return changeListener;
+    }
+
+    public void setChangeListener(OnUITabChangListener changeListener) {
+        this.changeListener = changeListener;
+    }
+
+
+    @Override
+    protected void onDraw(Canvas canvas) {
+        super.onDraw(canvas);
+    }
+}

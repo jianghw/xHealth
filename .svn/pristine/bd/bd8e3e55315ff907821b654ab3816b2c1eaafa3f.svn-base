@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@android:color/white"
+              android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/tv_complete"
+        style="@style/Complete_Text"
+        android:text="@string/dialog_btn_complete"
+        android:textColor="@color/color_tv_press"/>
+
+    <TextView
+        style="@style/line_mine"
+        android:layout_marginTop="0dp"/>
+
+    <biz.kasual.materialnumberpicker.MaterialNumberPicker
+        android:id="@+id/number_picker"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        app:npSeparatorColor="#cccccc"
+        app:npTextColor="@color/tv_nor_color"
+        app:npTextSize="18sp"/>
+</LinearLayout>
