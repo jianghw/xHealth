@@ -1,0 +1,320 @@
+package com.kaurihealth.kaurihealth.login_v;
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import com.avos.avoscloud.im.v2.AVIMClient;
+import com.avos.avoscloud.im.v2.AVIMException;
+import com.avos.avoscloud.im.v2.callback.AVIMClientCallback;
+import com.kaurihealth.chatlib.LCChatKit;
+import com.kaurihealth.datalib.request_bean.bean.LoginBean;
+import com.kaurihealth.datalib.request_bean.builder.LoginBeanBuilder;
+import com.kaurihealth.datalib.response_bean.TokenBean;
+import com.kaurihealth.datalib.response_bean.UserBean;
+import com.kaurihealth.kaurihealth.R;
+import com.kaurihealth.kaurihealth.base_v.BaseActivity;
+import com.kaurihealth.kaurihealth.findpassword_v.FindPasswordActivity;
+import com.kaurihealth.kaurihealth.main_v.MainActivity;
+import com.kaurihealth.kaurihealth.register_v.RegisterActivity;
+import com.kaurihealth.kaurihealth.register_v.RegisterPersonInfoActivity;
+import com.kaurihealth.kaurihealth.tinker.SampleApplicationLike;
+import com.kaurihealth.mvplib.login_p.ILoginView;
+import com.kaurihealth.mvplib.login_p.LoginPresenter;
+import com.kaurihealth.utilslib.OnClickUtils;
+import com.kaurihealth.utilslib.SharedUtils;
+import com.kaurihealth.utilslib.TimeCount;
+import com.kaurihealth.utilslib.ValidatorUtils;
+import com.kaurihealth.utilslib.constant.Global;
+import com.kaurihealth.utilslib.dialog.DialogUtils;
+import com.kaurihealth.utilslib.widget.CircleImageView;
+import com.kaurihealth.utilslib.widget.TextWatchClearError;
+import com.mobsandgeeks.saripaar.ValidationError;
+import com.mobsandgeeks.saripaar.Validator;
+import com.mobsandgeeks.saripaar.annotation.NotEmpty;
+import com.squareup.picasso.Picasso;
+
+import java.util.List;
+
+import javax.inject.Inject;
+
+import butterknife.Bind;
+import butterknife.OnClick;
+
+public class LoginActivity extends BaseActivity implements ILoginView, Validator.ValidationListener {
+    @Inject
+    LoginPresenter<ILoginView> mLoginPresenter;
+
+    @Bind(R.id.portrait_login)
+    CircleImageView mPortraitLogin;
+
+    @Bind(R.id.edt_name)
+    @NotEmpty(messageResId = R.string.login_edit_name)
+    EditText mEdtName;
+
+    @Bind(R.id.img_del_name)
+    ImageView mImgDelName;
+
+    @Bind(R.id.edt_password)
+    @NotEmpty(messageResId = R.string.login_edit_pw)
+    EditText mEdtPassword;
+
+    @Bind(R.id.img_del_pw)
+    ImageView mImgDelPw;
+    @Bind(R.id.btn_login)
+    Button mBtnLogin;
+    @Bind(R.id.tv_register)
+    TextView mTvRegister;
+
+    //忘记密码
+    @Bind(R.id.tv_forget_pw)
+    TextView mTvForgetPw;
+
+    //"验证码登录"提示语
+    @Bind(R.id.tv_verify)
+    TextView mTvVerify;
+    //"或"字提示
+    @Bind(R.id.tv_select)
+    TextView mTvSelect;
+
+    //"发送验证码"按钮
+    @Bind(R.id.tv_get_verificationcode)
+    TextView tvGetVerificationCode;
+
+    private Validator mValidator;//调用.validate()
+    private TimeCount timeCount;  //倒计时器
+
+    @Override
+    protected int getActivityLayoutID() {
+        return R.layout.activity_login;
+    }
+
+    @Override
+    protected void initPresenterAndView(Bundle savedInstanceState) {
+        SampleApplicationLike.getApp().getComponent().inject(this);
+        mLoginPresenter.setPresenter(this);
+        //取出数据进行回显
+        mEdtName.setText(SharedUtils.getString(this, "username", ""));
+    }
+
+    @Override
+    protected void initDelayedData() {
+        mEdtName.addTextChangedListener(new TextWatchClearError(mEdtName, mImgDelName));
+        mEdtPassword.addTextChangedListener(new TextWatchClearError(mEdtPassword, mImgDelPw));
+
+        //表单初始化
+        mValidator = new Validator(this);
+        mValidator.setValidationListener(this);
+
+        // 第一步: 忘记密码出现, 获取验证码按钮隐藏
+        //第一次进入页面: 忘记密码出现,  提示语:验证码登录
+        mTvForgetPw.setVisibility(View.VISIBLE);  //忘记密码出现
+        tvGetVerificationCode.setVisibility(View.GONE);  //获取验证码隐藏
+
+    }
+
+
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        if (mEdtName != null) mEdtName.setText(SharedUtils.getString(this, "username", ""));
+        if (mEdtPassword != null) mEdtPassword.setText("");
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mLoginPresenter.unSubscribe();
+        if (timeCount != null) timeCount.cancel();
+    }
+
+    /**
+     * ----------------------------表单验证回调方法----------------------------------
+     **/
+    @Override
+    public void onValidationSucceeded() {
+        mLoginPresenter.onSubscribe();
+    }
+
+    @Override
+    public void onValidationFailed(List<ValidationError> errors) {
+        String message = ValidatorUtils.validationErrorMessage(getApplicationContext(), errors);
+        displayErrorDialog(message);
+    }
+
+    /**
+     * ---------------------点击事件----------------------
+     */
+    @OnClick({R.id.btn_login, R.id.tv_register, R.id.tv_forget_pw, R.id.tv_get_verificationcode})
+    public void onClick(View view) {
+        if (OnClickUtils.onNoDoubleClick()) return;
+        switch (view.getId()) {
+            case R.id.btn_login://登陆
+                mValidator.validate();
+                break;
+            case R.id.tv_register://注册
+                switchPageUI(Global.Jump.RegisterActivity);
+                break;
+            case R.id.tv_forget_pw://忘记密码
+                switchPageUI(Global.Jump.FindPasswordActivity);
+                break;
+            case R.id.tv_get_verificationcode: //"获取验证码"按钮
+                //发送验证码 P层参与
+                mLoginPresenter.sendVerificationCodeRequest();
+                break;
+            default:
+                break;
+        }
+    }
+
+    //第二步骤 : 点击验证码登录
+    //点击提示"验证码登录"的提示
+    @OnClick({R.id.tv_verify})   //"验证码登录"
+    public  void  clickVerify(View view){
+        switch (view.getId()){
+            //忘记密码和 提示字体 "huo 验证码登录在一起"
+            case  R.id.tv_verify :   //1."或" --> "返回"   2."验证码登录" -> "密码登录"  3.获取验证码 -> 忘记密码
+                if (mTvVerify.getText().equals("密码登录")) {
+                    tvGetVerificationCode.setVisibility(View.GONE);
+                    mTvForgetPw.setVisibility(View.VISIBLE);
+                    mTvVerify.setText("验证码登录");
+                    mTvSelect.setText("或");
+
+                }else{   //密码登录的时候     验证码登录时间(测出来的时候)
+                    mTvSelect.setText("返回");
+                    mTvVerify.setText("密码登录");
+                    tvGetVerificationCode.setVisibility(View.VISIBLE);
+                }
+            break;
+
+         default:
+             break;
+
+
+
+        }
+
+    }
+
+    /**
+     * ----------------------------View中方法----------------------------------
+     **/
+    @Override
+    public String getUserName() {
+        return mEdtName.getText().toString().trim();
+    }
+
+    @Override
+    public String getPassword() {
+        return mEdtPassword.getText().toString().trim();
+    }
+
+    public void setImageHead(String url) {
+        Picasso.with(this).load(url).fit().into(mPortraitLogin);
+    }
+
+    @Override
+    public void completeRegister() {
+        dismissInteractionDialog();
+        switchPageUI(Global.Jump.RegisterPersonInfoActivity);
+    }
+
+    @Override
+    public void showSuccessToast() {
+        showToast(getString(R.string.login_success));
+    }
+
+    //保存用户名到SP中
+    @Override
+    public void saveUsername() {
+        if (mEdtName != null) {
+            SharedUtils.setString(this, "username", mEdtName.getText().toString().trim());
+        }
+    }
+
+
+    @Override
+    public void loginError(Throwable e) {
+        mBtnLogin.setEnabled(true);
+    }
+
+    @Override
+    public void switchPageUI(String className) {
+        switch (className) {
+            case Global.Jump.RegisterActivity:
+                skipTo(RegisterActivity.class);
+                break;
+            case Global.Jump.RegisterPersonInfoActivity:
+                skipTo(RegisterPersonInfoActivity.class);
+                break;
+            case Global.Jump.MainActivity:
+                skipTo(MainActivity.class);
+                break;
+            case Global.Jump.FindPasswordActivity:
+                skipTo(FindPasswordActivity.class);
+                break;
+            default:
+                break;
+        }
+    }
+
+    @Override
+    public LoginBean createRequestBean() {
+        String userName = getUserName();  //手机号
+        String password = getPassword();
+        if (password.trim().length() == 4) {   //验证码登录,验证码是4位数字
+            LoginBean loginBean = new LoginBean();
+            loginBean.userName = userName;
+            loginBean.password = password;
+            loginBean.deviceId = "android";
+            loginBean.setLoginType("1");  //验证码登录请填写"1"
+            return loginBean;
+
+        }
+        return new LoginBeanBuilder().Build(userName, password);   //手机账号和密码登录
+
+    }
+
+    @Override
+    public void setLoginBtnEnable(boolean flag) {
+        mBtnLogin.setEnabled(flag);
+    }
+
+    @Override
+    public void initChatKitOpen(TokenBean tokenBean) {
+        UserBean userBean = tokenBean.getUser();
+        if (userBean != null) {
+            LCChatKit.getInstance().open(userBean.getKauriHealthId(), new AVIMClientCallback() {
+                @Override
+                public void done(AVIMClient avimClient, AVIMException e) {
+                    if (e != null) showToast("聊天通讯未连接上,请重新登录" + e.getMessage());
+                    dismissInteractionDialog();
+                    showSuccessToast();
+                    switchPageUI(Global.Jump.MainActivity);
+                }
+            });
+        }
+    }
+
+    //提示输入电话号码有误
+    @Override
+    public void showPhoneNumberErrorMessage() {
+        String message = "请输入正确的电话号码";
+        DialogUtils.sweetWarningDialog(this, message);
+    }
+
+    //发送验证码之后开始倒计时
+    @Override
+    public void startCountDown() {
+        if (timeCount != null) timeCount.cancel();
+        timeCount = new TimeCount(60000, 1000, tvGetVerificationCode, "%d秒后重新获取", "获取验证码");
+        timeCount.start();
+    }
+
+
+}

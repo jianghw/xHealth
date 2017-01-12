@@ -1,0 +1,386 @@
+<resources>
+    <string name="app_name">佳仁健康</string>
+    <!-- TODO: Remove or change this placeholder text -->
+
+    <string name="password_register">密码不合法</string>
+    <string name="confirm_password_register">密码不一致</string>
+    <string name="agreement_register">尚未同意协议，无法注册</string>
+    <string name="registerresult">该账户已存在</string>
+    <string name="submit_error">修改密码失败</string>
+
+    <!--loginActivity-->
+    <string name="login_edit_name">请输入用户名</string>
+    <string name="login_btn_login">登录</string>
+    <string name="login_edit_pw">请输入密码或验证码</string>
+    <string name="login_tv_register">立即注册</string>
+    <string name="login_tv_forget_pw">忘记密码</string>
+    <string name="login_success">登录成功</string>
+
+    <!--mainActivity-->
+    <string name="main_rb_home">首页</string>
+    <string name="main_rb_message">消息</string>
+    <string name="main_rb_friend">医患</string>
+    <string name="main_rb_clinical">临床</string>
+    <string name="main_rb_mine">我的</string>
+
+    <!--RegisterActivity-->
+    <string name="register_phone_pattern">请输入正确的电话号码</string>
+    <string name="register_verification_pattern">验证码必须为4位数字</string>
+    <string name="register_pw_length">为了保证您的账户安全,密码长度须为6到20位</string>
+    <string name="register_pw_password">请使用字母和数字构建密码</string>
+    <string name="register_pw_confirm">密填写不一致,请检查密码</string>
+    <string name="register_checked">尚未同意协议,无法注册</string>
+
+    <!--RegistActivity FirstPageInfo-->
+    <string name="register_phone_number">请输入您需要注册的手机号</string>
+    <string name="register_verifycode">请输入验证码</string>
+    <string name="register_tv_agree">注册即代表您同意</string>
+
+
+    <!--RegisterPersonInfoActivity-->
+    <string name="register_person_first">名不能为空</string>
+    <string name="register_person_last">姓不能为空</string>
+    <string name="register_person_gender">性别不能为空</string>
+    <string name="register_person_birthday">生日不能为空</string>
+    <string name="register_person_title">您的账号已经注册成功!</string>
+    <string name="register_person_complete">请继续完善基础信息</string>
+
+    <!--ServiceSettingActivity-->
+    <string name="service_price">价格不能小于0.01</string>
+    <string name="personal_doctor_service">专属医生服务</string>
+    <string name="remote_doctor_service">远程医疗咨询</string>
+    <string name="default_service_price">未开通</string>
+    <!--性别-->
+    <string-array name="gender">
+        <item>男</item>
+        <item>女</item>
+    </string-array>
+    <!--学历职称-->
+    <string-array name="educationTitles">
+        <item>教授</item>
+        <item>副教授</item>
+    </string-array>
+    <!--指导职称-->
+    <string-array name="mentorshipTitles">
+        <item>硕士生导师</item>
+        <item>博士生导师</item>
+    </string-array>
+    <!--在院职称-->
+    <string-array name="hospitalTitles">
+        <item>住院医师</item>
+        <item>主治医师</item>
+        <item>主任医师</item>
+        <item>副主任医师</item>
+    </string-array>
+    <!--教育程度-->
+    <string-array name="educationLevel">
+        <item>本科以下</item>
+        <item>本科</item>
+        <item>硕士</item>
+        <item>博士</item>
+        <item>博士后</item>
+    </string-array>
+    <!--ClinicalDiagnosisAndTreatment:临床诊疗 SupplementaryTest:辅助检查 LabTest:实验室检查 Pathology:病理-->
+
+    <!--临床诊疗值-->
+    <string-array name="clinical_medical_diagnosis">
+        <item>门诊记录电子病历</item>
+        <item>远程医疗咨询</item>
+        <item>网络医疗咨询</item>
+        <item>门诊记录图片存档</item>
+        <item>入院记录</item>
+        <item>院内治疗相关记录</item>
+        <item>出院记录</item>
+    </string-array>
+    <!--辅助检查值-->
+    <string-array name="SupplementaryTest">
+        <item>影像学检查</item>
+        <item>心血管系统相关检查</item>
+        <item>其它检查</item>
+    </string-array>
+    <!--实验室检查值-->
+    <string-array name="LabTest">
+        <item>常规血液学检查</item>
+        <item>常规尿液检查</item>
+        <item>常规粪便检查</item>
+        <item>特殊检查</item>
+        <item>其它</item>
+    </string-array>
+    <string-array name="Pathology">
+        <item>病理</item>
+    </string-array>
+    <string-array name="smokeslect">
+        <item>不吸</item>
+        <item>轻度</item>
+        <item>中度</item>
+        <item>重度</item>
+    </string-array>
+    <string-array name="exerciseHabit">
+        <item>不运动</item>
+        <item>偶尔</item>
+        <item>经常</item>
+        <item>每天</item>
+    </string-array>
+    <string-array name="menstruationPeriod">
+        <item>正常</item>
+        <item>不正常</item>
+    </string-array>
+    <string-array name="menstruationAmount">
+        <item>少量</item>
+        <item>中等</item>
+        <item>大量</item>
+    </string-array>
+    <string-array name="drinkLevel">
+        <item>不饮</item>
+        <item>轻度</item>
+        <item>中度</item>
+        <item>重度</item>
+    </string-array>
+    <string-array name="booleanStr">
+        <item>是</item>
+        <item>否</item>
+    </string-array>
+    <!--饮食习惯-->
+    <string-array name="Diet">
+        <item>常规膳食</item>
+        <item>高糖</item>
+        <item>高热量膳食</item>
+        <item>高脂肪膳食</item>
+        <item>高盐肪膳食</item>
+        <item>素食</item>
+    </string-array>
+
+    <!--病历详情-->
+    <string-array name="record_details_tab">
+        <item>医疗记录</item>
+        <item>健康记录</item>
+        <item>处方</item>
+        <item>长期监测指标</item>
+        <item>医疗团队</item>
+        <item>家庭成员</item>
+    </string-array>
+
+
+    <array name="paychannels">
+        <item>中国工商银行</item>
+        <item>招商银行</item>
+        <item>中国农业银行</item>
+        <item>中国建设银行</item>
+        <item>中国银行</item>
+        <item>中国民生银行</item>
+        <item>中国光大银行</item>
+        <item>中信银行</item>
+        <item>交通银行</item>
+        <item>兴业银行</item>
+        <item>上海浦东发展银行</item>
+        <item>中国人民银行</item>
+        <item>华夏银行</item>
+        <item>深圳发展银行</item>
+        <item>广东发展银行</item>
+        <item>国家开发银行</item>
+        <item>中国邮政储蓄银行</item>
+        <item>中国进出口银行</item>
+        <item>中国农业发展银行</item>
+    </array>
+
+    <string-array name="array_monitor_project">
+        <item>高血糖</item>
+        <item>身高</item>
+        <item>体重</item>
+        <item>腰围</item>
+        <item>心率</item>
+        <item>红细胞</item>
+        <item>白细胞</item>
+        <item>血小板</item>
+        <item>血尿酸</item>
+        <item>尿素氮</item>
+        <item>肌酐</item>
+        <item>谷丙转氨酶</item>
+        <item>谷草转氨酶</item>
+        <item>总胆红素</item>
+        <item>总胆固醇</item>
+        <item>低密度脂蛋白胆固醇</item>
+        <item>甘油三酯</item>
+        <item>静脉空腹血糖</item>
+        <item>指血空腹血糖</item>
+        <item>早餐后血糖</item>
+        <item>午餐后血糖</item>
+        <item>晚餐后血糖</item>
+        <item>糖化血红蛋白</item>
+        <item>血沉</item>
+        <item>纤维蛋白原</item>
+        <item>尿蛋白</item>
+        <item>尿微球蛋白</item>
+        <item>尿白细胞</item>
+        <item>血压</item>
+        <item>丙氨酸氨基转移酶</item>
+        <item>碱性磷酸酶</item>
+        <item>谷氨酰转肽酶</item>
+        <item>门冬氨酸氨基转移酶</item>
+        <item>高密度脂蛋白</item>
+        <item>低密度脂蛋白</item>
+    </string-array>
+
+    <string-array name="array_monitor_unit">
+        <item>mmol/L</item>
+        <item>cm</item>
+        <item>kg</item>
+        <item>cm</item>
+        <item>bpm</item>
+        <item>10^12/L</item>
+        <item>10^9/L</item>
+        <item>10^9/L</item>
+        <item>umol/L</item>
+        <item>mmol/L</item>
+        <item>umol/L</item>
+        <item>U/L</item>
+        <item>U/L</item>
+        <item>umol/L</item>
+        <item>mmol/L</item>
+        <item>mmol/L</item>
+        <item>mmol/L</item>
+        <item>mmol/L</item>
+        <item>mmol/L</item>
+        <item>mmol/L</item>
+        <item>mmol/L</item>
+        <item>mmol/L</item>
+        <item>%</item>
+        <item>mm/h</item>
+        <item>g/L</item>
+        <item>g/L</item>
+        <item>g/L</item>
+        <item>个/HP</item>
+        <item>mmHg</item>
+        <item>U/L</item>
+        <item>U/L</item>
+        <item>U/L</item>
+        <item>U/L</item>
+        <item>mmol/L</item>
+        <item>mmol/L</item>
+    </string-array>
+
+    <string-array name="search_tab">
+        <item>所有</item>
+        <item>医院</item>
+        <item>科室</item>
+        <item>医生</item>
+        <item>患者</item>
+    </string-array>
+
+    <string-array name="system_setting">
+        <item>清空系统消息</item>
+        <item>取消</item>
+    </string-array>
+    <string-array name="message_clean">
+        <item>确定清空聊天记录</item>
+        <item>取消</item>
+    </string-array>
+
+    <!--家属关系-->
+    <string-array name="relationship">
+        <item>夫妻</item>
+        <item>父子</item>
+        <item>父女</item>
+        <item>母子</item>
+        <item>母女</item>
+        <item>兄弟</item>
+        <item>兄妹</item>
+        <item>姐弟</item>
+        <item>姐妹</item>
+        <item>爷孙</item>
+        <item>婆孙</item>
+    </string-array>
+
+
+    <!-- TODO: Remove or change this placeholder text -->
+
+    <string name="main_table_home">首页</string>
+    <string name="main_table_message">消息</string>
+    <string name="main_table_patient">医患</string>
+    <string name="main_table_clinical">临床</string>
+    <string name="main_table_mine">我的</string>
+
+    <string name="patient_age_null">年龄:无</string>
+    <string name="patient_age">%d岁</string>
+    <string name="patient_gender">性别:%s</string>
+    <string name="long_standard_title">监测指标</string>
+    <string name="prescription_title">处方</string>
+    <string name="more_add">添加</string>
+
+    <string name="monitor_time">监测时间:</string>
+    <string name="monitor_program">监测项目:</string>
+    <string name="monitor_data">监测数据:</string>
+    <string name="monitor_hint_data">填写数据</string>
+    <string name="monitor_hint_time">选择时间</string>
+    <string name="monitor_hint_program">选择项目</string>
+    <string name="charts_null">&#160;&#160;&#160;&#160;</string>
+    <string name="swipe_tv_compile">编辑</string>
+    <string name="swipe_tv_delete">删除</string>
+    <string name="patient_tv_title">患者信息</string>
+    <string name="doctor_tv_title">医生信息</string>
+    <string name="details_tv_title">个人信息</string>
+    <string name="mr_tv_title">医疗记录</string>
+    <string name="mr_table_clinica">临床医疗</string>
+    <string name="mr_table_supplementary">辅助检查</string>
+    <string name="mr_table_lab">实验室检查</string>
+    <string name="mr_table_pathology">病理</string>
+    <string name="being_no">暂无</string>
+    <string name="doctor_tv_experience">学习与工作经历</string>
+    <string name="doctor_tv_speciality">专业特长</string>
+    <string name="mine_hello">你好!&#160;&#160;&#160;&#160;%s</string>
+    <string name="mine_regist_percentage">资料完成度%1$s</string>
+    <string name="professional_title_tv_title">职称</string>
+    <string name="title_save">保存</string>
+    <string name="certification_title_tv_title">职业证号</string>
+    <string name="graduate_title_tv_title">毕业院校</string>
+    <string name="practice_title_tv_title">专业特长</string>
+    <string name="hospital_title_tv_title">机构</string>
+    <string name="study_experience_tv_title">学习与工作经历</string>
+    <string name="department">科室一</string>
+    <string name="department_two">科室二</string>
+    <string name="tv_title_setting">设置</string>
+    <string name="service_title">服务项目</string>
+    <string name="account_title">我的账户</string>
+    <string name="title_account">账户明细</string>
+    <string name="title_complete">完成</string>
+    <string name="add_bank_card">添加银行卡</string>
+    <string name="find_password">找回密码</string>
+    <string name="set_password">设置密码</string>
+    <string name="no_search_data">暂无相关数据:%s</string>
+    <string name="search_data_size">当前共搜索到%d条数据</string>
+    <string name="no_doctor_message">暂无未读医生留言消息</string>
+    <string name="no_patient_message">暂无未读患者留言消息</string>
+    <string name="swipe_tv_stick">置顶</string>
+    <string name="swipe_tv_unstick">取消置顶</string>
+    <string name="visit_record">复诊提醒</string>
+    <string name="add_visit_record">设置复诊提醒</string>
+    <string name="patient_request">候诊患者请求</string>
+    <string name="patient_hint_context"> 请填写患者的手机号码</string>
+    <string name="referral_patient_to_select"> 请选择转诊患者</string>
+    <string name="referral_patient_to_select_only_one"> 只能选择一位转诊患者</string>
+    <string name="referral_doctor_to_select"> 请选择转诊医生</string>
+    <string name="referral_doctor_to_select_only_one"> 只能选择一位转诊医生</string>
+    <string name="doctor_team">医疗团队</string>
+    <string name="no_system_message">暂时没有系统消息</string>
+    <string name="system_message_title">佳仁健康系统消息</string>
+    <string name="system_message_setting">系统消息设置</string>
+    <string name="more_set">设置</string>
+    <string name="no_group_message">暂无未读群聊留言消息</string>
+    <string name="patient_request_team_tips">接受预约后才可查看医疗团队</string>
+    <string name="patient_request_familytips">接受预约后才可查看家庭成员</string>
+    <string name="all_medical_records">全部病历</string>
+    <string name="medical_records_processed">待处理病历</string>
+    <string name="title_time">时间：&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</string>
+    <string name="accessory_examination">辅助检查：&#160;&#160;&#160;</string>
+    <string name="accessory_count">%02d</string>
+    <string name="lab_examination">实验室检查：</string>
+    <string name="pathology_examination">病理：&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</string>
+    <string name="green_slash" formatted="false">
+        <![CDATA[
+         <font color = \'#50d2c2\'>%s</font>
+        ]]>
+    </string>
+    <string name="green_number">%02d</string>
+
+
+</resources>

@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+       xmlns:app="http://schemas.android.com/apk/res-auto"
+       android:layout_width="match_parent"
+       android:layout_height="match_parent"
+       android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/lay_admission_measurement"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingBottom="@dimen/dimen_14">
+
+        <TextView style="@style/Line_Match"/>
+
+        <!--医师-->
+        <com.kaurihealth.utilslib.widget.RecentlySaveLayout
+            android:id="@+id/lay_admission_doctor"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:RecentlyTitle="医师："/>
+
+        <!--科室-->
+        <com.kaurihealth.utilslib.widget.RecentlySaveLayout
+            android:id="@+id/lay_admission_departments"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:RecentlyCompileMode="true"
+            app:RecentlyTitle="科室："/>
+
+        <!--机构-->
+        <com.kaurihealth.utilslib.widget.RecentlySaveLayout
+            android:id="@+id/lay_admission_organization"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:RecentlyCompileMode="true"
+            app:RecentlyTitle="机构："/>
+
+        <!--检查项目-->
+        <com.kaurihealth.utilslib.widget.RecentlySaveLayout
+            android:id="@+id/lay_project"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:RecentlyCompileMode="true"
+            app:RecentlyTitle="检查项目："/>
+
+        <!--入院时间-->
+        <com.kaurihealth.utilslib.widget.RecentlySaveLayout
+            android:id="@+id/lay_admission_createdDate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:RecentlyCompileMode="true"
+            app:RecentlyTitle="入院时间："/>
+
+        <!--住院号-->
+        <com.kaurihealth.utilslib.widget.RecentlySaveLayout
+            android:id="@+id/lay_admission_hospitalNumber"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:RecentlyTitle="住院号："/>
+
+        <!--上传附件-->
+        <com.kaurihealth.utilslib.widget.SaveImageLayout
+            android:id="@+id/lay_admission_documents"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:RecentlyCompileMode="true"
+            app:RecentlyTitle="上传附件："/>
+
+        <!--备注-->
+        <com.kaurihealth.utilslib.widget.RecentlySaveLayout
+            android:id="@+id/lay_admission_comment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:RecentlyTitle="备注："/>
+    </LinearLayout>
+</merge>

@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--welcomeActivity-->
+    <color name="welcome_bg_cl">#50d2c2</color>
+
+    <!--mainActivity-->
+    <color name="main_bg_line">#cccccc</color>
+
+
+    <!--主布局Button的点击背景-->
+    <color name="main_background">#FFFFFF</color>
+
+    <!--login线颜色-->
+    <color name="linelogin">#ffffff</color>
+    <!--homeiteam中灰色字的颜色-->
+    <color name="texthomeiteam">#a8a8aa</color>
+
+    <!--pationinfo中字的颜色-->
+    <color name="textpationinfo">#697782</color>
+
+    <color name="background_holo_dark">#ff000000</color>
+
+
+    <color name="tv_patient_type">#ff9800</color>
+    <color name="tvName">#000000</color>
+    <color name="civPhoto">#4FD3C1</color>
+    <eat-comment/>
+    <color name="holo_blue_light">#ff33b5e5</color>
+
+    <color name="holo_orange_dark">#ffff8800</color>
+
+    <eat-comment/>
+    <color name="holo_blue_bright">#42bd41</color>
+    <eat-comment/>
+
+    <color name="kaurihealth_background">#FFF2F2F2</color>
+
+
+    <color name="rbtnunselect">#FFFBFCFC</color>
+    <color name="rbtnselect">#FF50D2C2</color>
+
+    <color name="colornormalblack">#1c1c1c</color>
+
+    <color name="normalText">#FF3F3932</color>
+
+    <color name="normal">#FFF2F2F2</color>
+
+
+    <color name="orange_bright">#FFFF8D17</color>
+    <color name="textblue">#50d2c2</color>
+
+    <!--TextView颜色-->
+    <color name="app_tv_color">#666666</color>
+    <!--EditText中提示的颜色-->
+    <color name="apptextts">#cccccc</color>
+
+    <!--文本框写入的时候的颜色-->
+    <color name="apptexttx">#333333</color>
+
+    <color name="tvType">#FFFF6600</color>
+
+    <!--医疗记录中要文本框中写人的文字-->
+    <color name="apptextcolormed">#999999</color>
+
+    <!--强调色-->
+    <color name="color_gold">#ff9800</color>
+    <!--主标题重要文字-->
+    <color name="color_title_back">#3e403f</color>
+    <!--副标正文文字-->
+    <color name="color_body_back">#808080</color>
+    <!--深色标注文字-->
+    <color name="color_label_back">#999999</color>
+    <!--间隔线-->
+    <color name="color_interval_gray">#dfdfdd</color>
+    <!--标注、评论-->
+    <color name="color_label_gray">#e6e4e4</color>
+
+    <!--提醒、倒计时-->
+    <color name="color_red">#ff3d00</color>
+
+    <!--登录界面编辑框竖线-->
+    <color name="color_login_grey">#e7ecee</color>
+
+    <!--所有的按钮颜色 已经激活-->
+    <color name="color_enable_green">#50d2c2</color>
+
+    <!--所有的按钮颜色 点击-->
+    <color name="color_click_green">#3da094</color>
+
+    <!--所有的按钮颜色 未激活-->
+    <color name="color_unable_green">#b9ede7</color>
+
+    <!--颜色-->
+    <color name="color_white">#ffffff</color>
+    <color name="color_green">#50d2c2</color>
+    <color name="color_gray">#666666</color>
+
+    <!--忘记密码-->
+    <color name="color_forget_password">#e40404 </color>
+    <color name="color_bg_green">#50d2c2</color>
+
+    <!--控件按下时的字体颜色-->
+    <color name="tv_nor_color">#666666</color>
+    <color name="tv_press_color">#cccccc</color>
+
+    <color name="bg_tv_gray">#c9c3c3</color>
+
+    <!--颜色-->
+    <color name="color_theme_green">#50d2c2</color>
+    <color name="color_light_gray">#c9c3c3</color>
+
+    <!--新添加-->
+    <color name="color_text_prompt">#cccccc</color>
+    <color name="color_text_title">#000b23</color>
+    <color name="color_text_age_black">#333333</color>
+    <color name="color_text_green">#66cccc</color>
+    <color name="color_text_date">#aaaaaa</color>
+    <color name="color_text_red">#e40404</color>
+    <color name="color_text_gray">#ccd3d5</color>
+    <color name="color_text_blue">#5084d2</color>
+    <color name="color_tab_black">#293d47</color>
+    <color name="color_referral_orange">#f66e2a</color>
+    <color name="color_chat_blue">#8ba4c4</color>
+    <color name="color_text_black">#122029</color>
+    <!--页面底部背景色-->
+    <color name="color_bg_gray">#efeff4</color>
+
+
+</resources>

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/ly_add_patient"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimen_40"
+        android:gravity="center_vertical">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/dimen_14"
+            android:layout_marginRight="@dimen/dimen_14"
+            android:src="@drawable/register_icon"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="建立患者档案"
+            android:textColor="@color/color_gray"
+            android:layout_marginRight="@dimen/dimen_16"
+            android:textSize="@dimen/textSize_14"/>
+    </LinearLayout>
+
+    <TextView
+        style="@style/Line_Match"/>
+
+    <LinearLayout
+        android:id="@+id/ly_search_patient"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimen_40"
+        android:gravity="center_vertical">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/dimen_14"
+            android:layout_marginRight="@dimen/dimen_14"
+            android:src="@drawable/add_icon"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="搜索添加患者"
+            android:layout_marginRight="@dimen/dimen_16"
+            android:textColor="@color/color_gray"
+            android:textSize="@dimen/textSize_14"/>
+    </LinearLayout>
+</LinearLayout>

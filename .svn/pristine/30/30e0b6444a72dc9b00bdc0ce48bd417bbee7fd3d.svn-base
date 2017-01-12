@@ -1,0 +1,54 @@
+package com.kaurihealth.utilslib.widget;
+
+import android.content.Context;
+import android.util.AttributeSet;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+
+import com.kaurihealth.utilslib.R;
+
+/**
+ * Created by jianghw on 2016/8/23.
+ * <p/>
+ * 描述：病历详情中 最近病历
+ */
+public class RecentlyRecordLayout extends LinearLayout {
+    private TextView titleTv;
+    private TextView contentTv;
+
+    public RecentlyRecordLayout(Context context) {
+        this(context, null);
+    }
+
+    public RecentlyRecordLayout(Context context, AttributeSet attrs) {
+        this(context, attrs, 0);
+    }
+
+    public RecentlyRecordLayout(Context context, AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
+        initLayoutView();
+    }
+
+    private void initLayoutView() {
+        View view = LayoutInflater.from(getContext().getApplicationContext()).inflate(R.layout.include_record_recently_linear, this, true);
+        titleTv = (TextView) view.findViewById(R.id.tvTitle);
+        contentTv = (TextView) view.findViewById(R.id.tv_content);
+    }
+
+    public void titleText(String titleText) {
+        if (titleTv != null) titleTv.setText(titleText);
+    }
+
+    public void contentText(String contentText) {
+        if (contentTv != null) contentTv.setText(contentText);
+    }
+
+    public void setContentTitle(String titleText, String contentText) {
+        titleText(titleText);
+        contentText(contentText);
+    }
+
+
+}

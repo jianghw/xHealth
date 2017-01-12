@@ -1,0 +1,171 @@
+package com.kaurihealth.mvplib.patient_new;
+
+import com.kaurihealth.datalib.repository.Repository;
+import com.kaurihealth.datalib.request_bean.bean.SearchPatientBean;
+import com.kaurihealth.datalib.request_bean.builder.SearchBooleanPatientBeanNewBuilder;
+import com.kaurihealth.datalib.response_bean.DoctorPatientRelationshipBean;
+import com.kaurihealth.datalib.response_bean.MainPagePatientDisplayBean;
+
+import java.util.List;
+
+import javax.inject.Inject;
+
+import rx.Observable;
+import rx.Subscriber;
+import rx.Subscription;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
+import rx.functions.Func1;
+import rx.schedulers.Schedulers;
+import rx.subscriptions.CompositeSubscription;
+
+/**
+ * Created by xxx on 2017/1/4.
+ */
+
+public class PatientSearchPresenter<V> implements IPatientSearchPresenter<V> {
+
+    private final Repository mRepository;
+    private CompositeSubscription mSubscriptions;
+    private IPatientSearchView mActivity;
+
+    @Inject
+    public PatientSearchPresenter(Repository mRepository) {
+        this.mRepository = mRepository;
+        mSubscriptions = new CompositeSubscription();
+    }
+
+    @Override
+    public void setPresenter(V view) {
+        mActivity = (IPatientSearchView) view;
+    }
+
+    @Override
+    public void onSubscribe() {
+        loadingRemoteData(true);
+    }
+
+    //刷新
+    @Override
+    public void loadingRemoteData(boolean first){
+        Subscription subscription = mRepository.PatientSearch(mActivity.getCurrentSearchRequestBean())
+                .subscribeOn(Schedulers.io())
+                .doOnSubscribe(() ->
+                        mActivity.loadingIndicator(true)
+                )
+                .subscribeOn(AndroidSchedulers.mainThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Action1<List<MainPagePatientDisplayBean>>() {
+                    @Override
+                    public void call(List<MainPagePatientDisplayBean> mainPagePatientDisplayBean) {
+                        loadDoctorPatientRelationshipForDoctor(mainPagePatientDisplayBean);
+                    }
+                }, new Action1<Throwable>() {
+                    @Override
+                    public void call(Throwable throwable) {
+                        mActivity.loadingIndicator(false);
+                    }
+                });
+        mSubscriptions.add(subscription);
+    }
+
+    /**
+     * 医患关系
+     */
+    public void loadDoctorPatientRelationshipForDoctor(List<MainPagePatientDisplayBean> patientDisplayBeen) {
+        Subscription subscription = mRepository.LoadDoctorPatientRelationshipForDoctor()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        new Action1<List<DoctorPatientRelationshipBean>>() {
+                            @Override
+                            public void call(List<DoctorPatientRelationshipBean> been) {
+                                handlePatientRelationship(been, patientDisplayBeen);
+                            }
+                        },
+                        new Action1<Throwable>() {
+                            @Override
+                            public void call(Throwable throwable) {
+                                mActivity.loadingIndicator(false);
+                                mActivity.displayErrorDialog(throwable.getMessage());
+                            }
+                        });
+        mSubscriptions.add(subscription);
+    }
+
+    /**
+     * 数据处理
+     */
+    private void handlePatientRelationship(List<DoctorPatientRelationshipBean> relationshipBeen, List<MainPagePatientDisplayBean> patientDisplayBeen) {
+        Subscription subscription = Observable.from(relationshipBeen)
+                .map(new Func1<DoctorPatientRelationshipBean, Integer>() {
+                    @Override
+                    public Integer call(DoctorPatientRelationshipBean bean) {
+                        return bean.getPatientId();
+                    }
+                })
+                .toList()
+                .flatMap(new Func1<List<Integer>, Observable<SearchPatientBean>>() {
+                    @Override
+                    public Observable<SearchPatientBean> call(List<Integer> integers) {
+                        return Observable.from(patientDisplayBeen)
+                                .map(new Func1<MainPagePatientDisplayBean, SearchPatientBean>() {
+                                    @Override
+                                    public SearchPatientBean call(MainPagePatientDisplayBean bean) {
+                                        return new SearchBooleanPatientBeanNewBuilder().Build(integers.contains(bean.getPatientId()), bean);
+                                    }
+                                });
+                    }
+                })
+                .toList()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<List<SearchPatientBean>>() {
+                    @Override
+                    public void onCompleted() {
+                        mActivity.loadingIndicator(false);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        mActivity.displayErrorDialog(e.getMessage());
+                    }
+
+                    @Override
+                    public void onNext(List<SearchPatientBean> been) {
+                        mActivity.updataDataSucceed(been);
+                    }
+                });
+        mSubscriptions.add(subscription);
+    }
+
+    public void insertNewRelationshipByDoctor(int mPatientId) {
+        Subscription subscription = mRepository.insertNewRelationshipByDoctor(mPatientId)
+                .subscribeOn(Schedulers.io())
+                .doOnSubscribe(() -> mActivity.dataInteractionDialog())
+                .subscribeOn(AndroidSchedulers.mainThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<DoctorPatientRelationshipBean>() {
+                    @Override
+                    public void onCompleted() {
+                        mActivity.dismissInteractionDialog();
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        mActivity.displayErrorDialog(e.getMessage());
+                    }
+
+                    @Override
+                    public void onNext(DoctorPatientRelationshipBean bean) {
+                        mActivity.insertPatientSucceed(bean);
+                    }
+                });
+        mSubscriptions.add(subscription);
+    }
+
+    @Override
+    public void unSubscribe() {
+        mSubscriptions.clear();
+        if (mActivity != null) mActivity = null;
+    }
+}

@@ -1,0 +1,180 @@
+package com.kaurihealth.kaurihealth.record_details_v;
+
+import android.os.Bundle;
+import android.view.View;
+import android.widget.ListView;
+import android.widget.TextView;
+
+import com.kaurihealth.datalib.response_bean.DoctorPatientRelationshipBean;
+import com.kaurihealth.datalib.response_bean.FamilyMemberBeanWrapper;
+import com.kaurihealth.kaurihealth.R;
+import com.kaurihealth.kaurihealth.adapter.FamilyMemberAdapter;
+import com.kaurihealth.kaurihealth.base_v.BaseFragment;
+import com.kaurihealth.kaurihealth.eventbus.AddFamilyMemberEvent;
+import com.kaurihealth.kaurihealth.patient_v.family_members.AddFamilyMemberActivity;
+import com.kaurihealth.kaurihealth.tinker.SampleApplicationLike;
+import com.kaurihealth.mvplib.patient_p.FamilyMembersPresenter;
+import com.kaurihealth.mvplib.patient_p.IFamilyMembersView;
+import com.kaurihealth.utilslib.ColorUtils;
+import com.kaurihealth.utilslib.constant.Global;
+import com.kaurihealth.utilslib.widget.ScrollChildSwipeRefreshLayout;
+
+import org.greenrobot.eventbus.EventBus;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.inject.Inject;
+
+import butterknife.Bind;
+
+/**
+ * Created by mip on 2016/12/20.
+ */
+
+public class FamilyMembersFragment extends BaseFragment implements IFamilyMembersView,
+        FamilyMemberAdapter.ItemClickBack, RecordDetailsActivity.DeliverListener {
+    @Inject
+    FamilyMembersPresenter<IFamilyMembersView> mPresenter;
+
+    //下拉刷新控件
+    @Bind(R.id.swipe_refresh)
+    ScrollChildSwipeRefreshLayout mSwipeRefresh;
+    //没有数据的提示文字
+    @Bind(R.id.tv_note)
+    TextView tvNote;
+    //数据列表
+    @Bind(R.id.lv_content)
+    ListView mLvContent;
+    //添加
+    @Bind(R.id.tv_more)
+    TextView tv_more;
+
+
+    private ArrayList<FamilyMemberBeanWrapper> mBeanList;
+    private int mPatientId;
+    private FamilyMemberAdapter adapter;
+
+    public static FamilyMembersFragment getInstance() {
+        return new FamilyMembersFragment();
+    }
+
+    @Override
+    protected int getFragmentLayoutID() {
+        return R.layout.activity_family_member;
+    }
+
+    @Override
+    protected void initPresenterAndView(Bundle savedInstanceState) {
+        SampleApplicationLike.getApp().getComponent().inject(this);
+        mPresenter.setPresenter(this);
+
+        mSwipeRefresh.setColorSchemeColors(
+                ColorUtils.setSwipeRefreshColors(getActivity().getApplication())
+        );
+        mSwipeRefresh.setScrollUpChild(mLvContent);
+        mSwipeRefresh.setDistanceToTriggerSync(Global.Numerical.SWIPE_REFRESH);
+        mSwipeRefresh.setOnRefreshListener(() -> mPresenter.onSubscribe());
+    }
+
+    @Override
+    protected void initDelayedData() {
+
+        mBeanList = new ArrayList<>();
+        adapter = new FamilyMemberAdapter(getActivity().getApplicationContext(), mBeanList, this);
+        mLvContent.setAdapter(adapter);
+
+//        EventBus.getDefault().register(this);
+        mPresenter.onSubscribe();
+    }
+
+    @Override
+    protected void lazyLoadingData() {
+        ((RecordDetailsActivity) (getActivity())).setOnclickInterface(this);//注册监听
+    }
+
+    /**
+     * 界面跳转
+     *
+     * @param position
+     */
+    @Override
+    public void deliverPosition(int position) {
+        if (position == 5) {
+            EventBus.getDefault().postSticky(new AddFamilyMemberEvent(getPatientId()));
+            skipTo(AddFamilyMemberActivity.class);   //跳转到添加家庭成员界面
+        }
+    }
+
+    /**
+     * 添加 按钮回调
+     *
+     * @param doctorID
+     */
+    @Override
+    public void onItemAddClick(int doctorID) {
+        mPresenter.insertNewRelationshipByDoctor(doctorID);
+    }
+
+    /**
+     * 得到从网络中获取的数据
+     *
+     * @param wrapLists
+     */
+    @Override
+    public void lazyLoadingDataSuccess(List<FamilyMemberBeanWrapper> wrapLists) {
+        tvNote.setVisibility(wrapLists != null ? !wrapLists.isEmpty() ? View.GONE : View.VISIBLE : View.VISIBLE);   //提示信息的显示
+        if (mBeanList.size() > 0) mBeanList.clear();
+        mBeanList.addAll(wrapLists);
+        adapter.notifyDataSetChanged();
+    }
+
+    /**
+     * 得到当前的patient
+     *
+     * @return
+     */
+    @Override
+    public int getPatientId() {
+        return ((RecordDetailsActivity) (getActivity())).getPatientId();
+    }
+
+
+    /**
+     * 添加患者后的反馈
+     *
+     * @param bean
+     */
+    @Override
+    public void insertPatientSucceed(DoctorPatientRelationshipBean bean) {
+        if (bean != null) {
+            showToast("添加患者成功");
+            //再次去刷新数据 ,控件发生改变
+            mPresenter.onSubscribe();
+
+        } else {
+            showToast("添加患者失败");
+        }
+    }
+
+
+    @Override
+    public void loadingIndicator(boolean flag) {
+        if (mSwipeRefresh == null) return;
+        mSwipeRefresh.post(() -> mSwipeRefresh.setRefreshing(flag));
+    }
+
+    @Override
+    public void switchPageUI(String className) {
+
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mPresenter.unSubscribe();
+//        EventBus.getDefault().unregister(this);
+    }
+
+
+}

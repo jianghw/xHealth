@@ -1,0 +1,179 @@
+package com.kaurihealth.kaurihealth.manager_v;
+
+import android.app.Activity;
+import android.support.v4.app.Fragment;
+import android.view.ViewGroup;
+
+import com.kaurihealth.kaurihealth.history_record_v.AccessoryRecordCompileActivity;
+import com.kaurihealth.kaurihealth.history_record_v.ClinicalHistoryActivity;
+import com.kaurihealth.kaurihealth.history_record_v.HospitalRecordCompileActivity;
+import com.kaurihealth.kaurihealth.history_record_v.LobRecordCompileActivity;
+import com.kaurihealth.kaurihealth.history_record_v.OutpatientRecordCompileActivity;
+import com.kaurihealth.kaurihealth.manager_v.compile.AccessoryRecordCompileFactory;
+import com.kaurihealth.kaurihealth.manager_v.compile.HospitalRecordCompileFactory;
+import com.kaurihealth.kaurihealth.manager_v.compile.LobRecordCompileFactory;
+import com.kaurihealth.kaurihealth.manager_v.compile.OutpatientRecordCompileFactory;
+import com.kaurihealth.kaurihealth.manager_v.history.ClinicalHistoryFactory;
+import com.kaurihealth.kaurihealth.manager_v.history.LobTestHistoryFactory;
+import com.kaurihealth.kaurihealth.manager_v.history.RecordAccessoryFactory;
+import com.kaurihealth.kaurihealth.manager_v.history.RecordPhologyFactory;
+import com.kaurihealth.kaurihealth.manager_v.loading.LoadingErrorFactory;
+import com.kaurihealth.kaurihealth.manager_v.record.MedicalRecordFactory;
+import com.kaurihealth.kaurihealth.manager_v.save.AccessoryRecordSaveFactory;
+import com.kaurihealth.kaurihealth.manager_v.save.HospitalRecordSaveFactory;
+import com.kaurihealth.kaurihealth.manager_v.save.LobRecordSaveFactory;
+import com.kaurihealth.kaurihealth.manager_v.save.OutpatientRecordSaveFactory;
+import com.kaurihealth.kaurihealth.record_details_v.NMedicalRecordFragment;
+import com.kaurihealth.kaurihealth.save_record_v.AccessoryRecordCommonSaveActivity;
+import com.kaurihealth.kaurihealth.save_record_v.HospitalRecordSaveActivity;
+import com.kaurihealth.kaurihealth.save_record_v.LobRecordCommonSaveActivity;
+import com.kaurihealth.kaurihealth.save_record_v.OutpatientRecordSaveActivity;
+import com.kaurihealth.utilslib.controller.IViewFactory;
+
+/**
+ * Created by jianghw on 2016/12/16.
+ * <p/>
+ * Describe:
+ */
+
+public class ViewFactoryManager {
+
+    public static IViewFactory createViewFactory(Fragment clazz, ViewGroup layContent) {
+        if (clazz.getClass().equals(NMedicalRecordFragment.class)) {
+            MedicalRecordFactory medicalRecordFactory = new MedicalRecordFactory(clazz.getContext());
+            medicalRecordFactory.createIncludeViews();
+            medicalRecordFactory.attachRootView(layContent);
+            return medicalRecordFactory;
+        }
+        return null;
+    }
+
+    /**
+     * 临床转诊历史记录
+     *
+     * @param clazz
+     * @param layContent
+     * @return
+     */
+    public static IViewFactory createViewFactory(Activity clazz, ViewGroup layContent) {
+        if (clazz.getClass().equals(ClinicalHistoryActivity.class)) {//临床诊疗历史
+            ClinicalHistoryFactory clinicalHistoryFactory = new ClinicalHistoryFactory(clazz.getApplicationContext());
+            clinicalHistoryFactory.createIncludeViews();
+            clinicalHistoryFactory.attachRootView(layContent);
+            return clinicalHistoryFactory;
+        } else if (clazz.getClass().equals(HospitalRecordCompileActivity.class)) {//住院记录
+            HospitalRecordCompileFactory hospitalRecordCompileFactory = new HospitalRecordCompileFactory(clazz.getApplicationContext());
+            hospitalRecordCompileFactory.createIncludeViews();
+            hospitalRecordCompileFactory.attachRootView(layContent);
+            return hospitalRecordCompileFactory;
+        } else if (clazz.getClass().equals(HospitalRecordSaveActivity.class)) {//保存住院记录
+            HospitalRecordSaveFactory hospitalRecordSaveFactory = new HospitalRecordSaveFactory(clazz.getApplicationContext());
+            hospitalRecordSaveFactory.createIncludeViews();
+            hospitalRecordSaveFactory.attachRootView(layContent);
+            hospitalRecordSaveFactory.childNeedActivity(clazz);
+            return hospitalRecordSaveFactory;
+        } else if (clazz.getClass().equals(OutpatientRecordCompileActivity.class)) {//门诊记录
+            OutpatientRecordCompileFactory outpatientRecordCompileFactory = new OutpatientRecordCompileFactory(clazz.getApplicationContext());
+            outpatientRecordCompileFactory.createIncludeViews();
+            outpatientRecordCompileFactory.attachRootView(layContent);
+            return outpatientRecordCompileFactory;
+        } else if (clazz.getClass().equals(OutpatientRecordSaveActivity.class)) {//保存门诊记录
+            OutpatientRecordSaveFactory outpatientRecordSaveFactory = new OutpatientRecordSaveFactory(clazz.getApplicationContext());
+            outpatientRecordSaveFactory.createIncludeViews();
+            outpatientRecordSaveFactory.attachRootView(layContent);
+            outpatientRecordSaveFactory.childNeedActivity(clazz);
+            return outpatientRecordSaveFactory;
+        }
+        return null;
+    }
+
+    /**
+     * 辅助检查历史记录
+     *
+     * @param clazz
+     * @param layContent
+     * @return
+     */
+    public static IViewFactory createRecordAccessoryViewFactory(Activity clazz, ViewGroup layContent, String title) {
+        if (clazz.getClass().equals(ClinicalHistoryActivity.class)) {
+            RecordAccessoryFactory recordAccessoryFactory = new RecordAccessoryFactory(clazz.getApplicationContext());
+            recordAccessoryFactory.createIncludeViews();
+            recordAccessoryFactory.attachRootView(layContent);
+            return recordAccessoryFactory;
+        } else if (clazz.getClass().equals(AccessoryRecordCompileActivity.class)) {
+            AccessoryRecordCompileFactory recordCompileFactory = new AccessoryRecordCompileFactory(clazz.getApplicationContext(), title);
+            recordCompileFactory.createIncludeViews();
+            recordCompileFactory.attachRootView(layContent);
+            return recordCompileFactory;
+        } else if (clazz.getClass().equals(AccessoryRecordCommonSaveActivity.class)) {
+            AccessoryRecordSaveFactory recordSaveFactory = new AccessoryRecordSaveFactory(clazz.getApplicationContext(), title);
+            recordSaveFactory.createIncludeViews();
+            recordSaveFactory.attachRootView(layContent);
+            recordSaveFactory.childNeedActivity(clazz);
+            return recordSaveFactory;
+        }
+        return null;
+    }
+
+    /**
+     * 实验室检查
+     */
+    public static IViewFactory createRecordLobTestViewFactory(Activity clazz, ViewGroup layContent, String title) {
+        if (clazz.getClass().equals(ClinicalHistoryActivity.class)) {
+            LobTestHistoryFactory lobTestHistoryFactory = new LobTestHistoryFactory(clazz.getApplicationContext());
+            lobTestHistoryFactory.createIncludeViews();
+            lobTestHistoryFactory.attachRootView(layContent);
+            return lobTestHistoryFactory;
+        } else if (clazz.getClass().equals(LobRecordCompileActivity.class)) {
+            LobRecordCompileFactory recordCompileFactory = new LobRecordCompileFactory(clazz.getApplicationContext(), title);
+            recordCompileFactory.createIncludeViews();
+            recordCompileFactory.attachRootView(layContent);
+            return recordCompileFactory;
+        } else if (clazz.getClass().equals(LobRecordCommonSaveActivity.class)) {//实验室检查保存
+            LobRecordSaveFactory recordSaveFactory = new LobRecordSaveFactory(clazz.getApplicationContext(), title);
+            recordSaveFactory.createIncludeViews();
+            recordSaveFactory.attachRootView(layContent);
+            recordSaveFactory.childNeedActivity(clazz);
+            return recordSaveFactory;
+        }
+        return null;
+    }
+
+    /**
+     * 病理历史记录
+     *
+     * @param clazz
+     * @param layContent
+     * @return
+     */
+    public static IViewFactory createPathologyViewFactory(Activity clazz, ViewGroup layContent) {
+        if (clazz.getClass().equals(ClinicalHistoryActivity.class)) {
+            RecordPhologyFactory recordAccessoryFactory = new RecordPhologyFactory(clazz.getApplicationContext());
+            recordAccessoryFactory.createIncludeViews();
+            recordAccessoryFactory.attachRootView(layContent);
+            return recordAccessoryFactory;
+        }
+        return null;
+    }
+
+    public static IViewFactory createErrorFactory(Fragment clazz, ViewGroup layContent) {
+        if (clazz.getClass().equals(NMedicalRecordFragment.class)) {
+            LoadingErrorFactory loadingErrorFactory = new LoadingErrorFactory(clazz.getContext());
+            loadingErrorFactory.createIncludeViews();
+            loadingErrorFactory.attachRootView(layContent);
+            return loadingErrorFactory;
+        }
+        return null;
+    }
+
+    public static IViewFactory createErrorFactory(Activity clazz, ViewGroup layContent) {
+        if (clazz.getClass().equals(ClinicalHistoryActivity.class)) {
+            LoadingErrorFactory loadingErrorFactory = new LoadingErrorFactory(clazz.getApplicationContext());
+            loadingErrorFactory.createIncludeViews();
+            loadingErrorFactory.attachRootView(layContent);
+            return loadingErrorFactory;
+        }
+        return null;
+    }
+
+}

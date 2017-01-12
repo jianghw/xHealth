@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".register_v.RegisterPersonInfoActivity">
+
+    <TextView
+        style="@style/regist_person_info_title"
+        android:layout_gravity="center"
+        android:layout_marginTop="28dp"
+        android:text="@string/register_person_title" />
+
+    <TextView
+        style="@style/regist_person_info_title"
+        android:layout_gravity="center"
+        android:layout_marginTop="16dp"
+        android:text="@string/register_person_complete"
+        android:textColor="@color/color_title_back" />
+
+
+    <RelativeLayout
+        style="@style/rlay_open_an_account"
+        android:layout_marginTop="40dp">
+
+
+        <ImageView
+            android:id="@+id/ivDelete2"
+            style="@style/Img_Delete"
+            android:visibility="gone" />
+
+        <View style="@style/Regist_Vertical_Line" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="14dp"
+            android:text="*"
+            android:textColor="#e40404" />
+
+        <EditText
+            android:id="@+id/tvName"
+            style="@style/content_open_an_account"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:background="@null"
+            android:drawableLeft="@mipmap/name_icon_on"
+            android:drawablePadding="20dp"
+            android:hint="请输入您的姓名"
+            android:maxLength="5" />
+    </RelativeLayout>
+    <TextView
+        style="@style/line_mine"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="0dp" />
+
+    <RelativeLayout style="@style/rlay_open_an_account">
+
+        <RadioGroup
+            android:id="@+id/id_radiogroup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/radio_male"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:layout_gravity="center"
+                android:button="@null"
+                android:checked="true"
+                android:drawableLeft="@drawable/selector_male"
+                android:drawablePadding="10dp"
+                android:text="男"
+                android:textSize="14sp" />
+
+            <RadioButton
+                android:id="@+id/radio_female"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@id/tv5"
+                android:button="@null"
+                android:drawableLeft="@drawable/selector_female"
+                android:drawablePadding="10dp"
+                android:paddingLeft="50dp"
+                android:text="女"
+                android:textSize="14sp" />
+
+        </RadioGroup>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="14dp"
+            android:text="*"
+            android:textColor="#e40404" />
+
+        <ImageView
+            android:id="@+id/ivDelete5"
+            style="@style/Img_Delete"
+            android:visibility="gone" />
+    </RelativeLayout>
+
+    <TextView
+        style="@style/line_mine"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="0dp" />
+
+
+    <RelativeLayout
+        android:id="@+id/rlay_gendar"
+        style="@style/rlay_open_an_account">
+
+        <View style="@style/Regist_Vertical_Line" />
+
+
+        <TextView
+            android:id="@+id/tv_organization"
+            style="@style/content_open_an_account"
+            android:layout_toRightOf="@id/tv3"
+            android:background="@null"
+            android:drawableLeft="@mipmap/hospital_icon_on"
+            android:drawablePadding="20dp"
+            android:editable="false"
+            android:hint="请选择您的机构" />
+
+        <ImageView
+            android:id="@+id/ivDelete3"
+            style="@style/Img_Delete"
+            android:visibility="gone" />
+    </RelativeLayout>
+
+    <TextView
+        style="@style/line_mine"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="0dp" />
+
+    <RelativeLayout
+        android:id="@+id/rlay_birthday"
+        style="@style/rlay_open_an_account">
+
+        <View style="@style/Regist_Vertical_Line" />
+
+        <ImageView
+            android:id="@+id/ivDelete4"
+            style="@style/Img_Delete"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/tv_department"
+            style="@style/content_open_an_account"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:background="@null"
+            android:drawableLeft="@mipmap/department_icon_on"
+            android:drawablePadding="20dp"
+            android:editable="false"
+            android:hint="请选择您的科室" />
+    </RelativeLayout>
+
+
+    <TextView
+        style="@style/line_mine"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="0dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="18dp"
+        android:text="请您填写真实信息，填写后如需修改请联系我们的客服人员"
+        android:textColor="@color/color_red"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/tv_operate"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginLeft="25dp"
+        android:layout_marginRight="25dp"
+        android:layout_marginTop="30dp"
+        android:background="@drawable/bg_btn_login"
+        android:gravity="center"
+        android:paddingBottom="5dp"
+        android:paddingTop="5dp"
+        android:text="进入APP"
+        android:textColor="@color/color_white"
+        android:textSize="18sp" />
+
+</LinearLayout>

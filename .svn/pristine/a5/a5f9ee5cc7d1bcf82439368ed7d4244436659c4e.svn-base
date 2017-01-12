@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+       xmlns:app="http://schemas.android.com/apk/res-auto"
+       android:layout_width="match_parent"
+       android:layout_height="match_parent"
+       android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/lay_scaling_measurement"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingBottom="@dimen/dimen_14">
+
+        <!--疾病-->
+        <com.kaurihealth.utilslib.widget.RecentlySaveLayout
+            android:id="@+id/lay_scaling_sickness"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:RecentlyCompileMode="true"
+            app:RecentlyTitle="疾病："/>
+
+        <!--现病史-->
+        <com.kaurihealth.utilslib.widget.RecentlySaveLayout
+            android:id="@+id/lay_scaling_presentIllness"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:RecentlyTitle="现病史："/>
+
+        <!--辅助检查-->
+        <com.kaurihealth.utilslib.widget.AuxiliaryExaminationLayout
+            android:id="@+id/lay_scaling_auxiliary"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:AuxiliaryContentF="患者系统医疗记录辅助检查已阅"
+            app:AuxiliaryContentS="患者长期检测指标已阅"
+            app:AuxiliaryTitle="辅助检查："/>
+
+        <!--体格检查-->
+        <com.kaurihealth.utilslib.widget.PhysicalCheckSaveLayout
+            android:id="@+id/lay_scaling_physical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:AuxiliaryTitle="体格检查："/>
+
+        <!--既往检查-->
+        <com.kaurihealth.utilslib.widget.AuxiliaryExaminationLayout
+            android:id="@+id/lay_scaling_history"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:AuxiliaryContentF="患者系统医疗记录已阅"
+            app:AuxiliaryContentS="患者系统医疗记录已更新"
+            app:AuxiliaryTitle="既往检查："/>
+        <!--目前使用药物-->
+        <com.kaurihealth.utilslib.widget.AuxiliaryExaminationLayout
+            android:id="@+id/lay_scaling_drug"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:AuxiliaryContentF="患者系统医疗记录已阅"
+            app:AuxiliaryContentS="患者系统医疗记录已更新"
+            app:AuxiliaryTitle="目前用药："/>
+        <!--印象/计划-->
+        <com.kaurihealth.utilslib.widget.RecentlySaveLayout
+            android:id="@+id/lay_scaling_plan"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:RecentlyTitle="印象/计划："/>
+        <!--备注-->
+        <com.kaurihealth.utilslib.widget.RecentlySaveLayout
+            android:id="@+id/lay_scaling_note"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:RecentlyTitle="备注："/>
+    </LinearLayout>
+</merge>

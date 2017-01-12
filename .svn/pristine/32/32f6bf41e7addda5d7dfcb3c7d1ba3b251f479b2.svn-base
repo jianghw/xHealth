@@ -1,0 +1,279 @@
+package com.kaurihealth.kaurihealth.record_details_v;
+
+import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
+import android.view.View;
+import android.widget.FrameLayout;
+import android.widget.RadioButton;
+import android.widget.TextView;
+
+import com.kaurihealth.datalib.response_bean.LongTermMonitoringDisplayBean;
+import com.kaurihealth.kaurihealth.R;
+import com.kaurihealth.kaurihealth.base_v.BaseFragment;
+import com.kaurihealth.kaurihealth.eventbus.AddMIndexBeanEvent;
+import com.kaurihealth.kaurihealth.eventbus.ChartsFgtStrEvent;
+import com.kaurihealth.kaurihealth.eventbus.LongHStandardBeanEvent;
+import com.kaurihealth.kaurihealth.eventbus.LongHStandardCompileEvent;
+import com.kaurihealth.kaurihealth.patient_v.long_monitoring.AddMonitorIndexActivity;
+import com.kaurihealth.kaurihealth.patient_v.long_monitoring.ChartsFragment;
+import com.kaurihealth.kaurihealth.patient_v.long_monitoring.CompileProgramActivity;
+import com.kaurihealth.kaurihealth.patient_v.long_monitoring.GraphDataFragment;
+import com.kaurihealth.kaurihealth.tinker.SampleApplicationLike;
+import com.kaurihealth.mvplib.patient_p.ILongHealthyStandardView;
+import com.kaurihealth.mvplib.patient_p.LongHealthyStandardPresenter;
+import com.kaurihealth.utilslib.constant.Global;
+import com.kaurihealth.utilslib.dialog.DialogUtils;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.inject.Inject;
+
+import butterknife.Bind;
+import butterknife.OnClick;
+
+/**
+ * Created by mip on 2016/12/20.
+ */
+
+public class LongHealthyStandardFragment extends BaseFragment implements ILongHealthyStandardView,RecordDetailsActivity.DeliverListener{
+
+    @Bind(R.id.tv_more)
+    TextView mTvMore;
+
+    @Bind(R.id.rbtn_chart)
+    RadioButton mRbtnChart;
+    @Bind(R.id.rbtn_graphData)
+    RadioButton mRbtnGraphData;
+    @Bind(R.id.fl_chart)
+    FrameLayout mFlChart;
+
+    @Inject
+    LongHealthyStandardPresenter<ILongHealthyStandardView> mPresenter;
+
+    private Fragment mChartsFragment;
+    private Fragment mGraphDataFragment;
+    private int currentPosition = -1;
+    private int mPatientId;
+    private boolean isAble;
+
+    /**
+     * 网络加载的监测项目详情bean
+     */
+    private List<LongTermMonitoringDisplayBean> beanList = new ArrayList<>();
+    /**
+     * 是否删除操作
+     */
+    private boolean isDeleteOperation;
+
+    public static LongHealthyStandardFragment getInstance(){
+        return new LongHealthyStandardFragment();
+    }
+
+    @Override
+    protected int getFragmentLayoutID() {
+        return R.layout.activity_long_standard;
+    }
+
+    @Override
+    protected void initPresenterAndView(Bundle savedInstanceState) {
+        SampleApplicationLike.getApp().getComponent().inject(this);
+        mPresenter.setPresenter(this);
+
+    }
+
+    @Override
+    protected void initDelayedData() {
+        setCurrentItem(0);
+        //注册事件
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    protected void lazyLoadingData() {
+        ((RecordDetailsActivity) (getActivity())).setOnclickInterface(this);//注册监听
+    }
+
+    /**
+     * 从主activity传递过来的position  添加监测指标事件
+     * @param position
+     */
+    @Override
+    public void deliverPosition(int position) {
+        if (position == 3){
+            switchPageUI(Global.Jump.AddMonitorIndexActivity);
+        }
+    }
+
+    /**
+     * fragment 操作
+     *
+     * @param i
+     */
+    public void setCurrentItem(int i) {
+        if (i != currentPosition) {
+            FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
+            hideAllFragments(fragmentTransaction);
+            switch (i) {
+                case 0:
+                    addOrShowFragment(i, fragmentTransaction, mChartsFragment, String.valueOf(i));
+                    break;
+                case 1:
+                    addOrShowFragment(i, fragmentTransaction, mGraphDataFragment, String.valueOf(i));
+                    break;
+                default:
+                    break;
+            }
+            fragmentTransaction.commit();
+            currentPosition = i;
+        }
+    }
+
+    private void hideAllFragments(FragmentTransaction fragmentTransaction) {
+        if (mChartsFragment != null) fragmentTransaction.hide(mChartsFragment);
+        if (mGraphDataFragment != null) fragmentTransaction.hide(mGraphDataFragment);
+    }
+
+    private void addOrShowFragment(int i, FragmentTransaction fragmentTransaction, Fragment fragment, String tag) {
+        if (fragment == null) {
+            fragmentTransaction.add(R.id.fl_chart, getItem(i), tag);
+        } else {
+            fragmentTransaction.show(fragment);
+        }
+    }
+
+    public Fragment getItem(int position) {
+        switch (position) {
+            case 0:
+                if (mChartsFragment == null)
+                    mChartsFragment = ChartsFragment.newInstance();
+                return mChartsFragment;
+            case 1:
+                if (mGraphDataFragment == null)
+                    mGraphDataFragment = GraphDataFragment.newInstance();
+                return mGraphDataFragment;
+            default:
+                return null;
+        }
+    }
+
+    @OnClick({R.id.rbtn_chart, R.id.rbtn_graphData})
+    public void rBtnOnClick(View view) {
+        switch (view.getId()) {
+            case R.id.rbtn_chart:
+                clickChartBtn();
+                break;
+            case R.id.rbtn_graphData:
+                setCurrentItem(1);
+                break;
+            default:
+                break;
+        }
+    }
+
+    private void clickChartBtn() {
+        if (currentPosition == 1) {
+            setCurrentItem(0);
+        } else {
+            mPresenter.dialogDateByList(beanList);
+        }
+    }
+
+
+    /**
+     * 编辑后通知
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
+    public void eventBusMain(LongHStandardCompileEvent event) {
+        updateDataOnly();
+    }
+
+    /**
+     * 得到当前病人的patientId
+     * @return
+     */
+    @Override
+    public int getPatientId() {
+        return ((RecordDetailsActivity)(getActivity())).getPatientId();
+    }
+
+    /**
+     * 弹出框选择
+     */
+    @Override
+    public void showDialogByString(String[] strings) {
+        DialogUtils.showStringDialog(getActivity(), strings, index -> {
+            //显示所有绘图
+            mRbtnChart.setText(strings[index]);
+            mPresenter.needToDisplayData(strings[index], beanList);
+        });
+    }
+
+    /**
+     * 成功加载的数据回传
+     *
+     * @param list
+     */
+    @Override
+    public void loadingDataSuccess(List<LongTermMonitoringDisplayBean> list) {
+        if (!beanList.isEmpty()) beanList.clear();
+        beanList.addAll(list);
+
+        if (isDeleteOperation) {
+            mPresenter.needToDisplayData(mRbtnChart.getText().toString(), beanList);
+        }
+    }
+
+    /**
+     * 事件分发 chartsfgt/graphdatafgt
+     */
+    @Override
+    public void distributionListData(List<List<LongTermMonitoringDisplayBean>> lists) {
+        EventBus.getDefault().postSticky(new ChartsFgtStrEvent(lists));
+        setDeleteOperation(false);
+    }
+
+    /**
+     * 标记更新
+     */
+    public void setDeleteOperation(boolean flag) {
+        isDeleteOperation = flag;
+    }
+
+    @Override
+    public void updateDataOnly() {
+        setDeleteOperation(true);
+        mPresenter.onSubscribe();
+    }
+
+    @Override
+    public void switchPageUI(String className) {
+        switch (className) {
+            case Global.Jump.CompileProgramActivity:
+                skipTo(CompileProgramActivity.class);
+                break;
+            case Global.Jump.AddMonitorIndexActivity:
+                EventBus.getDefault().postSticky(new AddMIndexBeanEvent(getPatientId()));
+                skipTo(AddMonitorIndexActivity.class);
+                break;
+            default:
+                break;
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (!beanList.isEmpty()) beanList.clear();
+        removeStickyEvent(LongHStandardBeanEvent.class);
+        removeStickyEvent(LongHStandardCompileEvent.class);
+        mPresenter.unSubscribe();
+        //注销事件
+        EventBus.getDefault().unregister(this);
+    }
+}

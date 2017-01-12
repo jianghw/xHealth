@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@color/color_bg_gray"
+              android:orientation="vertical">
+
+    <include layout="@layout/include_action_bar"/>
+
+    <com.kaurihealth.utilslib.widget.MaterialSearchBar
+        android:id="@+id/searchBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:hint="请输入至少两个字符疾病"
+        android:layout_marginBottom="@dimen/dimen_8"
+        android:layout_marginLeft="@dimen/dimen_14"
+        android:layout_marginRight="@dimen/dimen_14"
+        android:layout_marginTop="@dimen/dimen_10"/>
+
+    <com.kaurihealth.utilslib.widget.FlowLayout
+        android:id="@+id/search_sicknesses"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/dimen_10"
+        android:layout_marginLeft="@dimen/dimen_14"
+        android:layout_marginRight="@dimen/dimen_14"
+        app:itemColor="@color/color_text_title"
+        app:itemSize="@dimen/textSize_12">
+    </com.kaurihealth.utilslib.widget.FlowLayout>
+
+    <com.kaurihealth.utilslib.widget.ScrollChildSwipeRefreshLayout
+        android:id="@+id/swipe_refresh"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:id="@+id/lay_scroll"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:id="@+id/lay_choice"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/color_white"
+                android:orientation="horizontal">
+
+                <ListView
+                    android:id="@+id/lv_left"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:divider="@null"
+                    android:scrollbars="none"/>
+
+                <TextView
+                    android:layout_width="1px"
+                    android:background="#e7ecee"
+                    android:layout_height="match_parent"/>
+
+                <com.kaurihealth.utilslib.widget.AnimatedExpandableListView
+                    android:id="@+id/lv_right"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="2"
+                    android:divider="@null"
+                    android:childDivider="#dfdfdd"
+                    android:dividerHeight="0.5dp"
+                    android:scrollbars="none"/>
+            </LinearLayout>
+
+            <ListView
+                android:id="@+id/lv_search"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/color_white"
+                android:scrollbars="none"
+                android:visibility="gone"/>
+
+            <TextView
+                android:id="@+id/tv_note"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:drawablePadding="@dimen/dimen_16"
+                android:drawableTop="@drawable/ic_no_search"
+                android:gravity="center"
+                android:text="暂未搜索到该疾病，点击图案添加此疾病"
+                android:textColor="@color/color_text_prompt"
+                android:visibility="gone"/>
+        </RelativeLayout>
+    </com.kaurihealth.utilslib.widget.ScrollChildSwipeRefreshLayout>
+</LinearLayout>

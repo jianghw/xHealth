@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/color_bg_gray">
+
+    <include
+        android:id="@+id/in_title"
+        layout="@layout/include_action_bar"/>
+
+    <com.kaurihealth.utilslib.widget.MaterialSearchBar
+        android:id="@+id/searchBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/in_title"
+        android:layout_marginLeft="@dimen/dimen_14"
+        android:layout_marginRight="@dimen/dimen_14"
+        android:layout_marginTop="@dimen/dimen_10"
+        app:hint="请输入医生姓名或医院、科室名称"/>
+
+    <ListView
+        android:id="@+id/doctor_search_lv"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/searchBar"
+        android:layout_marginTop="@dimen/margin_10">
+    </ListView>
+
+    <TextView
+        android:id="@+id/tv_note"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:drawablePadding="@dimen/dimen_16"
+        android:drawableTop="@drawable/ic_no_search"
+        android:gravity="center"
+        android:text="暂无相关数据！"
+        android:textColor="@color/color_text_prompt"
+        android:visibility="gone"/>
+
+</RelativeLayout>

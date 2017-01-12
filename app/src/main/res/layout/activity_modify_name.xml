@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="#ffffff"
+              android:orientation="vertical">
+
+    <include
+        android:id="@+id/in_title"
+        layout="@layout/include_action_bar"/>
+
+    <!--患者姓-->
+    <RelativeLayout
+        style="@style/open_an_account">
+
+        <View style="@style/Login_Vertical_Line"/>
+
+        <EditText
+            android:id="@+id/tvFirstName"
+            style="@style/Login_EditText"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:background="@null"
+            android:drawableLeft="@mipmap/name_icon"
+            android:drawablePadding="22dp"
+            android:hint="姓"/>
+
+        <TextView
+            style="@style/Img_Delete"
+            android:text="*"
+            android:textColor="#e40404"/>
+
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/tv_02"
+        style="@style/Line_of_open_account"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"/>
+    <!--患者姓-->
+
+    <!--患者名-->
+    <RelativeLayout
+        style="@style/open_an_account">
+
+        <View style="@style/Login_Vertical_Line"/>
+
+        <EditText
+            android:id="@+id/tvLastName"
+            style="@style/Login_EditText"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:background="@null"
+            android:drawableLeft="@mipmap/name_icon"
+            android:drawablePadding="22dp"
+            android:hint="名"/>
+
+        <TextView
+            style="@style/Img_Delete"
+            android:text="*"
+            android:textColor="#e40404"/>
+
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/tv_03"
+        style="@style/Line_of_open_account"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        />
+    <!--患者名-->
+</LinearLayout>

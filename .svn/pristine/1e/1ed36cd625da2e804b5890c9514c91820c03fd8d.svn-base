@@ -1,0 +1,225 @@
+package com.kaurihealth.kaurihealth.save_record_v;
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.widget.LinearLayout;
+import android.widget.ScrollView;
+import android.widget.TextView;
+
+import com.kaurihealth.datalib.local.LocalData;
+import com.kaurihealth.datalib.request_bean.bean.NewPatientRecordDisplayBean;
+import com.kaurihealth.datalib.response_bean.DepartmentDisplayBean;
+import com.kaurihealth.datalib.response_bean.DoctorDisplayBean;
+import com.kaurihealth.datalib.response_bean.PatientRecordDisplayDto;
+import com.kaurihealth.kaurihealth.R;
+import com.kaurihealth.kaurihealth.base_v.BaseActivity;
+import com.kaurihealth.kaurihealth.eventbus.HospitalRecordCompileEvent;
+import com.kaurihealth.kaurihealth.eventbus.OutPatientRecordAddEvent;
+import com.kaurihealth.kaurihealth.eventbus.RefreshEvent;
+import com.kaurihealth.kaurihealth.manager_v.ViewFactoryManager;
+import com.kaurihealth.kaurihealth.manager_v.loading.LoadingErrorFactory;
+import com.kaurihealth.kaurihealth.manager_v.save.OutpatientRecordSaveFactory;
+import com.kaurihealth.kaurihealth.tinker.SampleApplicationLike;
+import com.kaurihealth.mvplib.save_record_p.IOutpatientRecordSaveView;
+import com.kaurihealth.mvplib.save_record_p.OutpatientRecordSavePresenter;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
+import java.util.List;
+
+import javax.inject.Inject;
+
+import butterknife.Bind;
+import butterknife.OnClick;
+
+/**
+ * Created by jianghw .
+ * <p/>
+ * Describle: 保存门诊记录
+ */
+public class OutpatientRecordSaveActivity extends BaseActivity implements IOutpatientRecordSaveView {
+    @Inject
+    OutpatientRecordSavePresenter<IOutpatientRecordSaveView> mPresenter;
+
+    @Bind(R.id.tv_more)
+    TextView mTvMore;
+    @Bind(R.id.lay_content)
+    LinearLayout mLayContent;
+    @Bind(R.id.scrollView)
+    ScrollView mScrollView;
+
+    private OutpatientRecordSaveFactory viewFactory;
+    private LoadingErrorFactory errorFactory;
+    private String mAdd;
+
+    @Override
+    protected int getActivityLayoutID() {
+        return R.layout.activity_hospital_compile;
+    }
+
+    @Override
+    protected void initPresenterAndView(Bundle savedInstanceState) {
+        SampleApplicationLike.getApp().getComponent().inject(this);
+        mPresenter.setPresenter(this);
+
+        initNewBackBtn("门诊病历");
+        mTvMore.setText(getString(R.string.title_save));
+    }
+
+    @Override
+    protected void initDelayedData() {
+        EventBus.getDefault().register(this);
+    }
+
+    /**
+     * 编辑
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
+    public void eventBusMain(HospitalRecordCompileEvent event) {
+        PatientRecordDisplayDto displayDto = event.getPatientRecordDisplayDto();
+        if (displayDto != null) {
+            loadPatientRecordSucceed(displayDto);
+        } else {
+            loadPatientRecordError("数据出错,请退出当前页面");
+        }
+    }
+
+    /**
+     * 添加
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN,sticky = true)
+    public void eventBusMain(OutPatientRecordAddEvent event){
+        mAdd = event.getAdd();
+        PatientRecordDisplayDto displayDto= event.getPatientRecordDisplayDto();
+        setMustItem(displayDto);
+        loadPatientRecordSucceed(displayDto);
+    }
+
+    /**
+     *  必填项
+     */
+    private void setMustItem(PatientRecordDisplayDto displayDto){
+        PatientRecordDisplayDto recordDisplayDto = displayDto;
+        DoctorDisplayBean myself = LocalData.getLocalData().getMyself();
+        recordDisplayDto.setDoctor(myself.getFullName());
+        if (myself.getDoctorInformations()!=null){
+            if (myself.getDoctorInformations().getDepartment()!=null){
+                DepartmentDisplayBean department = new DepartmentDisplayBean();
+                department.setDepartmentName(myself.getDoctorInformations().getDepartment().getDepartmentName());
+                recordDisplayDto.setDepartment(department);
+            }
+        }
+        recordDisplayDto.setHospital(myself.getDoctorInformations().getHospitalName());
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        removeStickyEvent(OutPatientRecordAddEvent.class);
+        if (viewFactory != null) viewFactory.unbindView();
+        if (errorFactory != null) errorFactory.unbindView();
+        EventBus.getDefault().unregister(this);
+        mPresenter.unSubscribe();
+    }
+
+    /**
+     * 成功布局
+     */
+    public void loadPatientRecordSucceed(PatientRecordDisplayDto displayDto) {
+        if (errorFactory != null) errorFactory.hiddenLayout();
+
+        if (viewFactory == null) {
+            viewFactory = (OutpatientRecordSaveFactory) ViewFactoryManager.createViewFactory(this, mLayContent);
+        } else {
+            viewFactory.showLayout();
+        }
+        if (viewFactory != null) {
+            viewFactory.fillNewestData(displayDto, 0);
+        }
+        mScrollView.scrollTo(0, 0);
+    }
+
+    /**
+     * 失败布局
+     */
+    public void loadPatientRecordError(String message) {
+        if (viewFactory != null) viewFactory.hiddenLayout();
+
+        if (errorFactory == null) {
+            errorFactory = (LoadingErrorFactory) ViewFactoryManager.createErrorFactory(this, mLayContent);
+        } else {
+            errorFactory.showLayout();
+        }
+
+        if (errorFactory != null) {
+            errorFactory.fillNewestData(message, 0);
+        }
+        mScrollView.scrollTo(0, 0);
+    }
+
+    /**
+     * 保存
+     */
+    @OnClick(R.id.tv_more)
+    public void addMoreClick() {
+        if (mAdd !=null){
+            //添加
+            mPresenter.addNewPatientRecord();
+        }else {
+            //编辑
+            mPresenter.loadingRemoteData(true);
+        }
+    }
+
+    /**
+     * 权限回调
+     */
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (viewFactory != null)
+            viewFactory.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (viewFactory != null) viewFactory.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
+    public void switchPageUI(String className) {
+
+    }
+
+    @Override
+    public List<String> getImagePathsList() {
+        return viewFactory != null ? viewFactory.getImagePathsList() : null;
+    }
+
+    @Override
+    public PatientRecordDisplayDto getRequestPatientRecordBean() {
+        return viewFactory != null ? viewFactory.getRequestPatientRecordBean() : new PatientRecordDisplayDto();
+    }
+
+    /**
+     * 得到门诊添加bean
+     * @return
+     */
+    @Override
+    public NewPatientRecordDisplayBean getNewPatientRecordDisplayBean() {
+        return viewFactory != null ? viewFactory.getNewPatientRecordDisplayBean() : new NewPatientRecordDisplayBean();
+    }
+
+    @Override
+    public void updatePatientRecordSucceed(PatientRecordDisplayDto bean) {
+        EventBus.getDefault().postSticky(new RefreshEvent());//刷新
+        setResult(RESULT_OK);
+            finishCur();
+    }
+
+
+}

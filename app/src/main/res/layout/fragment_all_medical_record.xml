@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/color_bg_gray">
+
+    <com.kaurihealth.utilslib.widget.MaterialSearchBar
+        android:id="@+id/searchBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginBottom="@dimen/dimen_8"
+        android:layout_marginLeft="@dimen/dimen_14"
+        android:layout_marginRight="@dimen/dimen_14"
+        android:layout_marginTop="@dimen/dimen_10"/>
+
+    <com.kaurihealth.utilslib.widget.ScrollChildSwipeRefreshLayout
+        android:id="@+id/swipe_refresh"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/searchBar">
+
+        <ListView
+            android:id="@+id/lv_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:scrollbars="none"
+            android:divider="@null"
+            tools:listitem="@layout/list_item_all_medical_records"/>
+
+    </com.kaurihealth.utilslib.widget.ScrollChildSwipeRefreshLayout>
+
+    <TextView
+        android:id="@+id/tv_note"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:drawablePadding="@dimen/dimen_16"
+        android:drawableTop="@drawable/ic_no_search"
+        android:gravity="center"
+        android:text="暂无相关数据"
+        android:textColor="@color/color_text_prompt"
+        android:visibility="gone"/>
+</RelativeLayout>

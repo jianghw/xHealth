@@ -1,0 +1,48 @@
+package com.kaurihealth.kaurihealth.manager_v;
+
+import android.content.Context;
+import android.support.v4.app.Fragment;
+import android.view.ViewGroup;
+
+import com.kaurihealth.datalib.response_bean.PatientRecordCountDisplayBean;
+import com.kaurihealth.utilslib.controller.IViewFactory;
+
+/**
+ * Created by jianghw on 2016/12/16.
+ * <p/>
+ * Describe: 病历详情组装页面
+ */
+
+public class MedicalRecentlyFactory implements IViewFactory<PatientRecordCountDisplayBean> {
+
+    private final Context mContext;
+    /**
+     * 病人模块
+     */
+    private RecordPatientView mRecordPatientView;
+
+    public MedicalRecentlyFactory(Fragment clazz) {
+        this.mContext = clazz.getContext();
+    }
+
+    @Override
+    public void createIncludeViews() {
+        mRecordPatientView = new RecordPatientView(mContext);
+    }
+
+    @Override
+    public void attachRootView(ViewGroup root) {
+        mRecordPatientView.attachRoot(root);
+    }
+
+    @Override
+    public void fillNewestData(PatientRecordCountDisplayBean beanData) {
+        mRecordPatientView.fillData(beanData);
+    }
+
+    @Override
+    public void unbindView() {
+        mRecordPatientView.unbindView();
+    }
+
+}

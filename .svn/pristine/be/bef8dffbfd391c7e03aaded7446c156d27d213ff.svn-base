@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_bg_gray">
+
+    <!--标题Start-->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/color_enable_green">
+        <ImageView
+            android:id="@+id/iv_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/margin_16"
+            android:layout_marginStart="@dimen/margin_16"
+            android:src="@mipmap/right_back"/>
+
+        <TextView
+            android:id="@+id/tv_save"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:textColor="@color/color_white"
+            android:textSize="18sp"
+            android:layout_marginRight="@dimen/margin_16"
+            android:layout_marginEnd="@dimen/margin_16"
+            tools:text="存储"/>
+    <!--标题End-->
+    </RelativeLayout>
+
+    <!--机构Start-->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!--机构标题-->
+        <TextView
+            android:id="@+id/tv_hospital"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="请填写选择机构"
+            android:textSize="14sp"
+            android:layout_marginTop="20dp"
+            android:layout_marginLeft="14dp"
+            android:layout_marginBottom="5dp"/>
+
+        <!--白色选择框-->
+        <RelativeLayout
+            android:id="@+id/rlay_hospital"
+            style="@style/Bg_Lay_Press">
+
+            <ImageView
+                style="@style/Image_Arrow_Right"
+                android:src="@mipmap/arrow_right" />
+
+            <TextView
+                android:id="@+id/tv_select_hospital"
+                style="@style/Doctor_BodyText"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:hint="请选择你机构" />
+        </RelativeLayout>
+    <!--机构End-->
+    </LinearLayout>
+
+    <!--科室Start-->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <!--科室标题-->
+        <TextView
+            android:id="@+id/tv_department"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="请填写选择科室"
+            android:textSize="14sp"
+            android:layout_marginTop="20dp"
+            android:layout_marginLeft="14dp"
+            android:layout_marginBottom="5dp"/>
+        <!--白色选择框-->
+        <RelativeLayout
+            android:id="@+id/rlay_department"
+            style="@style/Bg_Lay_Press">
+            <ImageView
+                style="@style/Image_Arrow_Right"
+                android:src="@mipmap/arrow_right" />
+            <TextView
+                android:id="@+id/tv_select_department"
+                style="@style/Doctor_BodyText"
+                android:hint="请选择你的科室"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"/>
+        </RelativeLayout>
+        <!--科室End-->
+    </LinearLayout>
+
+</LinearLayout>

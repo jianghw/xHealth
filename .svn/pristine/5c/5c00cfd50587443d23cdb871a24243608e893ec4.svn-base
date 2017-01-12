@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+    <!--圆形头像-->
+    <declare-styleable name="CircleImageView">
+        <attr name="civ_border_width" format="dimension"/>
+        <attr name="civ_border_color" format="color"/>
+        <attr name="civ_border_overlay" format="boolean"/>
+        <attr name="civ_fill_color" format="color"/>
+    </declare-styleable>
+    <!--配置间隔属性-->
+    <declare-styleable name="NineGridImageView">
+        <attr name="imgGap" format="dimension"/>
+    </declare-styleable>
+    <!--搜索栏-->
+    <declare-styleable name="MaterialSearchBar">
+        <attr name="searchIconDrawable" format="reference"/>
+        <attr name="hint" format="string"/>
+        <attr name="speechMode" format="boolean"/>
+        <attr name="hintColor" format="color"/>
+        <attr name="textColor" format="color"/>
+    </declare-styleable>
+
+    <declare-styleable name="FlowLayoutAttrs">
+        <attr name="horizontalSpacing" format="dimension" />
+        <attr name="verticalSpacing" format="dimension" />
+        <attr name="itemSize" format="dimension" />
+        <attr name="itemColor" format="color" />
+        <attr name="backgroundResource" format="reference" />
+        <attr name="textPaddingH" format="dimension" />
+        <attr name="textPaddingV" format="dimension" />
+    </declare-styleable>
+</resources>

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:background="@color/color_bg_gray"
+              android:orientation="vertical">
+
+    <TextView
+        style="@style/Line_Match"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimen_40"
+        android:background="@color/color_white">
+
+        <TextView
+            android:id="@+id/tv_subject"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_gravity="center"
+            android:textColor="@color/color_tab_black"
+            android:textSize="@dimen/textSize_14"
+            tools:text="门诊记录"/>
+
+        <ImageView
+            android:id="@+id/img_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="@dimen/dimen_8"
+            android:layout_toRightOf="@+id/tv_subject"
+            android:src="@drawable/image_icon"/>
+
+        <TextView
+            android:id="@+id/tv_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_gravity="center"
+            android:textColor="@color/color_text_gray"
+            android:textSize="@dimen/textSize_14"
+            tools:text="2016/12/54"/>
+    </RelativeLayout>
+</LinearLayout>

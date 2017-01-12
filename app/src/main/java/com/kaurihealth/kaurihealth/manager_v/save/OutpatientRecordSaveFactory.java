@@ -1,0 +1,96 @@
+package com.kaurihealth.kaurihealth.manager_v.save;
+
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
+import android.view.ViewGroup;
+
+import com.kaurihealth.datalib.request_bean.bean.NewPatientRecordDisplayBean;
+import com.kaurihealth.datalib.response_bean.PatientRecordDisplayDto;
+import com.kaurihealth.kaurihealth.manager_v.compile.HospitalPatientView;
+import com.kaurihealth.utilslib.controller.IViewFactory;
+
+import java.util.List;
+
+/**
+ * Created by jianghw on 2016/12/16.
+ * <p/>
+ * Describe: 门诊组装页面
+ */
+
+public class OutpatientRecordSaveFactory implements IViewFactory<PatientRecordDisplayDto> {
+
+    private final Context mContext;
+    /**
+     * 病人信息模块
+     */
+    private HospitalPatientView mHospitalPatientView;
+    /**
+     * 入院记录
+     */
+    private OutpatientMedicalSaveView mOutpatientMedicalSaveView;
+
+    public OutpatientRecordSaveFactory(Context context) {
+        this.mContext = context;
+    }
+
+    @Override
+    public void createIncludeViews() {
+        mHospitalPatientView = new HospitalPatientView(mContext);
+        mOutpatientMedicalSaveView = new OutpatientMedicalSaveView(mContext);
+    }
+
+    @Override
+    public void attachRootView(ViewGroup root) {
+        mHospitalPatientView.attachRoot(root);
+        mOutpatientMedicalSaveView.attachRoot(root);
+    }
+
+    @Override
+    public void fillNewestData(PatientRecordDisplayDto beanData, int position) {
+        mHospitalPatientView.fillData(beanData);
+        mOutpatientMedicalSaveView.fillData(beanData);
+    }
+
+    @Override
+    public void unbindView() {
+        mHospitalPatientView.unbindView();
+        mOutpatientMedicalSaveView.unbindView();
+    }
+
+    @Override
+    public void showLayout() {
+        mHospitalPatientView.showLayout();
+        mOutpatientMedicalSaveView.showLayout();
+    }
+
+    @Override
+    public void hiddenLayout() {
+        mHospitalPatientView.hiddenLayout();
+        mOutpatientMedicalSaveView.hiddenLayout();
+    }
+
+    public void childNeedActivity(Activity clazz) {
+        mOutpatientMedicalSaveView.childNeedActivity(clazz);
+    }
+
+    public void onRequestPermissionsResult(int code, String[] permissions, int[] results) {
+        mOutpatientMedicalSaveView.onRequestPermissionsResult(code, permissions, results);
+    }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        mOutpatientMedicalSaveView.onActivityResult(requestCode, resultCode, data);
+    }
+
+    public List<String> getImagePathsList() {
+        return mOutpatientMedicalSaveView.getImagePathsList();
+    }
+
+    public PatientRecordDisplayDto getRequestPatientRecordBean() {
+        return mOutpatientMedicalSaveView.getRequestPatientRecordBean();
+    }
+
+    public NewPatientRecordDisplayBean getNewPatientRecordDisplayBean() {
+        return mOutpatientMedicalSaveView.getNewPatientRecordDisplayBean();
+    }
+}

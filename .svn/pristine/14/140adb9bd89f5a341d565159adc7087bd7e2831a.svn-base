@@ -1,0 +1,28 @@
+package com.kaurihealth.datalib.response_bean;
+
+/**
+ * Created by jianghw on 2016/12/14.
+ * <p/>
+ * Describe: 疾病
+ * GET api/DoctorPatientRelationship/LoadDoctorMainPage
+ */
+public class SicknessesBean {
+    private int sicknessId;
+    private String sicknessName;
+
+    public int getSicknessId() {
+        return sicknessId;
+    }
+
+    public void setSicknessId(int sicknessId) {
+        this.sicknessId = sicknessId;
+    }
+
+    public String getSicknessName() {
+        return sicknessName;
+    }
+
+    public void setSicknessName(String sicknessName) {
+        this.sicknessName = sicknessName;
+    }
+}

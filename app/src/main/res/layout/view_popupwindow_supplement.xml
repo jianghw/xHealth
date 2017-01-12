@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:background="@drawable/popup_shape"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tv_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:padding="16dp"
+            android:text="新增医疗记录"
+            android:textColor="#666"
+            android:textSize="18sp" />
+
+        <!--辅助检查-->
+        <RelativeLayout
+            android:id="@+id/rl_c"
+            android:gravity="center"
+            android:padding="10dp"
+            android:background="#e5e5e5"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:text="辅助检查"
+                android:id="@+id/Tv_c"
+                android:textSize="18sp"
+                android:textColor="#3a3a3a"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <ImageView
+                android:id="@+id/clinical_back"
+                android:onClick="onClickIm"
+                android:layout_alignParentRight="true"
+                android:layout_centerInParent="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="@dimen/margin_10"
+                android:src="@mipmap/more_up_icon"/>
+        </RelativeLayout>
+        <!--临床-->
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.1px"
+            android:layout_marginRight="@dimen/margin_10"
+            android:layout_marginLeft="@dimen/margin_10"
+            android:background="#c3bfbf" />
+
+        <TextView
+            android:id="@+id/clinical_outpatient"
+            android:text="影像学检查"
+            android:padding="10dp"
+            android:textSize="18sp"
+            android:textColor="#3a3a3a"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.1px"
+            android:layout_marginRight="@dimen/margin_10"
+            android:layout_marginLeft="@dimen/margin_10"
+            android:background="#c3bfbf" />
+
+        <TextView
+            android:id="@+id/supplement_blood_vessel"
+            android:text="心血管系统相关检查"
+            android:padding="10dp"
+            android:textSize="18sp"
+            android:textColor="#3a3a3a"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.1px"
+            android:layout_marginRight="@dimen/margin_10"
+            android:layout_marginLeft="@dimen/margin_10"
+            android:background="#c3bfbf" />
+        <TextView
+            android:id="@+id/supplement_other"
+            android:text="其它检查"
+            android:padding="10dp"
+            android:textSize="18sp"
+            android:textColor="#3a3a3a"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+        </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginLeft="8dp"
+        android:background="@drawable/popup_shape">
+
+        <TextView
+            android:id="@+id/tv_cancel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:padding="16dp"
+            android:text="取消"
+            android:textColor="#118"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+</LinearLayout>

@@ -1,0 +1,385 @@
+package com.kaurihealth.kaurihealth.sickness_v;
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ExpandableListView;
+import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+
+import com.kaurihealth.datalib.request_bean.bean.LoadAllSicknessItem;
+import com.kaurihealth.datalib.response_bean.AllSicknessDisplayBean;
+import com.kaurihealth.datalib.response_bean.ChildDepartmentsBean;
+import com.kaurihealth.datalib.response_bean.SicknessBean;
+import com.kaurihealth.datalib.response_bean.SicknessesBean;
+import com.kaurihealth.kaurihealth.R;
+import com.kaurihealth.kaurihealth.adapter.LoadAllSicknessAdapter;
+import com.kaurihealth.kaurihealth.adapter.LoadAllSicknessLeftAdapter;
+import com.kaurihealth.kaurihealth.adapter.SearchAllSicknessAdapter;
+import com.kaurihealth.kaurihealth.base_v.BaseActivity;
+import com.kaurihealth.kaurihealth.tinker.SampleApplicationLike;
+import com.kaurihealth.mvplib.sickness_p.ILoadAllSicknessView;
+import com.kaurihealth.mvplib.sickness_p.LoadAllSicknessPresenter;
+import com.kaurihealth.utilslib.ColorUtils;
+import com.kaurihealth.utilslib.constant.Global;
+import com.kaurihealth.utilslib.widget.AnimatedExpandableListView;
+import com.kaurihealth.utilslib.widget.FlowLayout;
+import com.kaurihealth.utilslib.widget.MaterialSearchBar;
+import com.kaurihealth.utilslib.widget.ScrollChildSwipeRefreshLayout;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.inject.Inject;
+
+import butterknife.Bind;
+import butterknife.OnClick;
+
+/**
+ * Created by jianghw .
+ * <p/>
+ * Describle: 按级读取科室
+ */
+public class LoadAllSicknessActivity extends BaseActivity implements
+        ILoadAllSicknessView, AdapterView.OnItemClickListener, FlowLayout.OnItemDeleteClickListener,
+        LoadAllSicknessAdapter.OnChildBoxListener, MaterialSearchBar.OnSearchActionListener,
+        SearchAllSicknessAdapter.OnSearchBoxItem, View.OnClickListener {
+    @Inject
+    LoadAllSicknessPresenter<ILoadAllSicknessView> mPresenter;
+
+    @Bind(R.id.tv_more)
+    TextView mTvMore;
+    @Bind(R.id.searchBar)
+    MaterialSearchBar mSearchBar;
+    @Bind(R.id.search_sicknesses)
+    FlowLayout mSearchSicknesses;
+    /**
+     * 左
+     */
+    @Bind(R.id.lv_left)
+    ListView mLvLeft;
+    /**
+     * 右
+     */
+    @Bind(R.id.lv_right)
+    AnimatedExpandableListView mAeRightListView;
+    @Bind(R.id.lay_choice)
+    LinearLayout mLayChoice;
+    /**
+     * 搜索
+     */
+    @Bind(R.id.lv_search)
+    ListView mLvSearch;
+    @Bind(R.id.tv_note)
+    TextView mTvNote;
+    @Bind(R.id.swipe_refresh)
+    ScrollChildSwipeRefreshLayout mSwipeRefresh;
+    @Bind(R.id.lay_scroll)
+    RelativeLayout mLayScroll;
+
+    private List<AllSicknessDisplayBean> mAllSicknessDisplayBeen = new ArrayList<>();
+    private List<LoadAllSicknessItem> mChildDepartmentsBeanList = new ArrayList<>();
+    private List<SicknessesBean> mSearchList = new ArrayList<>();
+    /**
+     * 原始疾病集合 控制器
+     */
+    private List<SicknessesBean> mSicknesseList = new ArrayList<>();
+
+    private LoadAllSicknessLeftAdapter mLeftAdapter;
+    private LoadAllSicknessAdapter mChildAdapter;
+    private SearchAllSicknessAdapter mSearchAdapter;
+    /**
+     * 左侧当前选择项
+     */
+    private int mCurPosition = 0;
+
+    @Override
+    protected int getActivityLayoutID() {
+        return R.layout.activity_load_all_sickness;
+    }
+
+    @Override
+    protected void initPresenterAndView(Bundle savedInstanceState) {
+        SampleApplicationLike.getApp().getComponent().inject(this);
+        mPresenter.setPresenter(this);
+
+        Bundle bundle = getIntent().getExtras();
+        if (bundle != null) {
+            ArrayList<SicknessBean> bundleList = bundle.getParcelableArrayList(Global.Environment.BUNDLE);
+            if (bundleList != null && !bundleList.isEmpty()) {
+                for (SicknessBean bean : bundleList) {
+                    SicknessesBean sicknessesBean = new SicknessesBean();
+                    sicknessesBean.setSicknessName(bean.getSicknessName());
+                    if (bean.getSicknessId() != null)
+                        sicknessesBean.setSicknessId(bean.getSicknessId());
+                    mSicknesseList.add(sicknessesBean);
+                }
+                updateFlowLaySick();
+            }
+        }
+        initNewBackBtn("疾病选择");
+        mTvMore.setText(getString(R.string.more_add));
+
+        mSwipeRefresh.setColorSchemeColors(
+                ColorUtils.setSwipeRefreshColors(getApplicationContext())
+        );
+        mSwipeRefresh.setScrollUpChild(mLayScroll);
+        mSwipeRefresh.setSize(SwipeRefreshLayout.DEFAULT);
+        mSwipeRefresh.setDistanceToTriggerSync(Global.Numerical.SWIPE_REFRESH);
+        mSwipeRefresh.setOnRefreshListener(() -> mPresenter.loadingRemoteData(false));
+    }
+
+    @Override
+    protected void initDelayedData() {
+        //左
+        mLeftAdapter = new LoadAllSicknessLeftAdapter(this, mAllSicknessDisplayBeen);
+        mLvLeft.setAdapter(mLeftAdapter);
+        mLvLeft.setOnItemClickListener(this);
+        //右
+        mChildAdapter = new LoadAllSicknessAdapter(this, mChildDepartmentsBeanList, mSicknesseList);
+        mAeRightListView.setAdapter(mChildAdapter);
+        mAeRightListView.setGroupIndicator(null);
+        mChildAdapter.setOnChildBoxListener(this);
+        //搜索
+        mSearchAdapter = new SearchAllSicknessAdapter(this, mSearchList, mSicknesseList);
+        mLvSearch.setAdapter(mSearchAdapter);
+        mSearchAdapter.setSearchBoxListener(this);
+
+        mSearchBar.setOnSearchActionListener(this);
+        mTvNote.setOnClickListener(this);
+
+        mPresenter.onSubscribe();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mPresenter.unSubscribe();
+        if (!mAllSicknessDisplayBeen.isEmpty()) mAllSicknessDisplayBeen.clear();
+        if (!mChildDepartmentsBeanList.isEmpty()) mChildDepartmentsBeanList.clear();
+        if (!mSearchList.isEmpty()) mSearchList.clear();
+        if (!mSicknesseList.isEmpty()) mSicknesseList.clear();
+    }
+
+    @Override
+    public void switchPageUI(String className) {
+//TODO 暂时无
+    }
+
+    @Override
+    public void loadingIndicator(boolean flag) {
+        if (mSwipeRefresh == null) return;
+        mSwipeRefresh.post(() -> mSwipeRefresh.setRefreshing(flag));
+    }
+
+    /**
+     * 加载全部数据
+     */
+    @Override
+    public void loadAllSicknessSucceed(List<AllSicknessDisplayBean> been) {
+        mLayChoice.setVisibility(View.VISIBLE);
+        mLvSearch.setVisibility(View.INVISIBLE);
+        mTvNote.setVisibility(View.GONE);
+        if (!mAllSicknessDisplayBeen.isEmpty()) mAllSicknessDisplayBeen.clear();
+        if (been != null) mAllSicknessDisplayBeen.addAll(been);
+
+        loadRightData(mCurPosition);
+        mLeftAdapter.setItemSelected(mCurPosition);
+        mLeftAdapter.notifyDataSetChanged();
+        //滑动冲突
+        mSwipeRefresh.setEnabled(mAllSicknessDisplayBeen.isEmpty());
+    }
+
+    @Override
+    public void loadAllSicknessError() {
+        mLayChoice.setVisibility(View.INVISIBLE);
+        mLvSearch.setVisibility(View.INVISIBLE);
+        mTvNote.setVisibility(View.VISIBLE);
+        mTvNote.setText("数据出错,请下拉刷新数据");
+        mSwipeRefresh.setEnabled(mAllSicknessDisplayBeen.isEmpty());
+    }
+
+    /**
+     * 添加
+     */
+    @OnClick(R.id.tv_more)
+    public void addMoreClick() {
+        if (mSicknesseList.isEmpty()) {
+            displayErrorDialog("请至少选择一个疾病");
+        } else {
+            ArrayList<SicknessesBean> arrayList = new ArrayList<>();
+            arrayList.addAll(mSicknesseList);
+            Intent intent = getIntent();
+            intent.putParcelableArrayListExtra(Global.Bundle.RESULT_OK_SICKNESS, arrayList);
+            setResult(RESULT_OK, intent);
+            finishCur();
+        }
+    }
+
+    /**
+     * 点击左侧选择项
+     */
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        mCurPosition = position;
+
+        loadRightData(position);
+        mLeftAdapter.setItemSelected(mCurPosition);
+        mLeftAdapter.notifyDataSetChanged();
+    }
+
+    private void loadRightData(int position) {
+        AllSicknessDisplayBean allSicknessDisplayBean = mAllSicknessDisplayBeen.get(position);
+        if (allSicknessDisplayBean != null) {
+            List<ChildDepartmentsBean> childDepartments = allSicknessDisplayBean.getChildDepartments();
+            if (childDepartments != null) mPresenter.updateRightOptions(childDepartments);
+        }
+    }
+
+    @Override
+    public void updateRightOptionsSucceed(List<LoadAllSicknessItem> items) {
+        if (!mChildDepartmentsBeanList.isEmpty()) mChildDepartmentsBeanList.clear();
+        if (items != null) mChildDepartmentsBeanList.addAll(items);
+        mChildAdapter.notifyDataSetChanged();
+    }
+
+    /**
+     * 点击子item，选择疾病 右
+     *
+     * @ deprecated
+     */
+    public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
+        SicknessesBean sicknessesBean = mChildDepartmentsBeanList.get(groupPosition).getChildList().get(childPosition);
+        if (sicknessesBean == null) return false;
+        mPresenter.selectedSickDiseases(mSicknesseList, sicknessesBean);
+        return true;
+    }
+
+    /**
+     * 点击子item，选择疾病 右
+     */
+    @Override
+    public void onChildBoxListener(int groupPosition, int childPosition) {
+        SicknessesBean sicknessesBean = mChildDepartmentsBeanList.get(groupPosition).getChildList().get(childPosition);
+        if (sicknessesBean == null) return;
+        mPresenter.selectedSickDiseases(mSicknesseList, sicknessesBean);
+    }
+
+    @Override
+    public void selectedSickDiseasesSucceed(List<SicknessesBean> been) {
+        if (!mSicknesseList.isEmpty()) mSicknesseList.clear();
+        mSicknesseList.addAll(been);
+
+        updateFlowLaySickAdapter();
+    }
+
+    @Override
+    public void onItemClickDelete(int position) {
+        if (mSicknesseList.size() > position) mSicknesseList.remove(position);
+
+        updateFlowLaySickAdapter();
+    }
+
+    /**
+     * 联动刷新
+     */
+    private void updateFlowLaySickAdapter() {
+        updateFlowLaySick();
+        mChildAdapter.notifyDataSetChanged();
+        if (mLvSearch.getVisibility() == View.VISIBLE) mSearchAdapter.notifyDataSetChanged();
+    }
+
+    private void updateFlowLaySick() {
+        List<String> stringList = new ArrayList<>();
+        if (mSicknesseList != null && !mSicknesseList.isEmpty()) {
+            for (SicknessesBean bean : mSicknesseList) {
+                stringList.add(bean.getSicknessName());
+            }
+        }
+        mSearchSicknesses.setFlowLayout(stringList, this);
+    }
+
+    /**
+     * 开始搜索
+     */
+    @Override
+    public void onSearchStart() {
+        mLayChoice.setVisibility(View.INVISIBLE);
+        mLvSearch.setVisibility(View.VISIBLE);
+        mTvNote.setVisibility(View.GONE);
+        if (!mSearchList.isEmpty()) mSearchList.clear();
+        mSearchAdapter.notifyDataSetChanged();
+    }
+
+    /**
+     * 搜索
+     */
+    @Override
+    public void onSearchConfirmed(CharSequence text) {
+        if (text != null && text.length() >= 2) {
+            mPresenter.onSearchSickness(mAllSicknessDisplayBeen, text);
+        } else {
+            displayErrorDialog("请输入至少两个字符的疾病");
+        }
+    }
+
+    /**
+     * 退出搜索
+     */
+    @Override
+    public void onSearchCompleteBack() {
+        mLayChoice.setVisibility(View.VISIBLE);
+        mLvSearch.setVisibility(View.INVISIBLE);
+        mTvNote.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void onSearchDeleteBack() {
+
+    }
+
+    /**
+     * 搜索完成
+     */
+    @Override
+    public void onSearchSicknessSucceed(List<SicknessesBean> been) {
+        if (been.isEmpty()) {
+            searchNoData();
+        } else {
+            if (!mSearchList.isEmpty()) mSearchList.clear();
+            mSearchList.addAll(been);
+            mSearchAdapter.notifyDataSetChanged();
+        }
+    }
+
+    @Override
+    public void onSearchBOxItem(SicknessesBean childItem) {
+        mPresenter.selectedSickDiseases(mSicknesseList, childItem);
+    }
+
+    private void searchNoData() {
+        mLayChoice.setVisibility(View.INVISIBLE);
+        mLvSearch.setVisibility(View.INVISIBLE);
+        mTvNote.setVisibility(View.VISIBLE);
+    }
+
+    /**
+     * 搜索未到，添加图案
+     */
+    @Override
+    public void onClick(View v) {
+        String text = mSearchBar.getEditorTextContent().toString().trim();
+        if (text.length() < 2) {
+            displayErrorDialog("请在搜索栏中输入至少两个字符");
+        } else {
+            SicknessesBean bean = new SicknessesBean();
+            bean.setSicknessName(text);
+
+            mPresenter.selectedSickDiseases(mSicknesseList, bean);
+        }
+    }
+}

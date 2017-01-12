@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:layout_marginTop="16dp"
+   >
+    <TextView style="@style/Line_Gap" />
+
+    <RelativeLayout
+        android:id="@+id/rlay_lastname"
+        style="@style/Bg_Lay_Press">
+
+            <TextView
+                style="@style/Doctor_TitleText"
+                android:text="姓" />
+
+            <EditText
+                android:id="@+id/tv_lastname"
+                style="@style/Doctor_BodyText"
+                android:background="@null"
+                tools:text="xxxxxxxxxxx" />
+    </RelativeLayout>
+
+    <TextView style="@style/Line_Gap" />
+
+    <RelativeLayout
+        android:id="@+id/rlay_firstname"
+        style="@style/Bg_Lay_Press">
+
+        <TextView
+            style="@style/Doctor_TitleText"
+            android:text="名" />
+
+        <EditText
+            android:id="@+id/tv_firstname"
+            style="@style/Doctor_BodyText"
+            android:background="@null"
+            tools:text="xxxxxxxxxxx" />
+    </RelativeLayout>
+
+
+
+</LinearLayout>

@@ -1,0 +1,133 @@
+package com.kaurihealth.kaurihealth.manager_v.compile;
+
+import android.annotation.SuppressLint;
+import android.content.Context;
+import android.support.v7.widget.CardView;
+import android.view.View;
+import android.widget.LinearLayout;
+
+import com.kaurihealth.datalib.response_bean.DepartmentDisplayBean;
+import com.kaurihealth.datalib.response_bean.HospitalizationBean;
+import com.kaurihealth.datalib.response_bean.PatientRecordDisplayDto;
+import com.kaurihealth.kaurihealth.R;
+import com.kaurihealth.utilslib.CheckUtils;
+import com.kaurihealth.utilslib.controller.AbstractViewController;
+import com.kaurihealth.utilslib.date.DateUtils;
+import com.kaurihealth.utilslib.widget.CollapsibleGroupView;
+import com.kaurihealth.utilslib.widget.RecentlyRecordLayout;
+import com.kaurihealth.utilslib.widget.ReviewImageLayout;
+
+import java.util.List;
+
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
+/**
+ * Created by jianghw on 2016/12/15.
+ * <p/>
+ * Describe: 入院记录
+ */
+
+class HospitalAdmissionView extends AbstractViewController<PatientRecordDisplayDto> implements CollapsibleGroupView.ChildGroupView{
+
+    @Bind(R.id.lay_admission)
+    CollapsibleGroupView mLayAdmission;
+    @Bind(R.id.cv_admission)
+    CardView mCvAdmission;
+
+    RecentlyRecordLayout mLayDoctor;
+    RecentlyRecordLayout mLayDepartments;
+    RecentlyRecordLayout mLayOrganization;
+    RecentlyRecordLayout mLayCreatedDate;
+    RecentlyRecordLayout mLayHospitalNumber;
+    ReviewImageLayout mLayDocuments;
+    RecentlyRecordLayout mLayComment;
+
+    private LinearLayout mMeasurement;
+
+    HospitalAdmissionView(Context context) {
+        super(context);
+    }
+
+    @Override
+    protected int getResLayoutId() {
+        return R.layout.include_hospital_admission;
+    }
+
+    @Override
+    protected void onCreateView(View view) {
+        ButterKnife.bind(this, view);
+
+        mLayAdmission.setChildGroupViewBack(this);
+        mLayAdmission.initInflaterView();
+    }
+
+    @SuppressLint("SetTextI18n")
+    @Override
+    protected void bindViewData(PatientRecordDisplayDto data) {
+        List<HospitalizationBean> hospitalizationBeanList = data.getHospitalization();
+        defaultViewData();
+        if (!hospitalizationBeanList.isEmpty()) {
+            setAdmissionData(hospitalizationBeanList,data);
+        }
+    }
+
+    private void setAdmissionData(List<HospitalizationBean> hospitalizationBeanList,PatientRecordDisplayDto data) {
+        for (HospitalizationBean bean : hospitalizationBeanList) {
+            if (bean.getHospitalizationType().contains("入院")) {
+                mLayAdmission.setHintTextHidden(false);
+                mLayDoctor.contentText(CheckUtils.checkTextContent(bean.getDoctor()));
+                DepartmentDisplayBean department = bean.getDepartment();
+                mLayDepartments.contentText(CheckUtils.checkTextContent(department.getDepartmentName()));
+                mLayOrganization.contentText(CheckUtils.checkTextContent(bean.getHospital()));
+                mLayCreatedDate.contentText(DateUtils.unifiedFormatYearMonthDay(data.getRecordDate()));
+                mLayHospitalNumber.contentText(CheckUtils.checkTextContent(bean.getHospitalNumber()));
+
+                mLayDocuments.initHospitalDocumentPathAdapter(bean.getHospitalizationDocuments());
+                mLayComment.contentText(CheckUtils.checkTextContent(bean.getComment()));
+
+                mLayAdmission.notifyDataSetChanged(mMeasurement);
+                break;
+            }
+        }
+    }
+
+    @Override
+    protected void defaultViewData() {
+        mLayAdmission.setHintTextHidden(true);
+    }
+
+    @Override
+    protected void unbindView() {
+        ButterKnife.unbind(this);
+    }
+
+    @Override
+    protected void showLayout() {
+        mCvAdmission.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    protected void hiddenLayout() {
+        mCvAdmission.setVisibility(View.GONE);
+    }
+
+    @Override
+    public int getChildResLayoutId() {
+        return R.layout.include_collapsible_group_view_admission;
+    }
+
+    @Override
+    public void onCreateChildView(View view) {
+        mMeasurement = (LinearLayout) view.findViewById(R.id.lay_measurement);
+
+        mLayDoctor = (RecentlyRecordLayout) view.findViewById(R.id.lay_doctor);
+        mLayDepartments = (RecentlyRecordLayout) view.findViewById(R.id.lay_departments);
+        mLayOrganization = (RecentlyRecordLayout) view.findViewById(R.id.lay_organization);
+        mLayCreatedDate = (RecentlyRecordLayout) view.findViewById(R.id.lay_createdDate);
+        mLayHospitalNumber = (RecentlyRecordLayout) view.findViewById(R.id.lay_hospitalNumber);
+        mLayDocuments = (ReviewImageLayout) view.findViewById(R.id.lay_documents);
+        mLayComment = (RecentlyRecordLayout) view.findViewById(R.id.lay_comment);
+    }
+
+}

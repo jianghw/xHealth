@@ -1,0 +1,257 @@
+package com.kaurihealth.kaurihealth.record_details_v;
+
+import android.os.Bundle;
+import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewPager;
+import android.view.View;
+import android.widget.TextView;
+
+import com.kaurihealth.datalib.local.LocalData;
+import com.kaurihealth.datalib.response_bean.PatientRecordDisplayDto;
+import com.kaurihealth.kaurihealth.R;
+import com.kaurihealth.kaurihealth.adapter.MainFragmentAdapter;
+import com.kaurihealth.kaurihealth.base_v.BaseActivity;
+import com.kaurihealth.kaurihealth.eventbus.AccessoryRecordAddEvent;
+import com.kaurihealth.kaurihealth.eventbus.HospitalRecordAddEvent;
+import com.kaurihealth.kaurihealth.eventbus.LobRecordAddEvent;
+import com.kaurihealth.kaurihealth.eventbus.NMedicalRecordEvent;
+import com.kaurihealth.kaurihealth.eventbus.OutPatientRecordAddEvent;
+import com.kaurihealth.kaurihealth.save_record_v.AccessoryRecordCommonSaveActivity;
+import com.kaurihealth.kaurihealth.save_record_v.HospitalRecordSaveActivity;
+import com.kaurihealth.kaurihealth.save_record_v.LobRecordCommonSaveActivity;
+import com.kaurihealth.kaurihealth.save_record_v.OutpatientRecordSaveActivity;
+import com.kaurihealth.utilslib.constant.Global;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import butterknife.Bind;
+import butterknife.OnClick;
+
+
+/**
+ * 病历详情-->医疗记录、健康记录、处方、长期监测指标、医疗团队
+ */
+public class RecordDetailsActivity extends BaseActivity {
+
+    List<Fragment> mFragmentList = new ArrayList<>();
+    @Bind(R.id.tabLayout)
+    TabLayout mTabLayout;
+    @Bind(R.id.vp_content)
+    ViewPager mVpContent;
+    @Bind(R.id.tv_more)
+    TextView mTvMore;
+    /**
+     * 患者id
+     */
+    protected int mPatientId;
+    /**
+     * 患者性别
+     */
+    protected String mGender;
+
+    private int mPosition;
+    private NMedicalRecordFragment caseHistoryFragment;
+
+    @Override
+    protected int getActivityLayoutID() {
+        return R.layout.activity_details;
+    }
+
+    @Override
+    protected void initPresenterAndView(Bundle savedInstanceState) {
+        Bundle bundle = getBundle();
+        if (bundle != null) {
+            mPatientId = bundle.getInt(Global.Bundle.SEARCH_PATIENT);
+            mGender = bundle.getString(Global.Bundle.SEARCH_GENDER);
+            boolean mShip = bundle.getBoolean(Global.Bundle.PATIENT_SHIP, false);
+            LocalData.getLocalData().setCurrentPatientShip(mShip);
+        }
+        mTvMore.setText("新增");
+        /**
+         * 等NMedicalFrag 加载完成
+         */
+        moreBtnVisibility(false);
+
+        initNewBackBtn("病历详情");
+        createCurrentFragment();
+
+        EventBus.getDefault().register(this);
+    }
+
+    private void createCurrentFragment() {
+        if (mFragmentList.size() > 0) mFragmentList.clear();
+        caseHistoryFragment = NMedicalRecordFragment.newInstance();
+        HealthConditionFragment healthConditionFragment = HealthConditionFragment.getInstance();
+        PresctiptionFragment presctiptionFragment = PresctiptionFragment.getInstance();
+        LongHealthyStandardFragment healthyStandardFragment = LongHealthyStandardFragment.getInstance();
+        DoctorTeamFragment doctorTeamFragment = DoctorTeamFragment.getIntance();
+        FamilyMembersFragment familyMembersFragment = FamilyMembersFragment.getInstance();
+
+        mFragmentList.add(caseHistoryFragment);
+        mFragmentList.add(healthConditionFragment);
+        mFragmentList.add(presctiptionFragment);
+        mFragmentList.add(healthyStandardFragment);
+        mFragmentList.add(doctorTeamFragment);
+        mFragmentList.add(familyMembersFragment);
+    }
+
+    @Override
+    protected void initDelayedData() {
+        String[] arrays = getResources().getStringArray(R.array.record_details_tab);
+        initViewPager(arrays);
+    }
+
+    private void initViewPager(String[] arrays) {
+        MainFragmentAdapter mainFragmentAdapter = new MainFragmentAdapter(getSupportFragmentManager(), mFragmentList, arrays);
+        mVpContent.setAdapter(mainFragmentAdapter);
+        mVpContent.setOffscreenPageLimit(mFragmentList.size() - 1);//设置预加载
+        mVpContent.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                mPosition = position;
+                displayView(position);
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+            }
+        });
+
+        //将TabLayout和ViewPager关联起来。
+        mTabLayout.setupWithViewPager(mVpContent);
+        //给TabLayout设置适配器
+        mTabLayout.setTabsFromPagerAdapter(mainFragmentAdapter);
+    }
+
+    private void displayView(int position) {
+        switch (position) {
+            case 0:
+                mTvMore.setText("新增");//医疗记录
+                break;
+            case 1:
+                mTvMore.setText("保存");//健康记录
+                break;
+            case 2:
+                mTvMore.setText("添加");//处方
+                break;
+            case 3:
+                mTvMore.setText("添加");//长期监测指标
+                break;
+            case 4:
+                mTvMore.setText("");//医生团队
+                break;
+            case 5:
+                mTvMore.setText("添加");//家庭成员
+                break;
+        }
+
+    }
+
+    /**
+     * 根据发送position 判断
+     */
+    @OnClick(R.id.tv_more)
+    public void onClick(View view) {
+        if (mTvMore.getText().toString().equals("新增")) {
+            caseHistoryFragment.openPopupWindow(view);
+        } else {
+            listener.deliverPosition(getPasition());
+        }
+    }
+
+    public void moreBtnVisibility(boolean isShow) {
+        mTvMore.setVisibility(isShow ? View.VISIBLE : View.GONE);
+        if (LocalData.getLocalData().getCurrentPatientShip()) mTvMore.setVisibility(View.GONE);
+    }
+
+    /**
+     * 订阅事件
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
+    public void eventBusMain(NMedicalRecordEvent event) {
+        mPatientId = event.getmPatientId();
+    }
+
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        LocalData.getLocalData().setCurrentPatientShip(false);
+        if (!mFragmentList.isEmpty()) mFragmentList.clear();
+        EventBus.getDefault().unregister(this);
+    }
+
+    /**
+     * 提供子布局调用
+     */
+    public int getPatientId() {
+        return mPatientId;
+    }
+
+    /**
+     * 提供患者性别
+     */
+    public String getGender() {
+        return mGender;
+    }
+
+
+    public int getPasition() {
+        return mPosition;
+    }
+
+    public void setOnclickInterface(DeliverListener onclickInterface) {
+        listener = onclickInterface;
+    }
+
+    private DeliverListener listener;
+
+    /**
+     * 给各fragment提供psition
+     */
+    interface DeliverListener {
+        void deliverPosition(int position);
+    }
+
+    /**
+     * 得到弹窗被选定值
+     */
+    public void getData(String subject, String category) {
+        PatientRecordDisplayDto displayDto = new PatientRecordDisplayDto();
+        displayDto.setPatientId(getPatientId());
+
+        if (subject == "辅助检查" || subject == "病理") {
+            Bundle bundle = new Bundle();
+            bundle.putString("ICONOGRAPHYTEST", category);
+
+            EventBus.getDefault().postSticky(new AccessoryRecordAddEvent(displayDto, subject));
+            skipToForResult(AccessoryRecordCommonSaveActivity.class, bundle, 0);
+        } else if (subject == "实验室检查") {
+            Bundle bundle = new Bundle();
+            bundle.putString(Global.Bundle.ITEM_Lob, category);
+
+            EventBus.getDefault().postSticky(new LobRecordAddEvent(displayDto, subject));
+            skipToForResult(LobRecordCommonSaveActivity.class, bundle, 0);
+        } else if (subject.equals("临床诊疗") && category.equals("门诊记录")) {
+
+            EventBus.getDefault().postSticky(new OutPatientRecordAddEvent(displayDto, subject));
+            skipToForResult(OutpatientRecordSaveActivity.class, null, 0);
+        } else if (subject.equals("临床诊疗") && category.equals("住院记录")) {
+
+            EventBus.getDefault().postSticky(new HospitalRecordAddEvent(displayDto, subject));
+            skipToForResult(HospitalRecordSaveActivity.class, null, 0);
+        }
+    }
+}
+

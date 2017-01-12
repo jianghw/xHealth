@@ -1,0 +1,100 @@
+package com.kaurihealth.kaurihealth.record_details_v;
+
+import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.widget.LinearLayout;
+import android.widget.ScrollView;
+
+import com.kaurihealth.datalib.response_bean.PatientRecordCountDisplayBean;
+import com.kaurihealth.kaurihealth.R;
+import com.kaurihealth.kaurihealth.base_v.BaseFragment;
+import com.kaurihealth.kaurihealth.manager_v.MedicalRecordFactory;
+import com.kaurihealth.kaurihealth.manager_v.ViewFactoryManager;
+import com.kaurihealth.kaurihealth.tinker.SampleApplicationLike;
+import com.kaurihealth.mvplib.rcord_details_p.INMedicalRecordsView;
+import com.kaurihealth.mvplib.rcord_details_p.NMedicalRecordsPresenter;
+import com.kaurihealth.utilslib.ColorUtils;
+import com.kaurihealth.utilslib.constant.Global;
+import com.kaurihealth.utilslib.widget.ScrollChildSwipeRefreshLayout;
+
+import javax.inject.Inject;
+
+import butterknife.Bind;
+
+/**
+ * 描述: ui组件化管理
+ */
+public class NMedicalRecordFragment extends BaseFragment implements INMedicalRecordsView {
+    @Inject
+    NMedicalRecordsPresenter<INMedicalRecordsView> mPresenter;
+
+    @Bind(R.id.lay_content)
+    LinearLayout mLayContent;
+    @Bind(R.id.scrollView)
+    ScrollView mScrollView;
+    @Bind(R.id.swipe_refresh)
+    ScrollChildSwipeRefreshLayout mSwipeRefresh;
+    /**
+     * 布局控制器
+     */
+    private MedicalRecordFactory viewFactory;
+
+    public static NMedicalRecordFragment newInstance() {
+        return new NMedicalRecordFragment();
+    }
+
+    @Override
+    protected int getFragmentLayoutID() {
+        return R.layout.fragment_n_medical_record;
+    }
+
+    @Override
+    protected void initPresenterAndView(Bundle savedInstanceState) {
+        SampleApplicationLike.getApp().getComponent().inject(this);
+        mPresenter.setPresenter(this);
+
+        mSwipeRefresh.setColorSchemeColors(
+                ColorUtils.setSwipeRefreshColors(getContext())
+        );
+        mSwipeRefresh.setScrollUpChild(mScrollView);
+        mSwipeRefresh.setSize(SwipeRefreshLayout.DEFAULT);
+        mSwipeRefresh.setDistanceToTriggerSync(Global.Numerical.SWIPE_REFRESH);
+        mSwipeRefresh.setOnRefreshListener(() -> mPresenter.loadingRemoteData(true));
+    }
+
+    @Override
+    protected void initDelayedData() {
+    }
+
+    @Override
+    protected void lazyLoadingData() {
+        mPresenter.onSubscribe();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        viewFactory.unbindView();
+        mPresenter.unSubscribe();
+    }
+
+    @Override
+    public int getPatientId() {
+        return ((RecordDetailsActivity) getActivity()).getPatientId();
+    }
+
+    @Override
+    public void loadNewPatientRecordCountsByPatientId(PatientRecordCountDisplayBean bean) {
+        if (viewFactory == null) {
+            viewFactory = (MedicalRecordFactory) ViewFactoryManager.createViewFactory(this, mLayContent);
+        }
+        if (viewFactory != null) {
+            viewFactory.fillNewestData(bean);
+        }
+        mScrollView.scrollTo(0, 0);
+    }
+
+    @Override
+    public void switchPageUI(String className) {
+    }
+}

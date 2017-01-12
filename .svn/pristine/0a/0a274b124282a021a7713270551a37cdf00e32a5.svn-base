@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+       xmlns:app="http://schemas.android.com/apk/res-auto"
+       xmlns:tools="http://schemas.android.com/tools"
+       android:layout_width="match_parent"
+       android:layout_height="match_parent"
+       android:orientation="vertical">
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/cv_recently"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/dimen_10"
+        android:layout_marginLeft="@dimen/dimen_14"
+        android:layout_marginRight="@dimen/dimen_14"
+        app:cardBackgroundColor="@color/color_white"
+        app:cardCornerRadius="@dimen/dimen_12"
+        app:cardElevation="@dimen/dimen_4">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="@dimen/dimen_14">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="最近临床诊疗"
+                android:textColor="@color/color_text_black"
+                android:textSize="@dimen/textSize_16"/>
+            <!--时间-->
+            <com.kaurihealth.utilslib.widget.RecentlyRecordLayout
+                android:id="@+id/lay_data"
+                android:visibility="gone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <!--类型-->
+            <com.kaurihealth.utilslib.widget.RecentlyRecordLayout
+                android:id="@+id/lay_type"
+                android:visibility="gone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <!--项目-->
+            <com.kaurihealth.utilslib.widget.RecentlyRecordLayout
+                android:id="@+id/lay_project"
+                android:visibility="gone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <!--医师-->
+            <com.kaurihealth.utilslib.widget.RecentlyRecordLayout
+                android:id="@+id/lay_doctor"
+                android:visibility="gone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <!--科室-->
+            <com.kaurihealth.utilslib.widget.RecentlyRecordLayout
+                android:id="@+id/lay_departments"
+                android:visibility="gone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <!--机构-->
+            <com.kaurihealth.utilslib.widget.RecentlyRecordLayout
+                android:id="@+id/lay_organization"
+                android:visibility="gone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <!--疾病-->
+            <com.kaurihealth.utilslib.widget.RecentlyRecordLayout
+                android:id="@+id/lay_disease"
+                android:visibility="gone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <!--现病史-->
+            <com.kaurihealth.utilslib.widget.RecentlyRecordLayout
+                android:id="@+id/lay_history"
+                android:visibility="gone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <!--辅助检查-->
+            <com.kaurihealth.utilslib.widget.RecentlyRecordLayout
+                android:id="@+id/lay_accessory"
+                android:visibility="gone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+            <!--实验室检查-->
+            <com.kaurihealth.utilslib.widget.RecentlyRecordLayout
+                android:id="@+id/lay_lab"
+                android:visibility="gone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+            <!--病理-->
+            <com.kaurihealth.utilslib.widget.RecentlyRecordLayout
+                android:id="@+id/lay_pathology"
+                android:visibility="gone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:id="@+id/tv_recently_history"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:layout_gravity="right"
+                android:drawablePadding="@dimen/dimen_4"
+                android:drawableRight="@drawable/more_icon"
+                android:text="历史记录"
+                android:textColor="@color/color_text_blue"
+                android:textSize="@dimen/textSize_14"/>
+        </LinearLayout>
+    </android.support.v7.widget.CardView>
+</merge>

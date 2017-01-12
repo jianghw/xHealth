@@ -1,0 +1,27 @@
+package com.kaurihealth.kaurihealth.manager_v;
+
+import android.support.v4.app.Fragment;
+import android.view.ViewGroup;
+
+import com.kaurihealth.kaurihealth.record_details_v.NMedicalRecordFragment;
+import com.kaurihealth.utilslib.controller.IViewFactory;
+
+/**
+ * Created by jianghw on 2016/12/16.
+ * <p/>
+ * Describe:
+ */
+
+public class ViewFactoryManager {
+
+    public static IViewFactory createViewFactory(Fragment clazz, ViewGroup layContent) {
+        if (clazz.getClass().equals(NMedicalRecordFragment.class)) {
+            MedicalRecordFactory medicalRecordFactory = new MedicalRecordFactory(clazz);
+            medicalRecordFactory.createIncludeViews();
+            medicalRecordFactory.attachRootView(layContent);
+            return medicalRecordFactory;
+        }
+        return null;
+    }
+
+}

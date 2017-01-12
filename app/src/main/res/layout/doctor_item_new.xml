@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@color/color_white"
+              android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/tv_index"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#E0E0E0"
+        android:paddingLeft="12dp"
+        android:textSize="14sp"
+        tools:text="G字母"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#eee"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:background="?android:attr/selectableItemBackground">
+
+        <com.kaurihealth.utilslib.widget.CircleImageView
+            android:id="@+id/iv_avatar"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_centerVertical="true"
+            android:layout_marginBottom="@dimen/margin_16"
+            android:layout_marginLeft="@dimen/margin_16"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="@dimen/margin_16"
+            android:contentDescription="avatar"
+            android:src="@mipmap/ic_circle_head_green"
+            app:civ_border_color="#4FD3C1"
+            app:civ_border_overlay="true"
+            app:civ_border_width="0.1dp"/>
+
+        <LinearLayout
+            android:id="@+id/ly"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/iv_avatar"
+            android:layout_marginTop="@dimen/dimen_8"
+            android:layout_toRightOf="@+id/iv_avatar">
+
+            <TextView
+                android:id="@+id/tv_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@+id/iv_avatar"
+                android:textColor="#000b23"
+                android:textSize="16sp"
+                tools:text="Gjiazhe"/>
+
+            <TextView
+                android:id="@+id/tv_doctor_department"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:textColor="#293d47"
+                android:textSize="14sp"
+                tools:text="12"/>
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tv_doctor_hospital"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/ly"
+            android:layout_marginBottom="@dimen/dimen_8"
+            android:layout_toRightOf="@+id/iv_avatar"
+            android:layout_alignBottom="@id/iv_avatar"
+            android:textColor="#8ba4c4"
+            android:gravity="center"
+            android:singleLine="true"
+            tools:text="123"/>
+    </RelativeLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:textColor="#e7ecee"/>
+</LinearLayout>

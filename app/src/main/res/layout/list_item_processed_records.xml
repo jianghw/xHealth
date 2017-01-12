@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/cardView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/dimen_14"
+        android:layout_marginLeft="@dimen/dimen_14"
+        android:layout_marginRight="@dimen/dimen_14"
+        app:cardBackgroundColor="@color/color_white"
+        app:cardCornerRadius="@dimen/dimen_12"
+        app:cardElevation="@dimen/dimen_4">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="@dimen/dimen_14"
+            android:paddingTop="@dimen/dimen_14">
+
+            <TextView
+                android:id="@+id/tv_patient_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dimen_14"
+                android:textColor="@color/color_text_title"
+                android:textSize="@dimen/textSize_16"
+                android:maxLength="6"
+                tools:text="央企小"/>
+
+            <ImageView
+                android:id="@+id/img_gender"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/tv_patient_age"
+                android:layout_marginLeft="@dimen/dimen_10"
+                android:layout_marginRight="@dimen/dimen_10"
+                android:layout_toRightOf="@+id/tv_patient_name"
+                android:src="@drawable/gender_icon"/>
+
+            <TextView
+                android:id="@+id/tv_patient_age"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@+id/tv_patient_name"
+                android:layout_toRightOf="@+id/img_gender"
+                android:textColor="@color/color_text_age_black"
+                android:textSize="@dimen/textSize_10"
+                tools:text="20岁"/>
+
+            <TextView
+                android:id="@+id/tv_type"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@+id/tv_patient_name"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="@dimen/dimen_14"
+                android:drawableLeft="@drawable/dot_red"
+                android:drawablePadding="@dimen/dimen_8"
+                android:textColor="@color/color_text_red"
+                android:textSize="@dimen/textSize_12"
+                tools:text="待对方确认"/>
+
+            <TextView
+                android:id="@+id/tv_phone_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@+id/tv_patient_name"
+                android:layout_below="@+id/tv_patient_name"
+                android:layout_marginTop="@dimen/dimen_14"
+                android:text="疾病："
+                android:textColor="@color/color_text_gray"
+                android:textSize="@dimen/textSize_12"/>
+
+            <TextView
+                android:id="@+id/tv_phone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@+id/tv_phone_title"
+                android:layout_marginTop="@dimen/dimen_14"
+                android:layout_toRightOf="@+id/tv_phone_title"
+                android:textColor="@color/color_text_age_black"
+                android:textSize="@dimen/textSize_12"
+                tools:text="疾病dfssfsfsfdsfd"/>
+
+            <TextView
+                android:id="@+id/tv_address_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@+id/tv_patient_name"
+                android:layout_below="@+id/tv_phone_title"
+                android:layout_marginTop="@dimen/dimen_14"
+                android:text="转诊医师："
+                android:textColor="@color/color_text_gray"
+                android:textSize="@dimen/textSize_12"/>
+
+            <TextView
+                android:id="@+id/tv_address"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@+id/tv_address_title"
+                android:layout_marginTop="@dimen/dimen_14"
+                android:layout_toRightOf="@+id/tv_address_title"
+                android:textColor="@color/color_text_age_black"
+                android:textSize="@dimen/textSize_12"
+                tools:text="疾辅导辅导费病dfssfsfsfdsfd"/>
+
+            <TextView
+                android:id="@+id/tv_date_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@+id/tv_patient_name"
+                android:layout_below="@+id/tv_address_title"
+                android:layout_marginTop="@dimen/dimen_14"
+                android:text="转诊时间："
+                android:textColor="@color/color_text_gray"
+                android:textSize="@dimen/textSize_12"/>
+
+            <TextView
+                android:id="@+id/tv_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@+id/tv_date_title"
+                android:layout_marginTop="@dimen/dimen_14"
+                android:layout_toRightOf="@+id/tv_date_title"
+                android:textColor="@color/color_text_age_black"
+                android:textSize="@dimen/textSize_12"
+                tools:text="2019/11/25"/>
+
+            <TextView
+                android:id="@+id/tv_communication_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@+id/tv_patient_name"
+                android:layout_below="@+id/tv_date_title"
+                android:layout_marginTop="@dimen/dimen_14"
+                android:text="沟通："
+                android:textColor="@color/color_text_gray"
+                android:textSize="@dimen/textSize_12"/>
+
+            <TextView
+                android:id="@+id/tv_communication"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@+id/tv_communication_title"
+                android:layout_marginTop="@dimen/dimen_14"
+                android:layout_toRightOf="@+id/tv_communication_title"
+                android:drawablePadding="@dimen/dimen_6"
+                android:drawableRight="@drawable/chat"
+                android:text="点击与相关医师沟通"
+                android:textColor="@color/color_text_blue"
+                android:textSize="@dimen/textSize_12"/>
+
+            <TextView
+                android:id="@+id/tv_refuse"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tv_communication_title"
+                android:layout_marginRight="@dimen/dimen_14"
+                android:layout_toLeftOf="@+id/tv_accept"
+                android:text="拒绝"
+                android:textColor="@color/color_text_gray"
+                android:textSize="@dimen/textSize_12"/>
+
+            <TextView
+                android:id="@+id/tv_accept"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_below="@+id/tv_communication_title"
+                android:layout_marginRight="@dimen/dimen_14"
+                android:text="接受"
+                android:textColor="@color/color_text_title"
+                android:textSize="@dimen/textSize_12"/>
+
+        </RelativeLayout>
+    </android.support.v7.widget.CardView>
+</RelativeLayout>

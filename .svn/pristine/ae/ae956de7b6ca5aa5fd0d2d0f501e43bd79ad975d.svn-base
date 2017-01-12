@@ -1,0 +1,398 @@
+package com.kaurihealth.kaurihealth.manager_v.save;
+
+import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.app.Dialog;
+import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
+import android.support.v7.widget.CardView;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+
+import com.kaurihealth.datalib.local.LocalData;
+import com.kaurihealth.datalib.request_bean.bean.NewLabTestPatientRecordDisplayBean;
+import com.kaurihealth.datalib.response_bean.DepartmentDisplayBean;
+import com.kaurihealth.datalib.response_bean.DoctorDisplayBean;
+import com.kaurihealth.datalib.response_bean.LabTestBean;
+import com.kaurihealth.datalib.response_bean.PatientRecordDisplayDto;
+import com.kaurihealth.kaurihealth.R;
+import com.kaurihealth.kaurihealth.department_v.SelectDepartmentLevel1Activity;
+import com.kaurihealth.kaurihealth.department_v.SelectDepartmentLevel2Activity;
+import com.kaurihealth.kaurihealth.mine_v.personal.EnterHospitalActivity;
+import com.kaurihealth.kaurihealth.patient_v.LabTestUtil;
+import com.kaurihealth.utilslib.CheckUtils;
+import com.kaurihealth.utilslib.constant.Global;
+import com.kaurihealth.utilslib.controller.AbstractViewController;
+import com.kaurihealth.utilslib.date.DateUtils;
+import com.kaurihealth.utilslib.dialog.DialogUtils;
+import com.kaurihealth.utilslib.log.LogUtils;
+import com.kaurihealth.utilslib.widget.CollapsibleGroupView;
+import com.kaurihealth.utilslib.widget.RecentlySaveLayout;
+import com.kaurihealth.utilslib.widget.SaveImageLayout;
+
+import java.util.List;
+
+import biz.kasual.materialnumberpicker.MaterialNumberPicker;
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
+import static android.app.Activity.RESULT_OK;
+
+/**
+ * Created by mip on 2016/12/29.
+ * <p/>
+ * Describe: 实验室检查通用view
+ */
+
+class LobRecordCommonSaveView extends AbstractViewController<PatientRecordDisplayDto>
+        implements CollapsibleGroupView.ChildGroupView, RecentlySaveLayout.IEditTextClick, SaveImageLayout.IModifiedImage {
+
+    @Bind(R.id.lay_admission)
+    CollapsibleGroupView mLayAdmission;
+    @Bind(R.id.cv_admission)
+    CardView mCvAdmission;
+
+    RecentlySaveLayout mLayDoctor;
+    RecentlySaveLayout mLayDepartments;
+    RecentlySaveLayout mLayOrganization;
+    RecentlySaveLayout mLayCreatedDate;
+    RecentlySaveLayout mLayHospitalNumber;
+    SaveImageLayout mLayDocuments;
+    RecentlySaveLayout mLayComment;
+    RecentlySaveLayout mProject;
+
+    private MaterialNumberPicker numberpicker;
+    private TextView textView;
+
+    private String[] labTestTypes;
+    private String[] content;
+    private Dialog labtestDialog;
+    private View departmentView;
+    private int index;
+
+    private LinearLayout mMeasurement;
+
+    private Activity mActivity;
+
+    private String mTitle;
+
+    private int departmentId;
+
+    private DoctorDisplayBean myself;
+
+    LobRecordCommonSaveView(Context context, String title) {
+        super(context);
+        this.mTitle = title;
+    }
+
+    @Override
+    protected int getResLayoutId() {
+        return R.layout.include_hospital_admission;
+    }
+
+    @Override
+    protected void onCreateView(View view) {
+        ButterKnife.bind(this, view);
+
+        mLayAdmission.setChildGroupViewBack(this);
+        mLayAdmission.initInflaterView();
+    }
+
+    private void initListenerControls() {
+        mLayDepartments.onEditClickListener(this);
+        mLayOrganization.onEditClickListener(this);
+        mLayCreatedDate.onEditClickListener(this);
+        mProject.onEditClickListener(this);
+
+        //初始化图片选择器
+        mLayDocuments.onImageModifiedListener(this);
+        mLayDocuments.initLayoutView(mActivity);
+        //删除键
+        mLayDocuments.initGridViewDeleteImage(mActivity);
+    }
+
+    /**
+     * 点击检查项目
+     */
+    private void setLabTest() {
+        labtestDialog.dismiss();
+        index = numberpicker.getValue();
+        mProject.contentText(content[index]);
+    }
+
+    private void setNumberPicker(MaterialNumberPicker numberpicker, String[] content) {
+        numberpicker.setDisplayedValues(null);
+        numberpicker.setMaxValue(content.length - 1);
+        numberpicker.setMinValue(0);
+        numberpicker.setValue(1);
+        numberpicker.setDisplayedValues(content);
+    }
+
+    @SuppressLint("SetTextI18n")
+    @Override
+    protected void bindViewData(PatientRecordDisplayDto bean) {
+        initListenerControls();
+
+        defaultViewData();
+
+        if (bean != null) {
+            setDate(bean);
+        }
+    }
+
+    /**
+     * 数据设置
+     */
+    private void setDate(PatientRecordDisplayDto bean) {
+        LogUtils.jsonDate(bean);//
+
+//        mLayAdmission.notifyDataSetChanged(mMeasurement);
+        mLayAdmission.setCollapsibleTitle(mTitle);//设置标题
+        mLayAdmission.setHintTextHidden(true);//为TRUE 隐藏提示信息
+        mLayDoctor.contentText(CheckUtils.checkTextContent(bean.getDoctor()));
+        mLayDepartments.contentText(bean.getDepartment() != null ? CheckUtils.checkTextContent(bean.getDepartment().getDepartmentName()) : null);
+        mLayOrganization.contentText(CheckUtils.checkTextContent(bean.getHospital()));
+//        mLayCreatedDate.contentText(DateUtils.unifiedFormatYearMonthDay(bean.getRecordDate()));
+        mLayCreatedDate.contentText(DateUtils.unifiedFormatYearMonthDay(bean.getRecordDate()).equals("暂无时间记录")?
+                DateUtils.Today():DateUtils.unifiedFormatYearMonthDay(bean.getRecordDate()));
+//        mLayHospitalNumber.contentText(CheckUtils.checkTextContent(bean.getHospitalNumber()));
+//        mProject.contentText(CheckUtils.checkTextContent(bean.getLabTest().getLabTestType()));//检查项目
+        mProject.contentText(bean.getLabTest() != null ? CheckUtils.checkTextContent(bean.getLabTest().getLabTestType()):null);//检查项目
+        mLayDocuments.initRecordDocumentPathAdapter(bean.getRecordDocuments());
+        mLayComment.contentText(CheckUtils.checkTextContent(bean.getComment()));
+
+        mLayAdmission.notifyDataSetChanged(mMeasurement);
+    }
+
+    @Override
+    protected void defaultViewData() {
+        mLayAdmission.setHintTextHidden(true);
+    }
+
+    @Override
+    protected void unbindView() {
+        ButterKnife.unbind(this);
+    }
+
+    @Override
+    protected void showLayout() {
+        mCvAdmission.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    protected void hiddenLayout() {
+        mCvAdmission.setVisibility(View.GONE);
+    }
+
+    @Override
+    public int getChildResLayoutId() {
+        return R.layout.include_collapsible_group_view_lob_save;
+    }
+
+    @Override
+    public void onCreateChildView(View view) {
+        mMeasurement = (LinearLayout) view.findViewById(R.id.lay_admission_measurement);
+
+        mLayDoctor = (RecentlySaveLayout) view.findViewById(R.id.lay_admission_doctor);
+        mLayDepartments = (RecentlySaveLayout) view.findViewById(R.id.lay_admission_departments);
+        mLayOrganization = (RecentlySaveLayout) view.findViewById(R.id.lay_admission_organization);
+        mLayCreatedDate = (RecentlySaveLayout) view.findViewById(R.id.lay_admission_createdDate);
+        mLayHospitalNumber = (RecentlySaveLayout) view.findViewById(R.id.lay_admission_hospitalNumber);
+        mLayHospitalNumber.setVisibility(View.GONE);
+        mLayDocuments = (SaveImageLayout) view.findViewById(R.id.lay_admission_documents);
+        mLayComment = (RecentlySaveLayout) view.findViewById(R.id.lay_admission_comment);
+        mProject = (RecentlySaveLayout) view.findViewById(R.id.lay_project);
+    }
+
+    /**
+     * 重新测量控件高度
+     */
+    @Override
+    public void redrawGroupView() {
+        mLayAdmission.notifyDataSetChanged(mMeasurement);
+    }
+
+    /**
+     * 点击事件回调
+     */
+    @Override
+    public void contentEditTextBack(View v, String content) {
+        switch (v.getId()) {
+            case R.id.lay_admission_departments:
+                selectDepartment();
+                break;
+            case R.id.lay_admission_organization:
+                selectHospital(content);
+                break;
+            case R.id.lay_admission_createdDate:
+                DialogUtils.showDateDialog(mActivity, (year, month, day) -> {
+                    String time = year + "/"
+                            + String.format(mContext.getResources().getString(R.string.date_month), Integer.valueOf(month)) + "/"
+                            + String.format(mContext.getResources().getString(R.string.date_month), Integer.valueOf(day));
+                    mLayCreatedDate.contentText(time);
+                });
+                break;
+            case R.id.lay_project://检查项目选择
+                selectProject();
+                chooseLabTest();
+                break;
+            default:
+                break;
+        }
+    }
+
+    private void chooseLabTest() {
+        if (labtestDialog.isShowing()) {
+            labtestDialog.dismiss();
+        } else {
+            labtestDialog.show();
+        }
+    }
+
+
+    private void selectProject() {
+        labTestTypes = LabTestUtil.getNewLabTestDetailDisplayBean(mTitle);
+        content = new String[labTestTypes.length];
+        for (int i = 0; i < labTestTypes.length; i++) {
+            content[i] = labTestTypes[i];
+        }
+
+        departmentView = LayoutInflater.from(mContext).inflate(R.layout.numberpickerdialog, null);
+        numberpicker = (MaterialNumberPicker) departmentView.findViewById(R.id.numberpicker);
+        TextView tv_complete = (TextView) departmentView.findViewById(R.id.tv_complete);
+        tv_complete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setLabTest();
+            }
+        });
+
+        labtestDialog = DialogUtils.createDialog(departmentView, mActivity);
+        setNumberPicker(numberpicker, content);
+    }
+
+    //选择科室，界面跳转
+    private void selectDepartment() {
+        Intent intent = new Intent(mContext, SelectDepartmentLevel1Activity.class);
+        Bundle bundle = new Bundle();
+        bundle.putString(Global.Environment.BUNDLE, Global.Environment.CHOICE);
+        intent.putExtras(bundle);
+        mActivity.startActivityForResult(intent, Global.RequestCode.DEPARTMENT);
+    }
+
+    //选择医院，界面跳转
+    private void selectHospital(String content) {
+        Intent intent = new Intent(mContext, EnterHospitalActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putString("hospitalName", content);
+        bundle.putString(Global.Environment.BUNDLE, Global.Environment.CHOICE);
+        intent.putExtras(bundle);
+        mActivity.startActivityForResult(intent, Global.RequestCode.HOSPITAL);
+    }
+
+    public void childNeedActivity(Activity clazz) {
+        this.mActivity = clazz;
+    }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        mLayDocuments.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case Global.RequestCode.DEPARTMENT:
+                if (resultCode == RESULT_OK) {
+                    Bundle extras = data.getExtras();
+                    setDepartment(extras);
+                }
+                break;
+            case Global.RequestCode.HOSPITAL:
+                if (resultCode == RESULT_OK) {
+                    String hospitalName = data.getStringExtra("hospitalName");
+                    setHospitalName(hospitalName);
+                }
+                break;
+        }
+    }
+
+    public void onRequestPermissionsResult(int code, String[] permissions, int[] results) {
+        mLayDocuments.onRequestPermissionsResult(code, permissions, results);
+    }
+
+    private void setDepartment(Bundle bundle) {
+        DepartmentDisplayBean bean = (DepartmentDisplayBean) bundle.getSerializable(SelectDepartmentLevel2Activity.DepartmentLevel2ActivityKey);
+        departmentId = bean.getDepartmentId();
+        mLayDepartments.contentText(bean.getDepartmentName());
+    }
+
+    private void setHospitalName(String hospitalName) {
+        mLayOrganization.contentText(hospitalName);
+    }
+
+    /**
+     * 图片
+     */
+    public List<String> getImagePathsList() {
+        return mLayDocuments.getImagePathsList();
+    }
+
+    /**
+     * 构建编辑bean
+     */
+    public PatientRecordDisplayDto getRequestPatientRecordBean() {
+
+        PatientRecordDisplayDto recordDisplayBean = mBeanData;
+        recordDisplayBean.setRecordDate(DateUtils.getDateSubmit(mLayCreatedDate.getContent()));
+        recordDisplayBean.setHospital(mLayOrganization.getContent());//医院
+        recordDisplayBean.setDoctor(mLayDoctor.getContent());//医生
+        recordDisplayBean.setComment(mLayComment.getContent());//留言
+        recordDisplayBean.setDepartmentId(departmentId == 0 ? recordDisplayBean.getDepartmentId() : departmentId);//测试科室id
+        LabTestBean labTest = recordDisplayBean.getLabTest();
+        labTest.setLabTestType(mProject.getContent());//获取实验室测试类型content[index]
+        recordDisplayBean.setLabTest(labTest);
+        return recordDisplayBean;
+    }
+
+    /**
+     * 插入新的实验室检查请求bean
+     *
+     * @return
+     */
+    public NewLabTestPatientRecordDisplayBean getNewLabTestPatientRecordDisplayBean() {
+        myself = LocalData.getLocalData().getMyself();
+        NewLabTestPatientRecordDisplayBean newLabTestPatientRecordDisplayBean =
+                new NewLabTestPatientRecordDisplayBean();
+        NewLabTestPatientRecordDisplayBean.LabTestBean labTest = new NewLabTestPatientRecordDisplayBean.LabTestBean();
+        labTest.setLabTestType(content[index]);//获取实验室测试类型
+        newLabTestPatientRecordDisplayBean.setPatientId(mBeanData.getPatientId());//患者id
+        newLabTestPatientRecordDisplayBean.setComment(mLayComment.getContent());//留言
+        newLabTestPatientRecordDisplayBean.setRecordDate(DateUtils.getDateSubmit(mLayCreatedDate.getContent()));//记录日期
+        newLabTestPatientRecordDisplayBean.setDoctor(mLayDoctor.getContent());
+        newLabTestPatientRecordDisplayBean.setHospital(mLayOrganization.getContent());
+        newLabTestPatientRecordDisplayBean.setDepartmentId(departmentId == 0 ? myself.getDoctorInformations().getDepartmentId() : departmentId);
+        newLabTestPatientRecordDisplayBean.setSubject(mTitle);
+        newLabTestPatientRecordDisplayBean.setStatus("1");
+        newLabTestPatientRecordDisplayBean.setLabTest(labTest);
+        return newLabTestPatientRecordDisplayBean;
+    }
+
+    /**
+     * 没有填写完整的判断
+     */
+    public boolean getBoolean() {
+        boolean b = false;
+        if (mLayDoctor.getContent().equals("")) {
+            b = true;
+        } else if (mLayDepartments.getContent().equals("")) {
+            b = true;
+        } else if (mLayOrganization.getContent().equals("")) {
+            b = true;
+        } else if (mLayCreatedDate.getContent().equals("")) {
+            b = true;
+        } else if (mProject.getContent().equals("")) {
+            b = true;
+        }
+        return b;
+    }
+
+}

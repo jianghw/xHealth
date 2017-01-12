@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/rl_title"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimen_42"
+        android:background="@color/color_bg_green">
+
+        <RadioGroup
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="@dimen/dimen_8"
+            android:layout_marginTop="@dimen/dimen_8"
+            android:layout_centerVertical="true"
+            android:background="@drawable/bg_radio_group_case"
+            android:orientation="horizontal"
+            android:padding="@dimen/dimen_1">
+
+            <RadioButton
+                android:id="@+id/rbtn_all"
+                style="@style/Friend_RadioButton"
+                android:background="@drawable/bg_rbtn_left"
+                android:checked="true"
+                android:text="@string/all_medical_records"
+                android:textColor="@color/color_rb_friend"/>
+
+            <RadioButton
+                android:id="@+id/rbtn_processed"
+                style="@style/Friend_RadioButton"
+                android:background="@drawable/bg_rbtn_right"
+                android:text="@string/medical_records_processed"
+                android:textColor="@color/color_rb_friend"/>
+        </RadioGroup>
+
+        <ImageView
+            android:id="@+id/tv_add"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/dimen_14"
+            android:src="@mipmap/add_doctor"
+            android:textColor="@color/color_white"/>
+    </RelativeLayout>
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/vp_relation"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+</LinearLayout>

@@ -1,0 +1,201 @@
+package com.kaurihealth.kaurihealth.casehistory_v;
+
+import android.app.Activity;
+import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewPager;
+import android.view.Gravity;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.PopupWindow;
+import android.widget.RadioButton;
+import android.widget.RelativeLayout;
+
+import com.kaurihealth.kaurihealth.R;
+import com.kaurihealth.kaurihealth.adapter.MainFragmentAdapter;
+import com.kaurihealth.kaurihealth.base_v.BaseFragment;
+import com.kaurihealth.kaurihealth.base_v.ChildBaseFragment;
+import com.kaurihealth.kaurihealth.open_account_v.OpenAnAccountActivity;
+import com.kaurihealth.utilslib.TranslationAnim;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import butterknife.Bind;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+
+/**
+ * 病历关系 母页
+ * 描述:病历Fragment
+ */
+public class CaseHistoryFragment extends BaseFragment {
+
+    @Bind(R.id.rbtn_all)
+    RadioButton mRbtnAll;
+    @Bind(R.id.rbtn_processed)
+    RadioButton mRbtnProcessed;
+    @Bind(R.id.rl_title)
+    RelativeLayout mActionBar;
+
+    @Bind(R.id.vp_relation)
+    ViewPager mVpRelation;
+    @Bind(R.id.tv_add)
+    ImageView addText;
+
+    List<Fragment> mFragmentList = new ArrayList<>();
+    private int mCurItem = 0;
+
+    public static CaseHistoryFragment newInstance() {
+        return new CaseHistoryFragment();
+    }
+
+    @Override
+    protected int getFragmentLayoutID() {
+        return R.layout.fragment_case_history;
+    }
+
+    @Override
+    protected void initPresenterAndView(Bundle savedInstanceState) {
+        initChildFragment();
+        initViewPager();
+    }
+
+    @Override
+    protected void initDelayedData() {
+        initCurPager(mCurItem);
+    }
+
+    @Override
+    protected void lazyLoadingData() {
+
+    }
+
+    private void initChildFragment() {
+        if (mFragmentList.size() > 0) mFragmentList.clear();
+        AllMedicalRecordsFragment allMedicalRecordsFragment = AllMedicalRecordsFragment.newInstance();
+        ProcessedRecordsFragment processedRecordsFragment = ProcessedRecordsFragment.newInstance();
+        mFragmentList.add(allMedicalRecordsFragment);
+        mFragmentList.add(processedRecordsFragment);
+    }
+
+    private void initViewPager() {
+        MainFragmentAdapter mainFragmentAdapter = new MainFragmentAdapter(getChildFragmentManager(), mFragmentList);
+        mVpRelation.setAdapter(mainFragmentAdapter);
+        mVpRelation.setOffscreenPageLimit(mFragmentList.size() - 1);
+        mVpRelation.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                initCurPager(position);
+                mCurItem = position;
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
+    }
+
+    private void initCurPager(int mCurItem) {
+        switch (mCurItem) {
+            case 0:
+                mVpRelation.setCurrentItem(mCurItem);
+                mRbtnAll.setChecked(true);
+                break;
+            case 1:
+                mVpRelation.setCurrentItem(mCurItem);
+                mRbtnProcessed.setChecked(true);
+                break;
+            default:
+                break;
+        }
+    }
+
+    /**
+     * 点击全部
+     */
+    @OnClick(R.id.rbtn_all)
+    public void allMedicalRecords() {
+        mVpRelation.setCurrentItem(0);
+    }
+
+    /**
+     * 点击待处理
+     */
+    @OnClick(R.id.rbtn_processed)
+    public void processedMedicalRecords() {
+        mVpRelation.setCurrentItem(1);
+    }
+
+    /**
+     * 添加患者
+     */
+    @OnClick(R.id.tv_add)
+    public void addPatient() {
+        View popupView = getActivity().getLayoutInflater().inflate(R.layout.view_popup_patient, null);
+        PopupWindow popupWindow = new PopupWindow(popupView,
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT, true);
+        LinearLayout addPatient = (LinearLayout) popupView.findViewById(R.id.ly_add_patient);
+        LinearLayout searchPatient = (LinearLayout) popupView.findViewById(R.id.ly_search_patient);
+        addPatient.setOnClickListener(new View.OnClickListener() {//患者开户
+            @Override
+            public void onClick(View v) {
+                skipTo(OpenAnAccountActivity.class);
+            }
+        });
+        searchPatient.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+        popupWindow.setBackgroundDrawable(getResources().getDrawable(R.drawable.bg_view_popup_patient));
+        popupWindow.setOutsideTouchable(true);
+        popupWindow.showAtLocation(mActionBar, Gravity.RIGHT | Gravity.TOP, 8, 100);
+    }
+
+    protected void skipToBundle(Class<? extends Activity> className, Bundle bundle) {
+        TranslationAnim.zlStartActivity(getActivity(), className, bundle);
+    }
+
+    /**
+     * @param isVisibleToUser
+     */
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+
+        if (getActivity() != null) {
+            List<Fragment> childFragmentList = getChildFragmentManager().getFragments();
+            if (isVisibleToUser) {
+                // 将所有正等待显示的子Fragment设置为显示状态，并取消等待显示标记
+                if (childFragmentList != null && childFragmentList.size() > 0) {
+                    for (Fragment childFragment : childFragmentList) {
+                        if (childFragment instanceof ChildBaseFragment) {
+                            ChildBaseFragment childBaseFragment = (ChildBaseFragment) childFragment;
+                            if (childBaseFragment.isWaitingShowToUser()) {
+                                childBaseFragment.setWaitingShowToUser(false);
+                                childFragment.setUserVisibleHint(true);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        ButterKnife.unbind(this);
+    }
+
+}

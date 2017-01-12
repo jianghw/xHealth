@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:background="@drawable/popup_shape"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:padding="16dp"
+            android:text="新增医疗记录"
+            android:textColor="#666"
+            android:textSize="18sp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.1px"
+            android:layout_marginRight="@dimen/margin_10"
+            android:layout_marginLeft="@dimen/margin_10"
+            android:background="#c3bfbf" />
+<!--病历-->
+        <RelativeLayout
+            android:id="@+id/rl"
+            android:gravity="center"
+            android:padding="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:text="临床诊疗"
+                android:id="@+id/Tv_1"
+                android:textSize="18sp"
+                android:textColor="#3a3a3a"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <ImageView
+                android:id="@+id/image"
+                android:layout_alignParentRight="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="@dimen/margin_10"
+                android:src="@mipmap/more_below_icon"/>
+            <LinearLayout
+                android:id="@+id/LY"
+                android:layout_below="@+id/image"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+            </LinearLayout>
+        </RelativeLayout>
+        <!--病历-->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.1px"
+            android:layout_marginRight="@dimen/margin_10"
+            android:layout_marginLeft="@dimen/margin_10"
+            android:background="#c3bfbf" />
+
+        <!--辅助检查-->
+        <RelativeLayout
+            android:id="@+id/rl_supplementaryTest"
+            android:gravity="center"
+            android:padding="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:text="辅助检查"
+                android:id="@+id/Tv_supplementaryTest"
+                android:textSize="18sp"
+                android:textColor="#3a3a3a"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <ImageView
+                android:id="@+id/image_rl_supplementaryTest"
+                android:layout_alignParentRight="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="@dimen/margin_10"
+                android:src="@mipmap/more_below_icon"/>
+        </RelativeLayout>
+        <!--辅助检查-->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.1px"
+            android:layout_marginRight="@dimen/margin_10"
+            android:layout_marginLeft="@dimen/margin_10"
+            android:background="#c3bfbf" />
+
+        <!--实验室检查-->
+        <RelativeLayout
+            android:id="@+id/rl_lobTest"
+            android:gravity="center"
+            android:padding="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:text="实验室检查"
+                android:id="@+id/Tv_lobTest"
+                android:textSize="18sp"
+                android:textColor="#3a3a3a"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <ImageView
+                android:id="@+id/image_lobTest"
+                android:layout_alignParentRight="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="@dimen/margin_10"
+                android:src="@mipmap/more_below_icon"/>
+        </RelativeLayout>
+        <!--实验室检查-->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.1px"
+            android:layout_marginRight="@dimen/margin_10"
+            android:layout_marginLeft="@dimen/margin_10"
+            android:background="#c3bfbf" />
+
+        <!--病理-->
+        <RelativeLayout
+            android:id="@+id/rl_pathology"
+            android:gravity="center"
+            android:padding="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:text="病理"
+                android:id="@+id/Tv_pathology"
+                android:textSize="18sp"
+                android:textColor="#3a3a3a"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <ImageView
+                android:id="@+id/image_pathology"
+                android:layout_alignParentRight="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="@dimen/margin_10"
+                android:src="@mipmap/more_below_icon"/>
+        </RelativeLayout>
+        <!--病理-->
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginLeft="8dp"
+        android:background="@drawable/popup_shape">
+
+        <TextView
+            android:id="@+id/tv_cancel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:padding="16dp"
+            android:text="取消"
+            android:textColor="#006aff"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+</LinearLayout>

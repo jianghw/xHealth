@@ -1,0 +1,227 @@
+package com.kaurihealth.kaurihealth.patient_v.prescription;
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ListView;
+import android.widget.TextView;
+
+import com.kaurihealth.datalib.request_bean.bean.PrescriptionBean;
+import com.kaurihealth.datalib.response_bean.DoctorPatientRelationshipBean;
+import com.kaurihealth.kaurihealth.R;
+import com.kaurihealth.kaurihealth.adapter.PrescriptionAdapter;
+import com.kaurihealth.kaurihealth.base_v.BaseActivity;
+import com.kaurihealth.kaurihealth.eventbus.AddPrescriptionBeanEvent;
+import com.kaurihealth.kaurihealth.eventbus.PrescriptionBeanEvent;
+import com.kaurihealth.kaurihealth.eventbus.PresriptionOnlyReadEvent;
+import com.kaurihealth.kaurihealth.patient_v.medical_records.AddAndEditPrescriptionActivityNew;
+import com.kaurihealth.kaurihealth.patient_v.medical_records_only_read.PresriptionOnlyReadActivity;
+import com.kaurihealth.kaurihealth.tinker.SampleApplicationLike;
+import com.kaurihealth.mvplib.patient_p.IPrescriptionView;
+import com.kaurihealth.mvplib.patient_p.PrescriptionPresenter;
+import com.kaurihealth.utilslib.ColorUtils;
+import com.kaurihealth.utilslib.widget.ScrollChildSwipeRefreshLayout;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.inject.Inject;
+
+import butterknife.Bind;
+import butterknife.OnClick;
+
+
+/**
+ * 医患Fragemt-->患者-->处方Activity
+ * created by mip
+ */
+public class PrescriptionActivity extends BaseActivity implements IPrescriptionView {
+
+    @Bind(R.id.tv_more)
+    TextView mTvMore;
+    @Bind(R.id.lv_content)
+    ListView lvContent;
+    @Bind(R.id.swipe_refresh)
+    ScrollChildSwipeRefreshLayout refreshTool;
+    @Bind(R.id.tv_prescription_tips)
+    TextView tv_prescription_tips;
+
+    private List<PrescriptionBean> list;
+    private PrescriptionAdapter prescriptionAdapter;
+    public static final int Update = 8;
+    private DoctorPatientRelationshipBean doctorPatientRelationshipBean;
+    private boolean isAble;
+    private static final int PRESRIPTIONONLYREADACTIVITY = 23;
+
+    @Inject
+    PrescriptionPresenter<IPrescriptionView> mPresenter;
+
+    @Override
+    protected int getActivityLayoutID() {
+        return R.layout.activity_prescription;
+    }
+
+    @Override
+    protected void initPresenterAndView(Bundle savedInstanceState) {
+        SampleApplicationLike.getApp().getComponent().inject(this);
+        mPresenter.setPresenter(this);
+
+        initNewBackBtn(getString(R.string.prescription_title));
+        mTvMore.setText(getString(R.string.more_add));
+
+        list = new ArrayList<>();
+        prescriptionAdapter = new PrescriptionAdapter(this, list);
+        lvContent.setAdapter(prescriptionAdapter);
+    }
+
+    @Override
+    protected void initDelayedData() {
+
+        mPresenter.loadDoctorDetail();
+
+//        getData();
+        refreshTool.setSize(SwipeRefreshLayout.DEFAULT);
+        refreshTool.setColorSchemeColors(
+                ColorUtils.setSwipeRefreshColors(getApplicationContext())
+        );
+        refreshTool.setProgressBackgroundColor(R.color.linelogin);
+        refreshTool.setScrollUpChild(lvContent);
+
+        refreshTool.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                getData();
+            }
+        });
+
+        lvContent.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                PrescriptionBean prescriptionBean = list.get(position);
+                EventBus.getDefault().postSticky(new PresriptionOnlyReadEvent(prescriptionBean, doctorPatientRelationshipBean, isAble));//EventBus发送消息被AddAndEditPrescriptionActivityNew接收
+                skipToForResult(PresriptionOnlyReadActivity.class, null, PRESRIPTIONONLYREADACTIVITY);
+            }
+        });
+
+        //注册事件
+        EventBus.getDefault().register(this);
+    }
+
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+    }
+
+    /**
+     * ----------------------------订阅事件----------------------------------
+     **/
+
+    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
+    public void eventBusMain(PrescriptionBeanEvent event) {
+        DoctorPatientRelationshipBean Bean = event.getBean();
+        boolean isAble = event.getIsAble();
+        if (Bean == null) return;
+        doctorPatientRelationshipBean = Bean;
+        this.isAble = isAble;
+        offCurActivity(isAble);
+        getData();
+    }
+
+    /**
+     * 设置当前界面为不可编辑状态
+     */
+    private void offCurActivity(boolean isAble) {
+
+        if (!isAble) {
+            mTvMore.setVisibility(View.GONE);
+//            lvContent.setEnabled(false);
+        } else {
+            mTvMore.setVisibility(View.VISIBLE);
+//            lvContent.setEnabled(true);
+        }
+    }
+
+    /**
+     * 得到处方数据
+     */
+    private void getData() {
+        mPresenter.onSubscribe();
+    }
+
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mPresenter.unSubscribe();
+        //注销事件
+        EventBus.getDefault().unregister(this);
+    }
+
+    /**
+     * ----------------------------继承基础mvpView方法-----------------------------------
+     *
+     * @param className
+     */
+
+    @Override
+    public void switchPageUI(String className) {
+
+    }
+
+    /**
+     * 添加处方
+     */
+    @OnClick(R.id.tv_more)
+    public void tv_operate() {
+        skipToForResult(AddAndEditPrescriptionActivityNew.class, null, 1);
+        EventBus.getDefault().postSticky(new AddPrescriptionBeanEvent(doctorPatientRelationshipBean));
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == Update) {
+            getData();
+        } else if (requestCode == PRESRIPTIONONLYREADACTIVITY && resultCode == RESULT_OK) {
+            getData();
+        }
+    }
+
+    /**
+     * 得到当前的患者id
+     */
+    @Override
+    public int getPatientId() {
+        if (doctorPatientRelationshipBean == null) {
+            throw new IllegalStateException("doctorPatientRelationshipBean must be not 0");
+        }
+        return doctorPatientRelationshipBean.getPatientId();
+    }
+
+    /**
+     * 得到所有的处方
+     */
+    @Override
+    public void getPresctiptionBeanList(List<PrescriptionBean> prescriptionBeen) {
+        if (list == null) {
+            throw new IllegalStateException("list must be not null");
+        }
+        if (prescriptionBeen.size() > 0) tv_prescription_tips.setVisibility(View.GONE);//隐藏提示信息
+        if (list.size() > 0) list.clear();
+        list.addAll(prescriptionBeen);
+        prescriptionAdapter.notifyDataSetChanged();
+        refreshTool.setRefreshing(false);
+    }
+
+    @Override
+    public void getDoctorRelationshipBean(DoctorPatientRelationshipBean relationshipBean) {
+
+    }
+}

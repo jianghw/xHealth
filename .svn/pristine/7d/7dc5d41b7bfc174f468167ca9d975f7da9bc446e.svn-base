@@ -1,0 +1,142 @@
+package com.kaurihealth.kaurihealth.manager_v.record;
+
+import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
+import android.support.v7.widget.CardView;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ListAdapter;
+import android.widget.ListView;
+import android.widget.TextView;
+
+import com.kaurihealth.datalib.response_bean.PatientBean;
+import com.kaurihealth.datalib.response_bean.PatientRecordCountDisplayBean;
+import com.kaurihealth.datalib.response_bean.TotalPathologyRecordCountsBean;
+import com.kaurihealth.kaurihealth.R;
+import com.kaurihealth.kaurihealth.adapter.RecordPathologyAdapter;
+import com.kaurihealth.kaurihealth.history_record_v.ClinicalHistoryActivity;
+import com.kaurihealth.utilslib.constant.Global;
+import com.kaurihealth.utilslib.controller.AbstractViewController;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import butterknife.Bind;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+
+/**
+ * Created by jianghw on 2016/12/15.
+ * <p/>
+ * Describe:病理统计
+ */
+
+class RecordPathologyView extends AbstractViewController<PatientRecordCountDisplayBean> implements View.OnClickListener {
+
+    @Bind(R.id.tv_pathology_title)
+    TextView mTvPathologyTitle;
+    @Bind(R.id.lv_pathology_content)
+    ListView mLvPathologyContent;
+    @Bind(R.id.tv_pathology_history)
+    TextView mTvPathologyHistory;
+    @Bind(R.id.cv_pathology)
+    CardView mCvPathology;
+
+    private List<TotalPathologyRecordCountsBean> list;
+    private RecordPathologyAdapter adapter;
+    private int mPatientId;
+
+    RecordPathologyView(Context context) {
+        super(context);
+    }
+
+    @Override
+    protected int getResLayoutId() {
+        return R.layout.include_record_pathology;
+    }
+
+    @Override
+    protected void onCreateView(View view) {
+        ButterKnife.bind(this, view);
+
+        mTvPathologyTitle.setText("病理");
+        list = new ArrayList<>();
+        adapter = new RecordPathologyAdapter(mContext, list);
+        mLvPathologyContent.setAdapter(adapter);
+    }
+
+    @Override
+    protected void bindViewData(PatientRecordCountDisplayBean data) {
+
+        PatientBean patientBean = data.getPatient();
+        if (patientBean != null) mPatientId = patientBean.getPatientId();
+        List<TotalPathologyRecordCountsBean> pathologyRecordCounts = data.getTotalPathologyRecordCounts();
+        if (pathologyRecordCounts != null && !pathologyRecordCounts.isEmpty()) {
+            stateTypeView(true);
+            if (list != null && !list.isEmpty()) list.clear();
+            list.addAll(pathologyRecordCounts);
+            adapter.notifyDataSetChanged();
+
+            measureListViewHeight();
+        } else {
+            defaultViewData();
+        }
+    }
+
+    private void measureListViewHeight() {
+        ListAdapter mAdapter = mLvPathologyContent.getAdapter();
+        int totalHeight = 0;
+        for (int i = 0; i < mAdapter.getCount(); i++) {
+            View listItem = mAdapter.getView(i, null, mLvPathologyContent);
+            listItem.measure(0, 0);
+            totalHeight += listItem.getMeasuredHeight();
+        }
+        ViewGroup.LayoutParams params = mLvPathologyContent.getLayoutParams();
+        params.height = totalHeight + (mLvPathologyContent.getDividerHeight() * (mAdapter.getCount() - 1));
+        mLvPathologyContent.setLayoutParams(params);
+    }
+
+    @Override
+    protected void defaultViewData() {
+        stateTypeView(false);
+    }
+
+    @Override
+    protected void unbindView() {
+        if (list != null) list.clear();
+        ButterKnife.unbind(this);
+    }
+
+    @OnClick({R.id.tv_pathology_history})
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.tv_pathology_history://历史记录
+                Intent intent = new Intent(mContext, ClinicalHistoryActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putInt(Global.Bundle.CONVER_ITEM_PATIENT, mPatientId);
+                bundle.putString(Global.Bundle.BUNDLE_CATEGORY, Global.Environment.PATHOLOGY);
+                intent.putExtras(bundle);
+                mContext.startActivity(intent);
+                break;
+            default:
+                break;
+        }
+    }
+
+    private void stateTypeView(boolean isActive) {
+        mLvPathologyContent.setVisibility(isActive ? View.VISIBLE : View.GONE);
+        mTvPathologyHistory.setVisibility(isActive ? View.VISIBLE : View.GONE);
+    }
+
+
+    @Override
+    protected void showLayout() {
+        mCvPathology.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    protected void hiddenLayout() {
+        mCvPathology.setVisibility(View.GONE);
+    }
+}

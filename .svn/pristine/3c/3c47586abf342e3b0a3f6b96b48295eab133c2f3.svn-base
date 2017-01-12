@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimen_42">
+
+        <TextView
+            android:id="@+id/tv_departmentName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:textSize="@dimen/textSize_16"
+            android:textColor="@color/color_sick_check"
+            tools:text="急诊医学科"/>
+
+        <TextView
+            android:id="@+id/tv_line"
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_alignParentBottom="true"
+            android:layout_marginLeft="@dimen/dimen_14"
+            android:layout_marginRight="@dimen/dimen_14"
+            android:background="@drawable/bg_sick_check"/>
+    </RelativeLayout>
+
+</RelativeLayout>

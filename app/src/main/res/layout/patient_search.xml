@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/color_bg_gray">
+
+    <include
+        android:id="@+id/in_title"
+        layout="@layout/include_action_bar"/>
+
+    <com.kaurihealth.utilslib.widget.MaterialSearchBar
+        android:id="@+id/searchBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/in_title"
+        android:layout_marginBottom="@dimen/dimen_10"
+        android:layout_marginLeft="@dimen/dimen_14"
+        android:layout_marginRight="@dimen/dimen_14"
+        android:layout_marginTop="@dimen/dimen_10"
+        app:hint="请输入患者姓名或手机号"/>
+
+    <com.kaurihealth.utilslib.widget.ScrollChildSwipeRefreshLayout
+        android:id="@+id/swipe_refresh"
+        android:layout_below="@+id/searchBar"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    <ListView
+        android:id="@+id/doctor_search_lv"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+
+        android:divider="@null">
+    </ListView>
+    </com.kaurihealth.utilslib.widget.ScrollChildSwipeRefreshLayout>
+
+    <RelativeLayout
+        android:id="@+id/tv_note_new"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/tv_note"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:drawablePadding="@dimen/dimen_16"
+            android:drawableTop="@drawable/ic_no_search"
+            android:text="暂无搜索结果！"
+            android:textColor="@color/color_text_prompt"/>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_note"
+            android:layout_marginTop="30dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="点击跳转至"
+                android:textColor="@color/color_text_prompt"/>
+
+            <TextView
+                android:id="@+id/tv_skip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="建立患者档案"
+                android:textColor="#91deff"/>
+        </LinearLayout>
+    </RelativeLayout>
+
+</RelativeLayout>

@@ -1,0 +1,442 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_bg_gray"
+    tools:context=".doctor_v.DoctorInfoActivity">
+
+    <include
+        android:id="@+id/in_title"
+        layout="@layout/include_action_bar" />
+
+    <RelativeLayout
+        android:id="@+id/rl_info"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/in_title"
+        android:layout_margin="@dimen/margin_10"
+        android:background="@drawable/bg_white">
+
+        <com.kaurihealth.utilslib.widget.CircleImageView
+            android:id="@+id/iv_photo"
+            style="@style/Photo.Nomal"
+            android:layout_marginBottom="@dimen/margin_16"
+            android:layout_marginLeft="@dimen/margin_16"
+            android:layout_marginRight="@dimen/margin_16"
+            android:layout_marginTop="20dp"
+            android:scaleType="centerCrop" />
+
+        <TextView
+            android:id="@+id/tv_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/iv_photo"
+            android:layout_marginBottom="@dimen/margin_16"
+            android:layout_toRightOf="@id/iv_photo"
+            android:ellipsize="end"
+            android:maxEms="7"
+            android:singleLine="true"
+            android:textColor="@color/color_title_back"
+            android:textSize="@dimen/textSize_18"
+            tools:text="李晓燕" />
+
+
+        <!--<TextView-->
+            <!--android:id="@+id/tv_gendar"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_alignBottom="@id/tv_name"-->
+            <!--android:layout_marginLeft="@dimen/margin_16"-->
+            <!--android:layout_toRightOf="@id/tv_name"-->
+            <!--android:textColor="@color/color_body_back"-->
+            <!--android:textSize="@dimen/textSize_14"-->
+            <!--tools:text="女" />-->
+
+        <ImageView
+            android:id="@+id/tv_gendar"
+            android:src="@mipmap/gender_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/tv_name"
+            android:layout_marginLeft="@dimen/margin_16"
+            android:layout_toRightOf="@id/tv_name" />
+
+        <TextView
+            android:id="@+id/tv_age"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/tv_gendar"
+            android:layout_marginLeft="@dimen/margin_16"
+            android:layout_toRightOf="@id/tv_gendar"
+            android:textColor="@color/color_body_back"
+            android:textSize="@dimen/textSize_14"
+            tools:text="30岁" />
+
+        <LinearLayout
+            android:id="@+id/vpager_top"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_name"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/input_height_35"
+                android:layout_marginTop="10dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/textView4"
+                    style="@style/BodyText_Title"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:gravity="left"
+                    android:paddingLeft="10dp"
+                    android:text="职称:"
+                    android:textColor="#cacacf" />
+
+                <LinearLayout
+                    style="@style/Record_BodyText"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="6"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/tv_professional"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:gravity="center|left"
+                        android:paddingRight="1dp"
+                        android:singleLine="true"
+                        android:textColor="#50d2c2"
+                        tools:text="xxx1" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="/" />
+
+
+                    <TextView
+                        android:id="@+id/tv_EducationTitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="5dp"
+                        android:gravity="center|left"
+                        android:singleLine="true"
+                        android:textColor="#cacacf"
+                        tools:text="xxx3" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="/" />
+
+                    <TextView
+                        android:id="@+id/tv_mentorshipTitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="1dp"
+                        android:gravity="center|left"
+                        android:singleLine="true"
+                        android:textColor="#8ba4c4"
+                        tools:text="xxx2" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/input_height_35"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/BodyText_Title"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:gravity="left"
+                    android:paddingLeft="10dp"
+                    android:text="科室:"
+                    android:textColor="#cacacf" />
+
+                <TextView
+                    android:id="@+id/tv_major"
+                    style="@style/Record_BodyText"
+                    android:layout_width="0dp"
+                    android:layout_weight="6"
+                    android:ellipsize="end"
+                    android:lines="1"
+                    android:singleLine="true"
+                    android:textColor="#293d47"
+                    tools:text="xxxxxxxxxxxxxxxxxxx" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/input_height_35"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/textView6"
+                    style="@style/BodyText_Title"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:gravity="left"
+                    android:paddingLeft="10dp"
+                    android:text="机构:"
+                    android:textColor="#cacacf" />
+
+                <TextView
+                    android:id="@+id/tv_organization"
+                    style="@style/Record_BodyText"
+                    android:layout_width="0dp"
+                    android:layout_weight="6"
+                    android:singleLine="true"
+                    android:textColor="#293d47"
+                    tools:text="xxxxxxxxxxxxxxxxxxx" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/input_height_35"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/textView7"
+                    style="@style/BodyText_Title"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:paddingLeft="6dp"
+                    android:text="执业证号:"
+                    android:textColor="#cacacf" />
+
+                <TextView
+                    android:id="@+id/tv_practice_number"
+                    style="@style/Record_BodyText"
+                    android:layout_width="0dp"
+                    android:layout_weight="3"
+                    android:textColor="#293d47"
+                    tools:text="xxxxxxxxxxxxxxxxxxx" />
+            </LinearLayout>
+
+            <RelativeLayout
+                android:id="@+id/ly_visit_referral_gone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/margin_10"
+                android:layout_marginTop="@dimen/margin_10"
+                android:gravity="right">
+
+                <TextView
+                    android:id="@+id/floatbtn_chat"
+                    android:gravity="center"
+                    android:background="@drawable/btn_shape"
+                    android:paddingRight="30dp"
+                    android:paddingLeft="30dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:drawablePadding="10dp"
+                    android:drawableLeft="@mipmap/message_icon"
+                    android:textColor="#FFFFFF"
+                    android:text="留言" />
+
+                <TextView
+                    android:id="@+id/floatbtn_referral"
+                    android:gravity="center"
+                    android:background="@drawable/btn_shape_referral"
+                    android:paddingRight="30dp"
+                    android:paddingLeft="30dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:drawablePadding="10dp"
+                    android:drawableLeft="@mipmap/tratement_icon"
+                    android:layout_marginLeft="@dimen/margin_10"
+                    android:layout_marginRight="10dp"
+                    android:layout_toRightOf="@id/floatbtn_chat"
+                    android:textColor="#FFFFFF"
+                    android:text="转诊" />
+            </RelativeLayout>
+        </LinearLayout>
+
+    </RelativeLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/rl_info"
+        android:layout_marginLeft="@dimen/margin_10"
+        android:layout_marginRight="@dimen/margin_10"
+        android:layout_marginTop="@dimen/padding_4"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:id="@+id/lay_experience"
+            style="@style/Bg_Lay_Press"
+            android:layout_width="match_parent"
+            android:background="@drawable/btn_edge_radius">
+
+            <ImageView
+                android:id="@+id/im_1"
+                style="@style/Lay_ImageView"
+                android:src="@mipmap/specialty_icon" />
+
+            <TextView
+                android:layout_toRightOf="@id/im_1"
+                style="@style/Tv_Patient_Info"
+                android:text="@string/doctor_tv_experience" />
+
+            <ImageView
+                android:layout_alignParentRight="true"
+                style="@style/Tv_Patient_Info"
+                android:src="@mipmap/more_icon" />
+        </RelativeLayout>
+
+        <View style="@style/Line_Gap" />
+
+        <RelativeLayout
+            android:id="@+id/lay_speciality"
+            style="@style/Bg_Lay_Press"
+            android:background="@drawable/btn_edge_radius_bottom">
+
+            <ImageView
+                android:id="@+id/im_2"
+                style="@style/Lay_ImageView"
+                android:src="@mipmap/experience_icon" />
+
+            <TextView
+                android:layout_toRightOf="@id/im_2"
+                style="@style/Tv_Patient_Info"
+                android:text="@string/doctor_tv_speciality" />
+
+            <ImageView
+                style="@style/Tv_Patient_Info"
+                android:layout_alignParentRight="true"
+                android:src="@mipmap/more_icon" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/Group_layout"
+            android:layout_marginTop="20dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:id="@+id/Group_add"
+                android:visibility="gone"
+                android:layout_marginRight="@dimen/margin_20"
+                android:layout_marginLeft="@dimen/margin_20"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:background="@drawable/btn_referral"
+                android:gravity="center"
+                android:textSize="14dp"
+                android:textColor="#FFFF"
+                android:text="添加好友"
+                />
+
+            <TextView
+                android:id="@+id/Gruop_chat"
+                android:visibility="gone"
+                android:layout_marginRight="@dimen/margin_20"
+                android:layout_marginLeft="@dimen/margin_20"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:background="@drawable/btn_message"
+                android:gravity="center"
+                android:textSize="14dp"
+                android:textColor="#FFFF"
+                android:text="留言"
+                />
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+
+    <!--老按钮  暂存-->
+    <!--<LinearLayout-->
+        <!--android:id="@+id/ly_visit_referral_gone"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_alignParentBottom="true"-->
+        <!--android:layout_alignParentLeft="true"-->
+        <!--android:layout_alignParentStart="true"-->
+        <!--android:keepScreenOn="true">-->
+
+        <!--<Button-->
+            <!--android:id="@+id/floatbtn_chat"-->
+            <!--android:layout_width="0dp"-->
+            <!--android:layout_height="40dp"-->
+            <!--android:layout_alignParentBottom="true"-->
+            <!--android:layout_alignParentRight="true"-->
+            <!--android:layout_marginBottom="4dp"-->
+            <!--android:layout_marginLeft="5dp"-->
+            <!--android:layout_marginRight="10dp"-->
+            <!--android:layout_weight="1"-->
+            <!--android:background="@drawable/btn_referral"-->
+            <!--android:keepScreenOn="true"-->
+            <!--android:text="留言"-->
+            <!--android:textColor="#ffffff" />-->
+
+        <!--<Button-->
+            <!--android:id="@+id/floatbtn_referral"-->
+            <!--android:layout_width="0dp"-->
+            <!--android:layout_height="40dp"-->
+            <!--android:layout_alignParentBottom="true"-->
+            <!--android:layout_alignParentRight="true"-->
+            <!--android:layout_marginBottom="4dp"-->
+            <!--android:layout_marginLeft="5dp"-->
+            <!--android:layout_marginRight="10dp"-->
+            <!--android:layout_weight="1"-->
+            <!--android:background="@drawable/btn_referral_h"-->
+            <!--android:keepScreenOn="true"-->
+            <!--android:text="转诊"-->
+            <!--android:textColor="#ffffff" />-->
+    <!--</LinearLayout>-->
+    <!--老按钮  暂存-->
+
+
+    <!--老按钮  暂存-->
+    <!--<RelativeLayout-->
+        <!--android:id="@+id/Group_layout"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_alignParentBottom="true"-->
+        <!--android:layout_alignParentLeft="true"-->
+        <!--android:layout_alignParentStart="true"-->
+        <!--android:keepScreenOn="true">-->
+
+        <!--<Button-->
+            <!--android:id="@+id/Group_add"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="40dp"-->
+            <!--android:layout_marginBottom="4dp"-->
+            <!--android:layout_marginLeft="80dp"-->
+            <!--android:layout_marginRight="80dp"-->
+            <!--android:background="@drawable/btn_referral_h"-->
+            <!--android:text="添加"-->
+            <!--android:textColor="#ffffff"-->
+            <!--android:visibility="gone" />-->
+
+        <!--<Button-->
+            <!--android:id="@+id/Gruop_chat"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="40dp"-->
+            <!--android:layout_marginBottom="4dp"-->
+            <!--android:layout_marginLeft="80dp"-->
+            <!--android:layout_marginRight="80dp"-->
+            <!--android:background="@drawable/btn_referral"-->
+            <!--android:text="留言"-->
+            <!--android:textColor="#ffffff"-->
+            <!--android:visibility="gone" />-->
+    <!--</RelativeLayout>-->
+    <!--老按钮  暂存-->
+</RelativeLayout>

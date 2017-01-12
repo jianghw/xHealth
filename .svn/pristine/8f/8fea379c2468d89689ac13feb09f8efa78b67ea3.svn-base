@@ -1,0 +1,309 @@
+package com.kaurihealth.kaurihealth.record_details_v;
+
+import android.graphics.drawable.BitmapDrawable;
+import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.WindowManager;
+import android.widget.LinearLayout;
+import android.widget.PopupWindow;
+import android.widget.RelativeLayout;
+import android.widget.ScrollView;
+import android.widget.TextView;
+
+import com.kaurihealth.datalib.local.LocalData;
+import com.kaurihealth.datalib.response_bean.DoctorPatientRelationshipBean;
+import com.kaurihealth.datalib.response_bean.PatientRecordCountDisplayBean;
+import com.kaurihealth.kaurihealth.R;
+import com.kaurihealth.kaurihealth.base_v.BaseFragment;
+import com.kaurihealth.kaurihealth.eventbus.RefreshEvent;
+import com.kaurihealth.kaurihealth.manager_v.loading.LoadingErrorFactory;
+import com.kaurihealth.kaurihealth.manager_v.record.MedicalRecordFactory;
+import com.kaurihealth.kaurihealth.manager_v.ViewFactoryManager;
+import com.kaurihealth.kaurihealth.manager_v.record.RecordPatientView;
+import com.kaurihealth.kaurihealth.record_details_v.LikeToIosDialog.ClinicalDialog;
+import com.kaurihealth.kaurihealth.record_details_v.LikeToIosDialog.LobTestDialog;
+import com.kaurihealth.kaurihealth.record_details_v.LikeToIosDialog.PathologyDialog;
+import com.kaurihealth.kaurihealth.record_details_v.LikeToIosDialog.SupplementTestDialog;
+import com.kaurihealth.kaurihealth.tinker.SampleApplicationLike;
+import com.kaurihealth.mvplib.rcord_details_p.INMedicalRecordsView;
+import com.kaurihealth.mvplib.rcord_details_p.NMedicalRecordsPresenter;
+import com.kaurihealth.utilslib.ColorUtils;
+import com.kaurihealth.utilslib.constant.Global;
+import com.kaurihealth.utilslib.widget.ScrollChildSwipeRefreshLayout;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
+import javax.inject.Inject;
+
+import butterknife.Bind;
+
+/**
+ * 描述: ui组件化管理
+ */
+public class NMedicalRecordFragment extends BaseFragment implements INMedicalRecordsView,
+        RecordDetailsActivity.DeliverListener, PopupWindow.OnDismissListener,
+        View.OnClickListener, ClinicalDialog.IBackToOpenListener, SupplementTestDialog.IBackToOpenListener,
+        LobTestDialog.IBackToOpenListener, PathologyDialog.IBackToOpenListener, RecordPatientView.IRefreshListener {
+
+    @Inject
+    NMedicalRecordsPresenter<INMedicalRecordsView> mPresenter;
+
+    @Bind(R.id.lay_content)
+    LinearLayout mLayContent;
+    @Bind(R.id.scrollView)
+    ScrollView mScrollView;
+    @Bind(R.id.swipe_refresh)
+    ScrollChildSwipeRefreshLayout mSwipeRefresh;
+    /**
+     * 布局控制器
+     */
+    private MedicalRecordFactory viewFactory;
+    private LoadingErrorFactory errorFactory;
+
+    private PopupWindow popupWindow;
+
+    public static NMedicalRecordFragment newInstance() {
+        return new NMedicalRecordFragment();
+    }
+
+    @Override
+    protected int getFragmentLayoutID() {
+        return R.layout.fragment_n_medical_record;
+    }
+
+    @Override
+    protected void initPresenterAndView(Bundle savedInstanceState) {
+        SampleApplicationLike.getApp().getComponent().inject(this);
+        mPresenter.setPresenter(this);
+
+        mSwipeRefresh.setColorSchemeColors(
+                ColorUtils.setSwipeRefreshColors(getContext())
+        );
+        mSwipeRefresh.setScrollUpChild(mScrollView);
+        mSwipeRefresh.setSize(SwipeRefreshLayout.DEFAULT);
+        mSwipeRefresh.setDistanceToTriggerSync(Global.Numerical.SWIPE_REFRESH);
+        mSwipeRefresh.setOnRefreshListener(() -> mPresenter.loadingRemoteData(true));
+    }
+
+    @Override
+    protected void initDelayedData() {
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    protected void lazyLoadingData() {
+        mPresenter.onSubscribe();
+        ((RecordDetailsActivity) (getActivity())).setOnclickInterface(this);//注册监听
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        mPresenter.unSubscribe();
+        EventBus.getDefault().unregister(this);
+        if (viewFactory != null) viewFactory.unbindView();
+        if (errorFactory != null) errorFactory.unbindView();
+    }
+
+    @Override
+    public int getPatientId() {
+        return ((RecordDetailsActivity) getActivity()).getPatientId();
+    }
+
+    /**
+     * 成功
+     */
+    @Override
+    public void loadNewPatientRecordCountsByPatientId(PatientRecordCountDisplayBean bean) {
+        LocalData.getLocalData().setCurrentPatient(bean.getPatient());
+
+        RecordDetailsActivity activity = (RecordDetailsActivity) getActivity();
+        if (activity != null) activity.moreBtnVisibility(true);
+
+        if (errorFactory != null) errorFactory.hiddenLayout();
+
+        if (viewFactory == null) {
+            viewFactory = (MedicalRecordFactory) ViewFactoryManager.createViewFactory(this, mLayContent);
+        } else {
+            viewFactory.showLayout();
+        }
+        if (viewFactory != null) viewFactory.setListener(this);
+
+        if (viewFactory != null) {
+            viewFactory.fillNewestData(bean, 0);
+        }
+        mScrollView.scrollTo(0, 0);
+    }
+
+    /**
+     * 出错
+     */
+    @Override
+    public void loadNewPatientRecordCountsByPatientIdError(String message) {
+        if (viewFactory != null) viewFactory.hiddenLayout();
+
+        if (errorFactory == null) {
+            errorFactory = (LoadingErrorFactory) ViewFactoryManager.createErrorFactory(this, mLayContent);
+        } else {
+            errorFactory.showLayout();
+        }
+
+        if (errorFactory != null) {
+            errorFactory.fillNewestData(message, 0);
+        }
+        mScrollView.scrollTo(0, 0);
+    }
+
+
+    @Override
+    public void switchPageUI(String className) {
+
+    }
+
+    /**
+     * 添加监听
+     */
+    @Override
+    public void deliverPosition(int position) {
+        if (position == 0) {
+            openPopupWindow(getView());
+        }
+    }
+
+    /**
+     * 打开弹窗
+     */
+    public void openPopupWindow(View v) {
+        //防止重复按按钮
+        if (popupWindow != null && popupWindow.isShowing()) {
+            return;
+        }
+        //设置PopupWindow的View
+        View view = LayoutInflater.from(getActivity()).inflate(R.layout.view_popupwindow, null);
+        popupWindow = new PopupWindow(view, RelativeLayout.LayoutParams.MATCH_PARENT,
+                RelativeLayout.LayoutParams.WRAP_CONTENT);
+        //设置背景,这个没什么效果，不添加会报错
+        popupWindow.setBackgroundDrawable(new BitmapDrawable());
+        //设置点击弹窗外隐藏自身
+        popupWindow.setFocusable(true);
+        popupWindow.setOutsideTouchable(true);
+        //设置动画
+        popupWindow.setAnimationStyle(R.style.PopupWindow);
+        //设置位置
+        popupWindow.showAtLocation(v, Gravity.BOTTOM, 0, 20);
+        //设置消失监听
+        popupWindow.setOnDismissListener(this);
+        //设置PopupWindow的View点击事件
+        setOnPopupViewClick(view);
+        //设置背景色
+        setBackgroundAlpha(0.5f);
+    }
+
+    private RelativeLayout layout, rl_supplementaryTest, rl_lobTest, rl_pathology;
+    private TextView tv_cancel;
+
+    private void setOnPopupViewClick(View view) {
+        tv_cancel = (TextView) view.findViewById(R.id.tv_cancel);
+        layout = (RelativeLayout) view.findViewById(R.id.rl);
+        rl_supplementaryTest = (RelativeLayout) view.findViewById(R.id.rl_supplementaryTest);
+        rl_lobTest = (RelativeLayout) view.findViewById(R.id.rl_lobTest);
+        rl_pathology = (RelativeLayout) view.findViewById(R.id.rl_pathology);
+
+        tv_cancel.setOnClickListener(this);
+        layout.setOnClickListener(this);
+        rl_supplementaryTest.setOnClickListener(this);
+        rl_lobTest.setOnClickListener(this);
+        rl_pathology.setOnClickListener(this);
+    }
+
+    //设置屏幕背景透明效果
+    public void setBackgroundAlpha(float alpha) {
+        WindowManager.LayoutParams lp = getActivity().getWindow().getAttributes();
+        lp.alpha = alpha;
+        if (alpha == 1) {
+            getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);//不移除该Flag的话,在有视频的页面上的视频会出现黑屏的bug
+        } else {
+            getActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);//此行代码主要是解决在华为手机上半透明效果无效的bug
+        }
+        getActivity().getWindow().setAttributes(lp);
+    }
+
+    @Override
+    public void onDismiss() {
+        setBackgroundAlpha(1);
+    }
+
+    /**
+     * 底部弹出框事件
+     *
+     * @param v
+     */
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.rl:
+                popupWindow.dismiss();
+                ClinicalDialog dialog = new ClinicalDialog();
+                dialog.openPopupWindow_item(getActivity(), getView(), popupWindow);
+                dialog.setIBackToOpenListener(this);
+                break;
+            case R.id.rl_supplementaryTest:
+                popupWindow.dismiss();
+                SupplementTestDialog supplementTestDialog = new SupplementTestDialog();
+                supplementTestDialog.openPopupWindow_item(getActivity(), getView(), popupWindow);
+                supplementTestDialog.setIBackToOpenListener(this);
+                break;
+            case R.id.rl_lobTest:
+                popupWindow.dismiss();
+                LobTestDialog lobTestDialog = new LobTestDialog();
+                lobTestDialog.openPopupWindow_item(getActivity(), getView(), popupWindow);
+                lobTestDialog.setIBackToOpenListener(this);
+                break;
+            case R.id.rl_pathology:
+                popupWindow.dismiss();
+                PathologyDialog pathologyDialog = new PathologyDialog();
+                pathologyDialog.openPopupWindow_item(getActivity(), getView(), popupWindow);
+                pathologyDialog.setListener(this);
+                break;
+            case R.id.tv_cancel:
+                popupWindow.dismiss();
+                break;
+        }
+    }
+
+    /**
+     * 重新打开
+     */
+    @Override
+    public void back() {
+        openPopupWindow(getView());
+    }
+
+    /**
+     * 添加患者并刷新
+     */
+    @Override
+    public void refresh() {
+        mPresenter.insertNewRelationshipByDoctor(getPatientId());
+    }
+
+    /**
+     * 添加患者
+     */
+    @Override
+    public void insertPatientSucceed(DoctorPatientRelationshipBean bean) {
+        LocalData.getLocalData().setCurrentPatientShip(false);
+        showToast("添加成功");
+        mPresenter.loadingRemoteData(true);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
+    public void eventBusMain(RefreshEvent event) {
+        mPresenter.loadingRemoteData(true);
+    }
+}

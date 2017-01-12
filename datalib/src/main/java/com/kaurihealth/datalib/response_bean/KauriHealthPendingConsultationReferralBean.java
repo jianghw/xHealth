@@ -1,0 +1,166 @@
+package com.kaurihealth.datalib.response_bean;
+
+import java.util.Date;
+import java.util.List;
+
+/**
+ * Created by jianghw on 2016/12/14.
+ * <p/>
+ * Describe:
+ * GET api/PatientRequest/NewLoadPendingConsultationReferralsByDoctorId
+ */
+
+public class KauriHealthPendingConsultationReferralBean {
+
+
+    /**
+     * patientRequestId : 1
+     * referralType : sample string 2
+     * patientId : 3
+     * patientFullName : sample string 4
+     * gender : sample string 5
+     * dateOfBirth : 2016-12-15T15:07:01+08:00
+     * date : 2016-12-15T15:07:01+08:00
+     * sourceDoctorId : 7
+     *
+     * sourceDoctorFullName : sample string 8
+     * sourceDoctorKauriHealthId : sample string 9
+     * destinationDoctorId : 10
+     * destinationDoctorFullName : sample string 11
+     * destinationDoctorKauriHealthId : sample string 12
+     * sicknesses : [{"sicknessId":1,"sicknessName":"sample string 1"},{"sicknessId":1,"sicknessName":"sample string 1"}]
+     */
+
+    private int patientRequestId;
+    private String referralType;
+    private int patientId;
+    private String patientFullName;
+    private String gender;
+    private Date dateOfBirth;
+    private Date date;
+    private int sourceDoctorId;
+    private String sourceDoctorFullName;
+    private String sourceDoctorKauriHealthId;
+    private int destinationDoctorId;
+    private String destinationDoctorFullName;
+    private String destinationDoctorKauriHealthId;
+    /**
+     * sicknessId : 1
+     * sicknessName : sample string 1
+     */
+
+    private List<SicknessesBean> sicknesses;
+
+    public int getPatientRequestId() {
+        return patientRequestId;
+    }
+
+    public void setPatientRequestId(int patientRequestId) {
+        this.patientRequestId = patientRequestId;
+    }
+
+    public String getReferralType() {
+        return referralType;
+    }
+
+    public void setReferralType(String referralType) {
+        this.referralType = referralType;
+    }
+
+    public int getPatientId() {
+        return patientId;
+    }
+
+    public void setPatientId(int patientId) {
+        this.patientId = patientId;
+    }
+
+    public String getPatientFullName() {
+        return patientFullName;
+    }
+
+    public void setPatientFullName(String patientFullName) {
+        this.patientFullName = patientFullName;
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
+    public Date getDateOfBirth() {
+        return dateOfBirth;
+    }
+
+    public void setDateOfBirth(Date dateOfBirth) {
+        this.dateOfBirth = dateOfBirth;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
+    }
+
+    public int getSourceDoctorId() {
+        return sourceDoctorId;
+    }
+
+    public void setSourceDoctorId(int sourceDoctorId) {
+        this.sourceDoctorId = sourceDoctorId;
+    }
+
+    public String getSourceDoctorFullName() {
+        return sourceDoctorFullName;
+    }
+
+    public void setSourceDoctorFullName(String sourceDoctorFullName) {
+        this.sourceDoctorFullName = sourceDoctorFullName;
+    }
+
+    public String getSourceDoctorKauriHealthId() {
+        return sourceDoctorKauriHealthId;
+    }
+
+    public void setSourceDoctorKauriHealthId(String sourceDoctorKauriHealthId) {
+        this.sourceDoctorKauriHealthId = sourceDoctorKauriHealthId;
+    }
+
+    public int getDestinationDoctorId() {
+        return destinationDoctorId;
+    }
+
+    public void setDestinationDoctorId(int destinationDoctorId) {
+        this.destinationDoctorId = destinationDoctorId;
+    }
+
+    public String getDestinationDoctorFullName() {
+        return destinationDoctorFullName;
+    }
+
+    public void setDestinationDoctorFullName(String destinationDoctorFullName) {
+        this.destinationDoctorFullName = destinationDoctorFullName;
+    }
+
+    public String getDestinationDoctorKauriHealthId() {
+        return destinationDoctorKauriHealthId;
+    }
+
+    public void setDestinationDoctorKauriHealthId(String destinationDoctorKauriHealthId) {
+        this.destinationDoctorKauriHealthId = destinationDoctorKauriHealthId;
+    }
+
+    public List<SicknessesBean> getSicknesses() {
+        return sicknesses;
+    }
+
+    public void setSicknesses(List<SicknessesBean> sicknesses) {
+        this.sicknesses = sicknesses;
+    }
+
+}

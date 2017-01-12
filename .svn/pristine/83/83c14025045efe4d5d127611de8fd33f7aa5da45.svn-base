@@ -1,0 +1,90 @@
+package com.kaurihealth.kaurihealth.manager_v.history;
+
+import android.content.Context;
+import android.view.ViewGroup;
+
+import com.kaurihealth.datalib.response_bean.PatientRecordDisplayDto;
+import com.kaurihealth.utilslib.controller.IViewFactory;
+
+import java.util.List;
+
+/**
+ * Created by mip on 2016/12/23.
+ *
+ * Describe:辅助检查组装
+ */
+
+public class RecordAccessoryFactory implements IViewFactory<List<PatientRecordDisplayDto>> {
+
+    private final Context mContext;
+
+    /**
+     * 影像学检查
+     */
+    private IconographyTestView iconographyTestView;
+
+    /**
+     * 心血管系统相关检查
+     */
+    private AngiocarpyTestView angiocarpyTestView;
+
+    /**
+     * 其他检查
+     */
+    private OtherTestView otherTestView;
+
+
+    public RecordAccessoryFactory(Context context) {
+        this.mContext = context;
+    }
+
+
+    @Override
+    public void createIncludeViews() {
+        iconographyTestView = new IconographyTestView(mContext);
+        angiocarpyTestView = new AngiocarpyTestView(mContext);
+        otherTestView = new OtherTestView(mContext);
+
+    }
+
+    @Override
+    public void attachRootView(ViewGroup root) {
+        iconographyTestView.attachRoot(root);
+        angiocarpyTestView.attachRoot(root);
+        otherTestView.attachRoot(root);
+
+    }
+
+    @Override
+    public void fillNewestData(List<PatientRecordDisplayDto> beanData, int position) {
+
+        if (position ==1){
+            iconographyTestView.fillData(beanData);
+        }else if (position ==2){
+            angiocarpyTestView.fillData(beanData);
+        }else if (position ==3){
+            otherTestView.fillData(beanData);
+        }
+    }
+
+    @Override
+    public void unbindView() {
+        iconographyTestView.unbindView();
+        angiocarpyTestView.unbindView();
+        otherTestView.unbindView();
+    }
+
+    @Override
+    public void showLayout() {
+        iconographyTestView.showLayout();
+        angiocarpyTestView.showLayout();
+        otherTestView.showLayout();
+    }
+
+    @Override
+    public void hiddenLayout() {
+        iconographyTestView.hiddenLayout();
+        angiocarpyTestView.hiddenLayout();
+        otherTestView.hiddenLayout();
+    }
+}

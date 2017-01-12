@@ -1,0 +1,102 @@
+package com.kaurihealth.kaurihealth.manager_v.record;
+
+import android.content.Context;
+import android.view.ViewGroup;
+
+import com.kaurihealth.datalib.response_bean.PatientRecordCountDisplayBean;
+import com.kaurihealth.kaurihealth.record_details_v.NMedicalRecordFragment;
+import com.kaurihealth.utilslib.controller.IViewFactory;
+
+/**
+ * Created by jianghw on 2016/12/16.
+ * <p/>
+ * Describe: 病历详情组装页面
+ */
+
+public class MedicalRecordFactory implements IViewFactory<PatientRecordCountDisplayBean> {
+
+    private final Context mContext;
+    /**
+     * 病人模块
+     */
+    private RecordPatientView mRecordPatientView;
+    /**
+     * 最近临床诊疗模块
+     */
+    private RecordRecentlyView mRecordRecentlyView;
+    /**
+     * 辅助检查
+     */
+    private RecordAccessoryView mRecordAccessoryView;
+    /**
+     * 实验室检查统计
+     */
+    private RecordLabView mRecordLabView;
+    /**
+     * 病理
+     */
+    private RecordPathologyView mRecordPathologyView;
+
+    public MedicalRecordFactory(Context context) {
+        this.mContext = context;
+    }
+
+    @Override
+    public void createIncludeViews() {
+        mRecordPatientView = new RecordPatientView(mContext);
+        mRecordRecentlyView = new RecordRecentlyView(mContext);
+        mRecordAccessoryView = new RecordAccessoryView(mContext);
+        mRecordLabView = new RecordLabView(mContext);
+        mRecordPathologyView = new RecordPathologyView(mContext);
+    }
+
+    @Override
+    public void attachRootView(ViewGroup root) {
+        mRecordPatientView.attachRoot(root);
+        mRecordRecentlyView.attachRoot(root);
+        mRecordAccessoryView.attachRoot(root);
+        mRecordLabView.attachRoot(root);
+        mRecordPathologyView.attachRoot(root);
+    }
+
+    @Override
+    public void fillNewestData(PatientRecordCountDisplayBean beanData, int position) {
+        mRecordPatientView.fillData(beanData);
+        mRecordRecentlyView.fillData(beanData);
+        mRecordAccessoryView.fillData(beanData);
+        mRecordLabView.fillData(beanData);
+        mRecordPathologyView.fillData(beanData);
+    }
+
+    @Override
+    public void unbindView() {
+        mRecordPatientView.unbindView();
+        mRecordRecentlyView.unbindView();
+        mRecordAccessoryView.unbindView();
+        mRecordLabView.unbindView();
+        mRecordPathologyView.unbindView();
+    }
+
+    @Override
+    public void showLayout() {
+        mRecordPatientView.showLayout();
+        mRecordRecentlyView.showLayout();
+        mRecordAccessoryView.showLayout();
+        mRecordLabView.showLayout();
+        mRecordPathologyView.showLayout();
+    }
+
+    @Override
+    public void hiddenLayout() {
+        mRecordPatientView.hiddenLayout();
+        mRecordRecentlyView.hiddenLayout();
+        mRecordAccessoryView.hiddenLayout();
+        mRecordLabView.hiddenLayout();
+        mRecordPathologyView.hiddenLayout();
+    }
+
+    public void setListener(NMedicalRecordFragment nMedicalRecordFragment){
+        mRecordPatientView.setListener(nMedicalRecordFragment);
+    }
+
+}

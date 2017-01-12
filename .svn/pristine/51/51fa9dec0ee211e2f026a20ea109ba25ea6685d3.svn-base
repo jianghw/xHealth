@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/color_bg_gray">
+
+    <include
+        android:id="@+id/in_title"
+        layout="@layout/include_action_bar_doctor"/>
+
+    <LinearLayout
+        android:id="@+id/bbb"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/in_title"
+        android:orientation="vertical">
+
+        <com.kaurihealth.utilslib.widget.MaterialSearchBar
+            android:id="@+id/searchBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="@dimen/dimen_14"
+            android:layout_marginRight="@dimen/dimen_14"
+            android:layout_marginTop="@dimen/dimen_10"
+            app:hint="请输入医生姓名"/>
+
+        <LinearLayout
+            android:id="@+id/LY_new_friend"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_10"
+            android:background="#ffffff"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingBottom="@dimen/margin_10"
+            android:paddingLeft="20dp"
+            android:paddingTop="@dimen/margin_10">
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/im_newFriend"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@mipmap/newfriend_icon"/>
+
+                <ImageView
+                    android:id="@+id/reddot"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@id/im_newFriend"
+                    android:src="@mipmap/reddot"
+                    android:visibility="gone"/>
+            </RelativeLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:text="新医生"
+                android:textColor="#424242"
+                android:textSize="16sp"/>
+        </LinearLayout>
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/bbb">
+
+        <com.kaurihealth.utilslib.widget.ScrollChildSwipeRefreshLayout
+            android:id="@+id/swipe_refresh"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/rv_contacts"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@id/bbb"/>
+        </com.kaurihealth.utilslib.widget.ScrollChildSwipeRefreshLayout>
+
+        <com.kaurihealth.kaurihealth.doctor_new.view.WaveSideBar
+            android:id="@+id/side_bar"
+            android:layout_width="80dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            app:sidebar_text_color="#8D6E63"/>
+
+        <TextView
+            android:id="@+id/tv_note"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:drawablePadding="@dimen/dimen_16"
+            android:drawableTop="@drawable/ic_no_search"
+            android:gravity="center"
+            android:text="暂无相关数据"
+            android:textColor="@color/color_text_prompt"
+            android:visibility="gone"/>
+    </RelativeLayout>
+</RelativeLayout>
