@@ -1,0 +1,45 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="#efeff4"
+              android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/lay_title"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimen_42"
+        android:background="@color/color_enable_green">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="临床支持"
+            android:layout_centerInParent="true"
+            android:textColor="#ffffff"
+            android:textSize="16sp"/>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/tv_hint"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="30dp"
+            android:src="@drawable/undeveloped"/>
+        <!-- TODO: Update blank fragment layout -->
+        <TextView
+            android:id="@+id/tv_hint"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="@string/hello_blank_fragment"
+            android:textColor="#aba9ac"
+            android:textSize="10sp"/>
+    </RelativeLayout>
+
+</LinearLayout>
